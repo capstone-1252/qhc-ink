@@ -1,10 +1,16 @@
-# Astro Starter Kit: Basics
+# Astro Help
 
+Start with running: 
 ```sh
-npm create astro@latest -- --template basics
+npm create astro@latest
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+To see your changes:
+```sh
+npm run dev
+```
+
+- Most of your work happens in /src
 
 ## 🚀 Project Structure
 
@@ -14,7 +20,7 @@ Inside of your Astro project, you'll see the following folders and files:
 /
 ├── public/
 │   └── favicon.svg
-├── src
+├── src <MOST-IMPORTANT>
 │   ├── assets
 │   │   └── astro.svg
 │   ├── components
@@ -26,7 +32,7 @@ Inside of your Astro project, you'll see the following folders and files:
 └── package.json
 ```
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+[our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
 
 ## 🧞 Commands
 
@@ -37,10 +43,11 @@ All commands are run from the root of the project, from a terminal:
 | `npm install`             | Installs dependencies                            |
 | `npm run dev`             | Starts local dev server at `localhost:4321`      |
 | `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
 | `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
 | `npm run astro -- --help` | Get help using the Astro CLI                     |
 
-## 👀 Want to learn more?
+[our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+
+## Extensions
+Download Astro extension (its like itellisense for Astro). May be helpful. 
