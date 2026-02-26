@@ -1,0 +1,19 @@
+---
+//fetch static data or props
+const navItems = ['Home', 'Menu', 'Reservation'];
+
+---
+
+<!-- curly braces required when dealing with js/props in the HTML -->
+<header>
+    <nav>
+        <h1>Little Wolf Restaurant</h1>
+        <ul>{navItems.map(item => (
+            <li><a href="#">{item}</a></li>
+        ))}</ul>
+    </nav>
+</header>
+
+<style>
+
+</style>
