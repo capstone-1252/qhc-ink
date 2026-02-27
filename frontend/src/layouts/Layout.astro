@@ -1,6 +1,7 @@
 ---
 import { string } from 'astro:schema';
 import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
 
 //component script: javascript/props run at build time here
 
@@ -27,6 +28,7 @@ const pageTitle = Astro.props; */
 	<body>
 		<Header />
 		<slot /> <!-- all page content would inject here -->
+		<Footer />
 	</body>
 </html>
 
