@@ -1,0 +1,42 @@
+---
+//fetch static data or props
+const navItems = ['Food Bank Dinner', 'Menu'];
+//the way we deal with images changes. img need to be imported from assets and using the format src={logomark.src} now
+import logomark from '../../assets/logomark.svg'; 
+
+---
+
+<!-- curly braces required when dealing with js/props in the HTML -->
+<header>
+    <nav>
+        <h1>
+            
+            <a href="#"><img src={logomark.src} alt="Logo">
+            </a>
+        </h1>
+        <ul>{navItems.map(item => (
+            <li><a href="#">Food Bank Dinner</a></li>
+            <li><a href="#">Menu</a></li>
+        ))}</ul>
+        <a href="someplace.net">Reservations</a>
+        
+    </nav>
+</header>
+
+<style>
+
+nav {
+    display: flex;
+    justify-content:space-between;
+}   
+
+ul {
+    display: flex;
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+}
+
+</style>
