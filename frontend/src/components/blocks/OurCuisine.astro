@@ -1,22 +1,64 @@
-<div class="cuisine">
-    <h1>Our Cuisine</h1>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit dolore vel facilis similique dolorum dicta temporibus voluptas quae cumque, totam quas. Reiciendis numquam vitae, veniam placeat accusantium modi hic recusandae?</p>
-    <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Alias culpa facilis fugit molestias sunt laborum aliquam voluptatem velit eos fugiat debitis, harum similique quas ut ipsum rerum eligendi? Odio, voluptatibus!</p>
-    <div class="images">
-        <img src="/slide-1.webp" alt="food pic">
-        <img src="/slide-2.webp" alt="food pic 2">
-        <img src="/slide-3.webp" alt="food pic 3">
+---
+import Button from '../ui/Button.astro';
+---
+
+
+<section class="cuisine-section py-24 px-4 max-w-7xl mx-auto" role="region" aria-labelledby="cuisine-heading">
+  <div class="text-center mb-20">
+    <h2 id="cuisine-heading" class="text-4xl md:text-5xl font-black text-gray-900 mb-6">
+      Our Cuisine
+    </h2>
+    <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+      Seasonal ingredients, masterful technique, unforgettable flavor.
+    </p>
+  </div>
+  
+  <div class="max-w-4xl mx-auto mb-16">
+    <div class="prose prose-lg mx-auto text-gray-700 leading-relaxed">
+      <p>
+        Our cuisine celebrates Alberta's finest seasonal ingredients, transformed through classical techniques 
+        and modern innovation. Each plate reflects our commitment to flavor harmony and visual artistry.
+      </p>
+      <p>
+        From house-made pastas to wood-fired proteins, every element receives meticulous attention to detail.
+      </p>
     </div>
-    <a href="#">View Menu</a>
+  </div>
 
-</div>
+  <div class="grid md:grid-cols-3 gap-6 mb-16">
+    <img 
+      src="/slide-1.webp" 
+      alt="Wood-fired steak with seasonal vegetables - Little Wolf signature dish"
+      class="w-full h-64 object-cover rounded-2xl shadow-lg hover:scale-105 transition-transform duration-300"
+      loading="lazy"
+      width="400"
+      height="256"
+    >
+    <img 
+      src="/slide-2.webp" 
+      alt="House-made pasta with foraged mushrooms and truffle"
+      class="w-full h-64 object-cover rounded-2xl shadow-lg hover:scale-105 transition-transform duration-300"
+      loading="lazy"
+      width="400"
+      height="256"
+    >
+    <img 
+      src="/slide-3.webp" 
+      alt="Artisanal dessert featuring local berries and housemade gelato"
+      class="w-full h-64 object-cover rounded-2xl shadow-lg hover:scale-105 transition-transform duration-300"
+      loading="lazy"
+      width="400"
+      height="256"
+    >
+  </div>
 
-<style>
+  <div class="text-center">
+    <Button label="View Menu"
+    size='lg'
+    class="shadow-xl hover:shadow-2xl w-full md:w-auto max-w-xs"
+    aria-label="View Label"
 
-    .images {
-        display: flex;
-    }
-    img {
-        max-width: 400px;
-    }
-</style>
+    />
+  </div>
+</section>
+

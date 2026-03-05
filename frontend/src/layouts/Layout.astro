@@ -1,43 +1,35 @@
 ---
-import { string } from 'astro:schema';
-import Header from '../components/layout/Header.astro';
 import Footer from '../components/layout/Footer.astro';
+import '../styles/global.css';
 
-//component script: javascript/props run at build time here
+interface Props {
+    title: string;
+}
 
-/* 
-export interface Props {
-	pageTitle: string;
-};
-
-const pageTitle = Astro.props; */
+const { title } = Astro.props;
+const actualTitle = title ? `${title} | Little Wolf Restaurant` : 'Little Wolf Restaurant';
 ---
 
-
-
 <!doctype html>
-<html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Little Wolf Restaurant</title>
-	</head>
-	<body>
-		<Header />
-		<slot /> <!-- all page content would inject here -->
-		<Footer />
-	</body>
+<html lang="en" class="scroll-smooth">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <link rel="icon" href="/favicon.ico" />
+        <meta name="generator" content={Astro.generator} />
+        <title>{actualTitle}</title>
+    </head>
+    <body class="antialiased bg-gray-50">
+            <slot /> <!-- all page content would inject here -->
+        
+        
+        <Footer />
+    </body>
 </html>
 
-<!-- some styling -->
 <style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
+    html {
+        scroll-behavior: smooth;
+    }
 </style>

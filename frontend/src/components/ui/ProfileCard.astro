@@ -1,0 +1,34 @@
+---
+
+//object props. make an object called user, and then give the props into it. object props are attached to user now
+interface Props {
+    user :
+    {
+    name: string;
+    role: string;
+    avatar?: string;
+    alt?: string;
+    }
+}
+
+//to set defaults you need to do things a bit differently
+/* const {user: {name, role, avatar = '/slide-1.webp', alt = "slide 1"}} = Astro.props as Props */
+
+//you could also do it this way if no need to set defaults:
+const { user } = Astro.props as Props
+
+---
+
+<!-- must be user.prop rather than propr -->
+<div>
+    <img src={user.avatar} alt={user.alt}>
+    <span class="bold">{user.name}</span>
+    <p>{user.role}</p>
+
+</div>
+
+<!-- usage example: syntax is object={{prop:'value', prop:'value'}} -->
+
+<!-- 
+<ProfileCard user={{name:'Lala', role:'Support', avatar:'/slide-1.webp', alt:'something'}}/> 
+-->
