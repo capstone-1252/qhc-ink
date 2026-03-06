@@ -1,6 +1,6 @@
 ---
 // src/components/FoodBankDinner.astro
-import Button from '../ui/Button.astro';
+import Link from '../ui/Link.astro';
 ---
 
 <section class="foodbank-section py-24 px-4 max-w-6xl mx-auto" aria-labelledby="foodbank-heading">
@@ -15,14 +15,12 @@ import Button from '../ui/Button.astro';
         our community's fight against hunger. Your dining experience makes a meaningful difference.
       </p>
       <div class="pt-4">
-        <Button 
+        <Link 
           href="/food-bank" 
           size="lg" 
           class="shadow-xl hover:shadow-2xl w-full md:w-auto max-w-xs"
-          aria-label="Reserve your seat Food Bank"
           label='Save Your Seat'
         >
-        </Button>
       </div>
     </div>
     
@@ -36,7 +34,7 @@ import Button from '../ui/Button.astro';
         width="600"
         height="400"
       >
-      <div class="absolute -inset-2 bg-gradient-to-r from-amber-500/10 via-transparent to-orange-500/10 rounded-3xl -z-10"></div>
+      <div class="absolute -inset-2 bg-linear-to-r from-amber-500/10 via-transparent to-orange-500/10 rounded-3xl -z-10"></div>
     </div>
   </div>
 </section>

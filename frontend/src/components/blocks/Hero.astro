@@ -1,4 +1,6 @@
 <!-- ---
+//Basically, put a pause on this until Bridgette gives the go-ahead for using React libraries.
+
 //this is our hero section; hours tab will also go in here
 
 import EmblaCarousel from '../ui/EmblaCarousel';
@@ -20,9 +22,6 @@ const options = {
 
 
 ---
-
-
-
 
 <section class="hero-section">
   <EmblaCarousel 
@@ -75,21 +74,20 @@ const options = {
 ---
 // src/components/Hero.astro
 
-import Button from '../ui/Button.astro';
+import Link from '../ui/Link.astro';
 ---
 
 <section class="hero relative overflow-hidden bg-linear-to-r from-gray-900 via-stone-900 to-black py-32 md:py-40">
   <div class="absolute inset-0 bg-black/40"></div>
   <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
-    <h1 class="text-4xl md:text-6xl lg:text-7xl font-black mb-6 drop-shadow-2xl">
+    <h2 class="text-4xl md:text-6xl lg:text-7xl font-black mb-6 drop-shadow-2xl">
       Little Wolf Restaurant
-    </h1>
+    </h2>
     <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto opacity-95 drop-shadow-lg">
       Exceptional dining experiences with seasonal ingredients and timeless hospitality.
     </p>
     <div class="flex flex-col sm:flex-row gap-4 justify-center items-center max-w-md mx-auto">
-      <Button href="/reservations" size="lg" class="w-full sm:w-auto" label='Reserve' variant='outline'>
-      </Button>
+      <Link href="/reservations" size="lg" class="w-full sm:w-auto" label='Reserve' variant='outline'>
     </div>
   </div>
 </section>

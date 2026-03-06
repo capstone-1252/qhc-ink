@@ -1,7 +1,7 @@
 ---
 // src/components/layout/Header.astro
 import logomark from '../../assets/logomark.svg'; 
-import Button from '../ui/Button.astro';
+import Link from '../ui/Link.astro';
 
 interface Props {
     links: {
@@ -29,6 +29,6 @@ const {links} = Astro.props as Props;
                 </li>
             ))}
         </ul>
-        <Button href="/reservations" class="ml-4" label='Reservations'/>
+        <Link href="/reservations" class="ml-4" label='Reservations'/>
     </nav>
 </header>
