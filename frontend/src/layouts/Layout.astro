@@ -20,16 +20,8 @@ const actualTitle = title ? `${title} | Little Wolf Restaurant` : 'Little Wolf R
         <meta name="generator" content={Astro.generator} />
         <title>{actualTitle}</title>
     </head>
-    <body class="antialiased bg-gray-50">
-            <slot /> <!-- all page content would inject here -->
-        
-        
+    <body>
+        <slot /> <!-- all page content would inject here -->
         <Footer />
     </body>
 </html>
-
-<style>
-    html {
-        scroll-behavior: smooth;
-    }
-</style>
