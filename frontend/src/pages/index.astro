@@ -1,22 +1,25 @@
 ---
-
 import '../styles/global.css';
 import Layout from '../layouts/Layout.astro';
+import Header from '../components/layout/Header.astro';
 import Hero from '../components/blocks/Hero.astro';
 import OurStory from '../components/blocks/OurStory.astro';
 import OurCuisine from '../components/blocks/OurCuisine.astro';
 import FoodBankDinner from '../components/blocks/FoodBankDinner.astro';
+import FAQS from '../components/blocks/FAQS.astro';
+import InstagramFeed from '../components/ui/InstagramFeed.astro';
 
-
+const IndexLinks = [
+    {label: 'Food Bank', url: '/food-bank'},
+    {label: 'Menu', url: '/menu'}
+]
 ---
 
-<Layout>
-<Hero />
-<OurStory />
-<OurCuisine />
-<FoodBankDinner />
-
+<Layout title="Little Wolf Restaurant - Home">
+  <Header links={IndexLinks}/>
+  <Hero />
+  <OurStory />
+  <OurCuisine />
+  <FoodBankDinner />
+  <FAQS />
 </Layout>
-
-
-
