@@ -9,14 +9,14 @@ import FoodBankDinner from '../components/blocks/FoodBankDinner.astro';
 import FAQS from '../components/blocks/FAQS.astro';
 import InstagramFeed from '../components/ui/InstagramFeed.astro';
 
-const indexLinks = [
+const IndexLinks = [
     {label: 'Food Bank', url: '/food-bank'},
     {label: 'Menu', url: '/menu'}
 ]
 ---
 
 <Layout title="Little Wolf Restaurant - Home">
-  <Header links={indexLinks}/>
+  <Header links={IndexLinks}/>
   <Hero />
   <OurStory />
   <OurCuisine />

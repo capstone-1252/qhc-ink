@@ -1,5 +1,25 @@
 ---
-
 //this will be our food bank dinner page
 
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/layout/Header.astro';
+import ReserveSeat from '../components/blocks/ReserveSeat.astro';
+
+//which links will be passed into the header component: 
+const MenuLinks = [
+    {
+        label: 'Home',
+        url: '/'},
+    {
+        label: 'Menu',
+        url: '/menu'
+    }
+
+]
 ---
+
+<Layout title='Little Wolf Restaurant - Food Bank'>
+<Header links={MenuLinks} />
+<ReserveSeat /> <!-- will have client:load if we are inserting the upcoming date for the dinner -->
+<!-- editable content components inserted here -->
+</Layout>
