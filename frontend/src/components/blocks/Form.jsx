@@ -7,13 +7,31 @@
 
 
 import { useState } from 'react';
+import { useEffect } from 'react';
 import * as Form from '@radix-ui/react-form';
+import { getFoodBankTimeSlots } from '../../lib/strapi';
 
 export default function CreateFoodBankForm() {
   const [step, setStep] = useState(1);
   const [serverErrors, setServerErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState('idle');
+  const [timeSlots, setTimeSlots] = useState([]);
+
+//fetch food bank seating time
+useEffect(() => {
+  async function loadTimeSlots() {
+    try {
+      const slots = await getFoodBankTimeSlots();     
+      setTimeSlots(sortedSlots);
+    } catch (error) {
+      console.error('Failed to load time slots:', error);
+      setServerErrors({ general: 'Failed to load available times' });
+    }
+  }
+  loadTimeSlots();
+}, []);
+
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -25,7 +43,7 @@ export default function CreateFoodBankForm() {
     // Your function currently expects: { data: { name, email... } }
     // But your fetch sends: { data: { data: { ... } } }
     // Let's adjust to match the function signature we wrote:
-       const payload = {
+    const payload = {
       name: data.name,
       email: data.email,
       phone: data.phone,
@@ -182,9 +200,8 @@ export default function CreateFoodBankForm() {
             <Form.Control asChild>
               <select name="seating" required>
                 <option value="">Select...</option>
-                <option value="indoor">Indoor</option>
-                <option value="outdoor">Outdoor</option>
-                <option value="either">Either</option>
+                <option value="indoor">Bar Top</option>
+                <option value="outdoor">Bar Bottom</option>
               </select>
             </Form.Control>
           </Form.Field>
@@ -203,6 +220,37 @@ export default function CreateFoodBankForm() {
               </select>
             </Form.Control>
           </Form.Field>
+
+          <Form.Field name="time" serverInvalid={!!serverErrors.time}>
+          <Form.Label>Preferred Time *</Form.Label>
+          <Form.Message match="valueMissing">Required</Form.Message>
+          <Form.Control asChild>
+            <select name="time" required disabled={!time}>
+              <option value="">Select time for {time || 'selected time'}...</option>
+              {timeSlots.map(slot => (
+        <option key={slot.id} value={slot.attributes.time}>
+          {slot.attributes.time}
+        </option>
+      ))}
+      </select>
+          </Form.Control>
+        </Form.Field>
+
+        <Form.Field name="time" serverInvalid={!!serverErrors.time}>
+  <Form.Label>Preferred Time *</Form.Label>
+  <Form.Message match="valueMissing">Required</Form.Message>
+  <Form.Control asChild>
+    <select name="time" required>
+      <option value="">Select time...</option>
+      {timeSlots.map(slot => (
+        <option key={slot.id} value={slot.attributes.time}>
+          {slot.attributes.time}
+        </option>
+      ))}
+    </select>
+  </Form.Control>
+</Form.Field>
+
 
           <Form.Field name="size" serverInvalid={!!serverErrors.size}>
             <div>
