@@ -3,19 +3,18 @@ import Link from '../ui/Link.astro';
 
 ---
 
-
-<section class="cuisine-section py-24 px-4 max-w-7xl mx-auto" role="region" aria-labelledby="cuisine-heading">
-  <div class="text-center mb-20">
-    <h2 id="cuisine-heading" class="text-4xl md:text-5xl font-black text-gray-900 mb-6">
+<section role="region" aria-labelledby="cuisine-heading">
+  <div>
+    <h2 id="cuisine-heading">
       Our Cuisine
     </h2>
-    <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+    <p>
       Seasonal ingredients, masterful technique, unforgettable flavor.
     </p>
   </div>
   
-  <div class="max-w-4xl mx-auto mb-16">
-    <div class="prose prose-lg mx-auto text-gray-700 leading-relaxed">
+  <div>
+    <div>
       <p>
         Our cuisine celebrates Alberta's finest seasonal ingredients, transformed through classical techniques 
         and modern innovation. Each plate reflects our commitment to flavor harmony and visual artistry.
@@ -26,11 +25,10 @@ import Link from '../ui/Link.astro';
     </div>
   </div>
 
-  <div class="grid md:grid-cols-3 gap-6 mb-16">
+  <div>
     <img 
       src="/slide-1.webp" 
       alt="Wood-fired steak with seasonal vegetables - Little Wolf signature dish"
-      class="w-full h-64 object-cover rounded-2xl shadow-lg hover:scale-105 transition-transform duration-300"
       loading="lazy"
       width="400"
       height="256"
@@ -38,7 +36,6 @@ import Link from '../ui/Link.astro';
     <img 
       src="/slide-2.webp" 
       alt="House-made pasta with foraged mushrooms and truffle"
-      class="w-full h-64 object-cover rounded-2xl shadow-lg hover:scale-105 transition-transform duration-300"
       loading="lazy"
       width="400"
       height="256"
@@ -46,18 +43,13 @@ import Link from '../ui/Link.astro';
     <img 
       src="/slide-3.webp" 
       alt="Artisanal dessert featuring local berries and housemade gelato"
-      class="w-full h-64 object-cover rounded-2xl shadow-lg hover:scale-105 transition-transform duration-300"
       loading="lazy"
       width="400"
       height="256"
     >
   </div>
 
-  <div class="text-center">
-    <Link label="View Menu"
-    size='lg'
-    class="shadow-xl hover:shadow-2xl w-full md:w-auto max-w-xs"
-    />
+  <div>
+    <Link label="View Menu" size='lg' />
   </div>
 </section>
-

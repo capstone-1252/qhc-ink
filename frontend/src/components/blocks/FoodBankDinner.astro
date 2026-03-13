@@ -3,38 +3,35 @@
 import Link from '../ui/Link.astro';
 ---
 
-<section class="foodbank-section py-24 px-4 max-w-6xl mx-auto" aria-labelledby="foodbank-heading">
-  <div class="grid md:grid-cols-2 gap-12 lg:gap-20 items-center">
+<section aria-labelledby="foodbank-heading">
+  <div>
     <!-- Text Content -->
-    <div class="space-y-6 order-2 md:order-1">
-      <h2 id="foodbank-heading" class="text-4xl md:text-5xl font-black text-gray-900 mb-6 leading-tight">
+    <div>
+      <h2 id="foodbank-heading">
         Food Bank Dinner
       </h2>
-      <p class="text-lg md:text-xl text-gray-700 leading-relaxed">
+      <p>
         Join us for our annual Food Bank Dinner, a special evening where every reservation directly supports 
         our community's fight against hunger. Your dining experience makes a meaningful difference.
       </p>
-      <div class="pt-4">
+      <div>
         <Link 
           href="/food-bank" 
           size="lg" 
-          class="shadow-xl hover:shadow-2xl w-full md:w-auto max-w-xs"
           label='Save Your Seat'
         >
       </div>
     </div>
     
     <!-- Image -->
-    <div class="relative order-1 md:order-2">
+    <div>
       <img 
         src="/slide-3.webp" 
         alt=""
-        class="w-full object-cover"
         loading="lazy"
         width="600"
         height="400"
       >
-      <div class="absolute -inset-2 bg-linear-to-r from-amber-500/10 via-transparent to-orange-500/10 rounded-3xl -z-10"></div>
     </div>
   </div>
 </section>
