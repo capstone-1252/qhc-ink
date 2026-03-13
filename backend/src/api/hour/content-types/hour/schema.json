@@ -1,0 +1,43 @@
+{
+  "kind": "singleType",
+  "collectionName": "hours",
+  "info": {
+    "singularName": "hour",
+    "pluralName": "hours",
+    "displayName": "Hours"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "monday": {
+      "type": "string",
+      "default": "closed"
+    },
+    "tuesday": {
+      "type": "string",
+      "default": "closed"
+    },
+    "wednesday": {
+      "type": "string",
+      "default": "5pm-11pm"
+    },
+    "thursday": {
+      "type": "string",
+      "default": "5pm-11pm"
+    },
+    "friday": {
+      "type": "string",
+      "default": "5pm-1am"
+    },
+    "saturday": {
+      "type": "string",
+      "default": "5pm-1am"
+    },
+    "sunday": {
+      "type": "string",
+      "default": "5pm-11pm"
+    }
+  }
+}

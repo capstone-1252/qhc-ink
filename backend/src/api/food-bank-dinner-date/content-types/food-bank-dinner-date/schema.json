@@ -1,0 +1,23 @@
+{
+  "kind": "singleType",
+  "collectionName": "food_bank_dinner_dates",
+  "info": {
+    "singularName": "food-bank-dinner-date",
+    "pluralName": "food-bank-dinner-dates",
+    "displayName": "FoodBankDinnerDate"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "nextDate": {
+      "type": "date",
+      "required": true
+    },
+    "seatingFull": {
+      "type": "boolean",
+      "default": false
+    }
+  }
+}
