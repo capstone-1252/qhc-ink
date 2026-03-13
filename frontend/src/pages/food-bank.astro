@@ -4,6 +4,7 @@
 import Layout from '../layouts/Layout.astro';
 import Header from '../components/layout/Header.astro';
 import ReserveSeat from '../components/blocks/ReserveSeat.astro';
+import CreateFoodBankForm from '../components/blocks/Form';
 
 //which links will be passed into the header component: 
 const MenuLinks = [
@@ -22,4 +23,5 @@ const MenuLinks = [
 <Header links={MenuLinks} />
 <ReserveSeat /> <!-- will have client:load if we are inserting the upcoming date for the dinner -->
 <!-- editable content components inserted here -->
+<CreateFoodBankForm client:load/>
 </Layout>

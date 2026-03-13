@@ -77,17 +77,16 @@ const options = {
 import Link from '../ui/Link.astro';
 ---
 
-<section class="hero relative overflow-hidden bg-linear-to-r from-gray-900 via-stone-900 to-black py-32 md:py-40">
-  <div class="absolute inset-0 bg-black/40"></div>
-  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
-    <h2 class="text-4xl md:text-6xl lg:text-7xl font-black mb-6 drop-shadow-2xl">
+<section>
+  <div>
+    <h2>
       Little Wolf Restaurant
     </h2>
-    <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto opacity-95 drop-shadow-lg">
+    <p>
       Exceptional dining experiences with seasonal ingredients and timeless hospitality.
     </p>
-    <div class="flex flex-col sm:flex-row gap-4 justify-center items-center max-w-md mx-auto">
-      <Link href="/reservations" size="lg" class="w-full sm:w-auto" label='Reserve' variant='outline'>
+    <div>
+      <Link href="/reservations" size="lg" label='Reserve' variant='outline'>
     </div>
   </div>
 </section>
