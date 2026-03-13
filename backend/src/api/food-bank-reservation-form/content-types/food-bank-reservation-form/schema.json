@@ -1,0 +1,51 @@
+{
+  "kind": "collectionType",
+  "collectionName": "food_bank_reservation_forms",
+  "info": {
+    "singularName": "food-bank-reservation-form",
+    "pluralName": "food-bank-reservation-forms",
+    "displayName": "FoodBankReservationForm"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "seating": {
+      "type": "enumeration",
+      "required": true,
+      "enum": [
+        "bartop",
+        "diningroom"
+      ]
+    },
+    "time": {
+      "type": "string",
+      "required": true
+    },
+    "partySize": {
+      "type": "integer",
+      "required": true,
+      "min": 1,
+      "max": 12
+    },
+    "Name": {
+      "type": "string",
+      "maxLength": 50,
+      "required": true
+    },
+    "email": {
+      "type": "email",
+      "required": true,
+      "unique": true
+    },
+    "phone": {
+      "type": "string",
+      "maxLength": 20,
+      "required": true
+    },
+    "allergies": {
+      "type": "text"
+    }
+  }
+}

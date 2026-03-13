@@ -4,7 +4,7 @@
   "info": {
     "singularName": "food-bank-time-slot",
     "pluralName": "food-bank-time-slots",
-    "displayName": "FoodBankSeatingTimes"
+    "displayName": "FoodBankTimeSlot"
   },
   "options": {
     "draftAndPublish": true
