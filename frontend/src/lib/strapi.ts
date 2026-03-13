@@ -18,26 +18,49 @@ async function fetchStrapi(endpoint: string) {
 
 //content-types/api::food-bank-time-slot.food-bank-time-slot
 export async function getFoodBankTimeSlots() {
-  const data = await fetchStrapi('/food-bank-time-slots?populate=');
+  const data = await fetchStrapi('/food-bank-time-slots?sort=order:asc');
   return data.data;
 }
 
-export async function getArticle(slug: string) {
-  const data = await fetchStrapi(`/articles?filters[slug][$eq]=${slug}&populate=`);
-  return data.data[0];
-}
-
-export async function getCategories() {
-  const data = await fetchStrapi('/categories?populate=');
+export async function getMenuItems() {
+  const data = await fetchStrapi('/menu-items?populate=');
   return data.data;
 }
 
-export async function getAuthors() {
-  const data = await fetchStrapi('/authors?populate=');
+export async function getMenuCategories() {
+  const data = await fetchStrapi('/menu-categories?populate=');
   return data.data;
 }
 
-export async function getGlobal() {
-  const data = await fetchStrapi('/global?populate=*');
+export async function getFaqs() {
+  const data = await fetchStrapi('/faqs?sort=order:asc');
   return data.data;
-} 
+}
+
+export async function getHours() {
+  const data = await fetchStrapi('/hours');
+  return data.data;
+}
+
+export async function getFoodBankDinnerDate() {
+  const data = await fetchStrapi('/food-bank-dinner-date');
+  return data.data;
+}
+
+
+export async function submitReservation(formData: object) {
+  const response = await fetch(`${STRAPI_URL}/api/food-bank-reservation-forms`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${STRAPI_TOKEN}`,
+    },
+    body: JSON.stringify({ data: formData }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Reservation submission failed: ${response.status}`);
+  }
+
+  return response.json();
+}
