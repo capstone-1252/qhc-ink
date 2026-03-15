@@ -1,13 +1,11 @@
-const STRAPI_URL = import.meta.env.STRAPI_URL;
-const STRAPI_TOKEN = import.meta.env.STRAPI_TOKEN;
+//you can expose this because its got read only permissions
+
+const STRAPI_URL = import.meta.env.PUBLIC_STRAPI_URL;
+
 
 async function fetchStrapi(endpoint: string) {
-  const response = await fetch(`${STRAPI_URL}/api${endpoint}`, {
-    headers: {
-      Authorization: `Bearer ${STRAPI_TOKEN}`,
-    },
-  });
-
+  const response = await fetch(`${STRAPI_URL}/api${endpoint}`);
+   //NO calling the Strapi.t
   if (!response.ok) {
     throw new Error(`Strapi error: ${response.status} on ${endpoint}`);
   }
@@ -47,20 +45,3 @@ export async function getFoodBankDinnerDate() {
   return data.data;
 }
 
-
-export async function submitReservation(formData: object) {
-  const response = await fetch(`${STRAPI_URL}/api/food-bank-reservation-forms`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${STRAPI_TOKEN}`,
-    },
-    body: JSON.stringify({ data: formData }),
-  });
-
-  if (!response.ok) {
-    throw new Error(`Reservation submission failed: ${response.status}`);
-  }
-
-  return response.json();
-}

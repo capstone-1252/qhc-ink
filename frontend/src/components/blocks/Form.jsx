@@ -3,7 +3,6 @@
 //form will be multi-levelled. 
 //currently, I will build form logic before making specific form ui components and implementing them
 
-//useState
 
 
 import { useState } from 'react';
@@ -11,19 +10,18 @@ import { useEffect } from 'react';
 import * as Form from '@radix-ui/react-form';
 import { getFoodBankTimeSlots } from '../../lib/strapi';
 
-export default function CreateFoodBankForm() {
+export default function CreateFoodBankForm({ timeSlots = []}) {
   const [step, setStep] = useState(1);
   const [serverErrors, setServerErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState('idle');
-  const [timeSlots, setTimeSlots] = useState([]);
 
-//fetch food bank seating time
+/* //fetch food bank seating time
 useEffect(() => {
   async function loadTimeSlots() {
     try {
       const slots = await getFoodBankTimeSlots();     
-      setTimeSlots(sortedSlots);
+      setTimeSlots(slots);
     } catch (error) {
       console.error('Failed to load time slots:', error);
       setServerErrors({ general: 'Failed to load available times' });
@@ -31,7 +29,7 @@ useEffect(() => {
   }
   loadTimeSlots();
 }, []);
-
+ */
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -130,7 +128,6 @@ useEffect(() => {
     }
   }
 
-  const totalSteps = 2;
 
   // --------------------------------------------------------------------------
   // RENDER
@@ -138,14 +135,17 @@ useEffect(() => {
   // Why: JSX defines what the user sees
   // Note: Radix UI Form components provide accessible form semantics
   // --------------------------------------------------------------------------
+// src/components/blocks/Form.jsx
+
+  const totalSteps = 2;
 
   return (
     <Form.Root onSubmit={handleSubmit} onClearServerErrors={() => setServerErrors({})}>
-      <div>
+      <div className="step-indicator">
         <div>Step {step} of {totalSteps}</div>
-        <div>
-          <div>{step === 1 ? '1' : ''}</div>
-          <div>{step === 2 ? '2' : ''}</div>
+        <div className="steps">
+          <div className={step === 1 ? 'active' : ''}>1</div>
+          <div className={step === 2 ? 'active' : ''}>2</div>
         </div>
       </div>
 
@@ -181,6 +181,7 @@ useEffect(() => {
               <input type="tel" name="phone" required minLength={10} />
             </Form.Control>
           </Form.Field>
+
           <Form.Field name="note">
             <Form.Label>Questions or Concerns</Form.Label>
             <Form.Control asChild>
@@ -206,6 +207,7 @@ useEffect(() => {
             </Form.Control>
           </Form.Field>
 
+        {/* data does not come in slot.attributes, data comes as flat objects w/o attributes wrapper data : id: ,  */}
           <Form.Field name="time" serverInvalid={!!serverErrors.time}>
             <div>
               <Form.Label>Preferred Time *</Form.Label>
@@ -213,45 +215,15 @@ useEffect(() => {
             </div>
             <Form.Control asChild>
               <select name="time" required>
-                <option value="">Select...</option>
-                <option value="morning">Morning</option>
-                <option value="afternoon">Afternoon</option>
-                <option value="evening">Evening</option>
+                <option value="">Select time...</option>
+                {timeSlots.map(slot => (
+                  <option key={slot.id} value={slot.time}>
+                    {slot.time}
+                  </option>
+                ))}
               </select>
             </Form.Control>
           </Form.Field>
-
-          <Form.Field name="time" serverInvalid={!!serverErrors.time}>
-          <Form.Label>Preferred Time *</Form.Label>
-          <Form.Message match="valueMissing">Required</Form.Message>
-          <Form.Control asChild>
-            <select name="time" required disabled={!time}>
-              <option value="">Select time for {time || 'selected time'}...</option>
-              {timeSlots.map(slot => (
-        <option key={slot.id} value={slot.attributes.time}>
-          {slot.attributes.time}
-        </option>
-      ))}
-      </select>
-          </Form.Control>
-        </Form.Field>
-
-        <Form.Field name="time" serverInvalid={!!serverErrors.time}>
-  <Form.Label>Preferred Time *</Form.Label>
-  <Form.Message match="valueMissing">Required</Form.Message>
-  <Form.Control asChild>
-    <select name="time" required>
-      <option value="">Select time...</option>
-      {timeSlots.map(slot => (
-        <option key={slot.id} value={slot.attributes.time}>
-          {slot.attributes.time}
-        </option>
-      ))}
-    </select>
-  </Form.Control>
-</Form.Field>
-
-
           <Form.Field name="size" serverInvalid={!!serverErrors.size}>
             <div>
               <Form.Label>Group Size *</Form.Label>
@@ -264,14 +236,14 @@ useEffect(() => {
         </>
       )}
 
-      <div>
+      <div className="form-actions">
         {step > 1 && (
-          <button type="button" onClick={() => setStep(step - 1)}>
+          <button type="button" onClick={() => setStep(step - 1)} disabled={isSubmitting}>
             Back
           </button>
         )}
         {step < 2 ? (
-          <button type="button" onClick={() => setStep(step + 1)}>
+          <button type="button" onClick={() => setStep(step + 1)} disabled={isSubmitting}>
             Next
           </button>
         ) : (
@@ -284,53 +256,16 @@ useEffect(() => {
       </div>
 
       {submitStatus === 'success' && (
-        <div>Food bank request submitted successfully!</div>
+        <div className="success-message">Food bank request submitted successfully!</div>
       )}
       {submitStatus === 'error' && (
-        <div>Submission failed. Please try again.</div>
+        <div className="error-message">
+          {serverErrors.general || 'Submission failed. Please try again.'}
+        </div>
       )}
     </Form.Root>
   );
 }
-
-
-
-//my solution that i started on
-/* import { useState } from 'react';
-import Button from '../ui/Button.astro';
-
-export default function createFoodBankForm(userData, setUserData) {
-
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
-  const [note, setNote] = useState('');
-  const [seating, setSeating] = useState('');
-  const [time, setTime] = useState('');
-  const [size, setSize] = useState('');
-
-
-  const handleSubmit = (event) => {
- 
-
-  return
-    
-
-} */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

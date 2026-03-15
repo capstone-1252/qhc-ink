@@ -4,7 +4,13 @@
 import Layout from '../layouts/Layout.astro';
 import Header from '../components/layout/Header.astro';
 import ReserveSeat from '../components/blocks/ReserveSeat.astro';
-import CreateFoodBankForm from '../components/blocks/Form';
+
+// SERVER-SIDE: Fetch once, pass as prop
+import CreateFoodBankForm from '../components/blocks/Form.jsx';
+import { getFoodBankTimeSlots } from '../lib/strapi';
+
+const timeSlots = await getFoodBankTimeSlots();
+
 
 //which links will be passed into the header component: 
 const MenuLinks = [
@@ -23,5 +29,5 @@ const MenuLinks = [
 <Header links={MenuLinks} />
 <ReserveSeat /> <!-- will have client:load if we are inserting the upcoming date for the dinner -->
 <!-- editable content components inserted here -->
-<CreateFoodBankForm client:load/>
+<CreateFoodBankForm client:load timeSlots={timeSlots}/>
 </Layout>
