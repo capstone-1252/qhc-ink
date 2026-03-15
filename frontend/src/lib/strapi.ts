@@ -20,6 +20,33 @@ export async function getFoodBankTimeSlots() {
   return data.data;
 }
 
+// this returns
+/* 
+
+{"data":[
+  {
+  "id":2,
+  "documentId":"p5xmr0zk4gublmifcoew8we3",
+  "time":"6:00pm",
+  "order":1,
+  "createdAt":"2026-03-13T21:10:57.367Z",
+  "updatedAt":"2026-03-13T21:10:57.367Z",
+  "publishedAt":"2026-03-13T21:10:57.420Z"},
+  
+  {
+  "id":4,
+  "documentId":"g57hn4w0q9whxthm1dyh9tag",
+  "time":"8:00pm",
+  "order":2,
+  "createdAt":"2026-03-13T21:11:13.724Z",
+  "updatedAt":"2026-03-13T21:11:13.724Z",
+  "publishedAt":"2026-03-13T21:11:13.768Z"
+  }
+  ]     
+}
+
+*/
+
 export async function getMenuItems() {
   const data = await fetchStrapi('/menu-items?populate=');
   return data.data;

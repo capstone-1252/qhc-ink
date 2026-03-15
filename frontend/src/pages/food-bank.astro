@@ -6,7 +6,9 @@ import Header from '../components/layout/Header.astro';
 import ReserveSeat from '../components/blocks/ReserveSeat.astro';
 
 // SERVER-SIDE: Fetch once, pass as prop
+//import form
 import CreateFoodBankForm from '../components/blocks/Form.jsx';
+// import the api fetch request
 import { getFoodBankTimeSlots } from '../lib/strapi';
 
 const timeSlots = await getFoodBankTimeSlots();
@@ -28,6 +30,6 @@ const MenuLinks = [
 <Layout title='Little Wolf Restaurant - Food Bank'>
 <Header links={MenuLinks} />
 <ReserveSeat /> <!-- will have client:load if we are inserting the upcoming date for the dinner -->
-<!-- editable content components inserted here -->
+<!-- function CreateFoodBankForm requires timeSlots as a prop -->
 <CreateFoodBankForm client:load timeSlots={timeSlots}/>
 </Layout>

@@ -6,30 +6,16 @@
 
 
 import { useState } from 'react';
-import { useEffect } from 'react';
 import * as Form from '@radix-ui/react-form';
-import { getFoodBankTimeSlots } from '../../lib/strapi';
 
-export default function CreateFoodBankForm({ timeSlots = []}) {
+// timeSlots = an array
+export default function CreateFoodBankForm({ timeSlots }) {
   const [step, setStep] = useState(1);
   const [serverErrors, setServerErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState('idle');
 
-/* //fetch food bank seating time
-useEffect(() => {
-  async function loadTimeSlots() {
-    try {
-      const slots = await getFoodBankTimeSlots();     
-      setTimeSlots(slots);
-    } catch (error) {
-      console.error('Failed to load time slots:', error);
-      setServerErrors({ general: 'Failed to load available times' });
-    }
-  }
-  loadTimeSlots();
-}, []);
- */
+
 
   async function handleSubmit(event) {
     event.preventDefault();
