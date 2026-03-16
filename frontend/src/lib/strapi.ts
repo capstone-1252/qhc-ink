@@ -63,7 +63,7 @@ export async function getFaqs() {
 }
 
 export async function getHours() {
-  const data = await fetchStrapi('/hours');
+  const data = await fetchStrapi('/hour');
   return data.data;
 }
 

@@ -193,7 +193,7 @@ export default function CreateFoodBankForm({ timeSlots }) {
             </Form.Control>
           </Form.Field>
 
-        {/* data does not come in slot.attributes, data comes as flat objects w/o attributes wrapper data : id: ,  */}
+        {/* data does not comes in an ARRAY, so we are handling that array when we put in timeSlots.map. (timeSlots and slot are not JSON values, but our own placeholders to handle each instance). Id and time are keys from the key-value pairs in each object of the array.  */}
           <Form.Field name="time" serverInvalid={!!serverErrors.time}>
             <div>
               <Form.Label>Preferred Time *</Form.Label>
