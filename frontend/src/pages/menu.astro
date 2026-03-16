@@ -1,21 +1,83 @@
 ---
-//this will be our menu page
+// this will be our menu page
 import Layout from '../layouts/Layout.astro';
 import Header from '../components/layout/Header.astro';
+import { getMenuCategories } from '../lib/strapi';
+import { getMenuItems } from '../lib/strapi';
 
-//which links will be passed into the header component: 
+type MenuCategory = {
+  id: number;
+  name: string;
+  order: number;
+  type: "food" | "drink";
+};
+
+type MenuItem = {
+  id: number;
+  name: string;
+  price?: number;
+  drinkPriceGlass?: number | null;
+  drinkPriceBottle?: number | null;
+  type: string;
+  menu_category?: {
+    name: string;
+  };
+};
+
+const menuCategories: MenuCategory[] = await getMenuCategories();
+const menuItems: MenuItem[] = await getMenuItems();
+
+// split categories
+const foodCategories = menuCategories
+  .filter((category) => category.type === "food")
+  .sort((a,b) => a.order - b.order);
+
+const drinkCategories = menuCategories
+  .filter((category) => category.type === "drink")
+  .sort((a,b) => a.order - b.order);
+
+// header links
 const MenuLinks = [
-    {label: 'Home',
-    url: '/'},
-    {
-        label: 'Food Bank',
-        url: '/food-bank'
-    }
-
-]
+  { label: 'Home', url: '/' },
+  { label: 'Food Bank', url: '/food-bank' }
+];
 ---
 
-<Layout title='Little Wolf Restaurant - Menu'>
+<Layout title="Little Wolf Restaurant - Menu">
 <Header links={MenuLinks} />
-<!-- editable content components inserted here -->
+
+<h2>Menu</h2>
+
+<h3>Food</h3>
+
+{foodCategories.map((category) => (
+  <div>
+    <h4>{category.name}</h4>
+
+    {menuItems
+      .filter((item) => item.menu_category?.name === category.name)
+      .map((item) => (
+        <p>{item.name} - ${item.price}</p>
+      ))}
+  </div>
+))}
+
+<h3>Drinks</h3>
+
+{drinkCategories.map((category) => (
+  <div>
+    <h4>{category.name}</h4>
+
+    {menuItems
+      .filter((item) => item.menu_category?.name === category.name)
+      .map((item) => (
+        <p>
+          {item.name}
+          {item.drinkPriceGlass && ` - Glass $${item.drinkPriceGlass}`}
+          {item.drinkPriceBottle && ` / Bottle $${item.drinkPriceBottle}`}
+        </p>
+      ))}
+  </div>
+))}
+
 </Layout>

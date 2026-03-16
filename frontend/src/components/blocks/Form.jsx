@@ -37,55 +37,48 @@ export default function CreateFoodBankForm({ timeSlots }) {
       size: data.size
     };
 
-    // ------------------------------------------------------------------------
+
     // STEP 3: SET LOADING STATES
-    // ------------------------------------------------------------------------
     // Why: Disable button, clear previous errors, show "Submitting..."
     // Security: Prevents user from submitting multiple times while waiting
-    // ------------------------------------------------------------------------
+
     setIsSubmitting(true);
     setSubmitStatus('idle');
     setServerErrors({});
 
     try {
-      // ----------------------------------------------------------------------
+  
       // STEP 4: SEND DATA TO NETLIFY FUNCTION
-      // ----------------------------------------------------------------------
       // Why: This is where the actual submission happens
       // Note: URL must match function filename: submit-food-bank.js
       // Security: Token is in function, NOT in this browser code
-      // ----------------------------------------------------------------------
+  
       const response = await fetch('/.netlify/functions/submit-food-bank', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
 
-      // ----------------------------------------------------------------------
+  
       // STEP 5: PARSE RESPONSE
-      // ----------------------------------------------------------------------
       // Why: Function returns JSON, we need to read it
       // Note: Always await .json() even if you expect success
-      // ----------------------------------------------------------------------
+  
       const result = await response.json();
 
-      // ----------------------------------------------------------------------
+  
       // STEP 6: HANDLE SUCCESS
-      // ----------------------------------------------------------------------
       // Why: Reset form, show success message, return to step 1
       // Note: response.ok is true for status codes 200-299
-      // ----------------------------------------------------------------------
+  
       if (response.ok) {
         setSubmitStatus('success');
         event.currentTarget.reset(); // Clear all form inputs
         setStep(1); // Return to first step
       } else {
-        // --------------------------------------------------------------------
         // STEP 7: HANDLE ERRORS FROM FUNCTION
-        // --------------------------------------------------------------------
         // Why: Function may return validation errors or Strapi failures
         // Note: Store error message to display to user
-        // --------------------------------------------------------------------
         if (result.error) {
           setServerErrors({ general: result.error });
         } else {
@@ -94,33 +87,28 @@ export default function CreateFoodBankForm({ timeSlots }) {
         setSubmitStatus('error');
       }
     } catch (error) {
-      // ----------------------------------------------------------------------
+  
       // STEP 8: HANDLE NETWORK ERRORS
-      // ----------------------------------------------------------------------
       // Why: Internet could be down, function could timeout, etc.
       // Security: Don't expose raw error to user (could leak info)
-      // ----------------------------------------------------------------------
+  
       console.error("Network error:", error); // Log for debugging
       setSubmitStatus('error');
       setServerErrors({ general: 'Network error. Please try again.' });
     } finally {
-      // ----------------------------------------------------------------------
+  
       // STEP 9: ALWAYS RESET LOADING STATE
-      // ----------------------------------------------------------------------
       // Why: Whether success or failure, we're done submitting
       // Note: finally() runs even if there's an error
-      // ----------------------------------------------------------------------
+  
       setIsSubmitting(false);
     }
   }
 
 
-  // --------------------------------------------------------------------------
   // RENDER
-  // --------------------------------------------------------------------------
   // Why: JSX defines what the user sees
   // Note: Radix UI Form components provide accessible form semantics
-  // --------------------------------------------------------------------------
 // src/components/blocks/Form.jsx
 
   const totalSteps = 2;
