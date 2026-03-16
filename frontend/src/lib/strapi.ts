@@ -48,12 +48,12 @@ export async function getFoodBankTimeSlots() {
 */
 
 export async function getMenuItems() {
-  const data = await fetchStrapi('/menu-items?populate=');
+  const data = await fetchStrapi('/menu-items??populate=*');
   return data.data;
 }
 
 export async function getMenuCategories() {
-  const data = await fetchStrapi('/menu-categories?populate=');
+  const data = await fetchStrapi('/menu-categories?populate=*');
   return data.data;
 }
 
@@ -63,7 +63,7 @@ export async function getFaqs() {
 }
 
 export async function getHours() {
-  const data = await fetchStrapi('/hours');
+  const data = await fetchStrapi('/hour');
   return data.data;
 }
 
