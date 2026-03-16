@@ -126,7 +126,27 @@ exports.handler = async (event, context) => {
     // Note: process.env is available in serverless functions but NOT in browser
     // ------------------------------------------------------------------------
     const strapiUrl = process.env.STRAPI_API_URL;
-    const strapiToken = process.env.STRAPI_ADMIN_TOKEN;
+    const strapiToken = process.env.STRAPI_FORM_TOKEN;
+
+
+    //Why are the variables so low here...
+    
+/* export async function submitReservation(formData: object) {
+  const response = await fetch(`${STRAPI_URL}/api/food-bank-reservation-forms`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${STRAPI_TOKEN}`,
+    },
+    body: JSON.stringify({ data: formData }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Reservation submission failed: ${response.status}`);
+  }
+
+  return response.json();
+} */
 
     // ------------------------------------------------------------------------
     // STEP 10: VERIFY ENVIRONMENT VARIABLES EXIST

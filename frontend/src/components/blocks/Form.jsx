@@ -3,34 +3,18 @@
 //form will be multi-levelled. 
 //currently, I will build form logic before making specific form ui components and implementing them
 
-//useState
 
 
 import { useState } from 'react';
-import { useEffect } from 'react';
 import * as Form from '@radix-ui/react-form';
-import { getFoodBankTimeSlots } from '../../lib/strapi';
 
-export default function CreateFoodBankForm() {
+// timeSlots = an array
+export default function CreateFoodBankForm({ timeSlots }) {
   const [step, setStep] = useState(1);
   const [serverErrors, setServerErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState('idle');
-  const [timeSlots, setTimeSlots] = useState([]);
 
-//fetch food bank seating time
-useEffect(() => {
-  async function loadTimeSlots() {
-    try {
-      const slots = await getFoodBankTimeSlots();     
-      setTimeSlots(sortedSlots);
-    } catch (error) {
-      console.error('Failed to load time slots:', error);
-      setServerErrors({ general: 'Failed to load available times' });
-    }
-  }
-  loadTimeSlots();
-}, []);
 
 
   async function handleSubmit(event) {
@@ -53,55 +37,48 @@ useEffect(() => {
       size: data.size
     };
 
-    // ------------------------------------------------------------------------
+
     // STEP 3: SET LOADING STATES
-    // ------------------------------------------------------------------------
     // Why: Disable button, clear previous errors, show "Submitting..."
     // Security: Prevents user from submitting multiple times while waiting
-    // ------------------------------------------------------------------------
+
     setIsSubmitting(true);
     setSubmitStatus('idle');
     setServerErrors({});
 
     try {
-      // ----------------------------------------------------------------------
+  
       // STEP 4: SEND DATA TO NETLIFY FUNCTION
-      // ----------------------------------------------------------------------
       // Why: This is where the actual submission happens
       // Note: URL must match function filename: submit-food-bank.js
       // Security: Token is in function, NOT in this browser code
-      // ----------------------------------------------------------------------
+  
       const response = await fetch('/.netlify/functions/submit-food-bank', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
 
-      // ----------------------------------------------------------------------
+  
       // STEP 5: PARSE RESPONSE
-      // ----------------------------------------------------------------------
       // Why: Function returns JSON, we need to read it
       // Note: Always await .json() even if you expect success
-      // ----------------------------------------------------------------------
+  
       const result = await response.json();
 
-      // ----------------------------------------------------------------------
+  
       // STEP 6: HANDLE SUCCESS
-      // ----------------------------------------------------------------------
       // Why: Reset form, show success message, return to step 1
       // Note: response.ok is true for status codes 200-299
-      // ----------------------------------------------------------------------
+  
       if (response.ok) {
         setSubmitStatus('success');
         event.currentTarget.reset(); // Clear all form inputs
         setStep(1); // Return to first step
       } else {
-        // --------------------------------------------------------------------
         // STEP 7: HANDLE ERRORS FROM FUNCTION
-        // --------------------------------------------------------------------
         // Why: Function may return validation errors or Strapi failures
         // Note: Store error message to display to user
-        // --------------------------------------------------------------------
         if (result.error) {
           setServerErrors({ general: result.error });
         } else {
@@ -110,42 +87,39 @@ useEffect(() => {
         setSubmitStatus('error');
       }
     } catch (error) {
-      // ----------------------------------------------------------------------
+  
       // STEP 8: HANDLE NETWORK ERRORS
-      // ----------------------------------------------------------------------
       // Why: Internet could be down, function could timeout, etc.
       // Security: Don't expose raw error to user (could leak info)
-      // ----------------------------------------------------------------------
+  
       console.error("Network error:", error); // Log for debugging
       setSubmitStatus('error');
       setServerErrors({ general: 'Network error. Please try again.' });
     } finally {
-      // ----------------------------------------------------------------------
+  
       // STEP 9: ALWAYS RESET LOADING STATE
-      // ----------------------------------------------------------------------
       // Why: Whether success or failure, we're done submitting
       // Note: finally() runs even if there's an error
-      // ----------------------------------------------------------------------
+  
       setIsSubmitting(false);
     }
   }
 
-  const totalSteps = 2;
 
-  // --------------------------------------------------------------------------
   // RENDER
-  // --------------------------------------------------------------------------
   // Why: JSX defines what the user sees
   // Note: Radix UI Form components provide accessible form semantics
-  // --------------------------------------------------------------------------
+// src/components/blocks/Form.jsx
+
+  const totalSteps = 2;
 
   return (
     <Form.Root onSubmit={handleSubmit} onClearServerErrors={() => setServerErrors({})}>
-      <div>
+      <div className="step-indicator">
         <div>Step {step} of {totalSteps}</div>
-        <div>
-          <div>{step === 1 ? '1' : ''}</div>
-          <div>{step === 2 ? '2' : ''}</div>
+        <div className="steps">
+          <div className={step === 1 ? 'active' : ''}>1</div>
+          <div className={step === 2 ? 'active' : ''}>2</div>
         </div>
       </div>
 
@@ -181,6 +155,7 @@ useEffect(() => {
               <input type="tel" name="phone" required minLength={10} />
             </Form.Control>
           </Form.Field>
+
           <Form.Field name="note">
             <Form.Label>Questions or Concerns</Form.Label>
             <Form.Control asChild>
@@ -206,6 +181,7 @@ useEffect(() => {
             </Form.Control>
           </Form.Field>
 
+        {/* data does not comes in an ARRAY, so we are handling that array when we put in timeSlots.map. (timeSlots and slot are not JSON values, but our own placeholders to handle each instance). Id and time are keys from the key-value pairs in each object of the array.  */}
           <Form.Field name="time" serverInvalid={!!serverErrors.time}>
             <div>
               <Form.Label>Preferred Time *</Form.Label>
@@ -213,45 +189,15 @@ useEffect(() => {
             </div>
             <Form.Control asChild>
               <select name="time" required>
-                <option value="">Select...</option>
-                <option value="morning">Morning</option>
-                <option value="afternoon">Afternoon</option>
-                <option value="evening">Evening</option>
+                <option value="">Select time...</option>
+                {timeSlots.map(slot => (
+                  <option key={slot.id} value={slot.time}>
+                    {slot.time}
+                  </option>
+                ))}
               </select>
             </Form.Control>
           </Form.Field>
-
-          <Form.Field name="time" serverInvalid={!!serverErrors.time}>
-          <Form.Label>Preferred Time *</Form.Label>
-          <Form.Message match="valueMissing">Required</Form.Message>
-          <Form.Control asChild>
-            <select name="time" required disabled={!time}>
-              <option value="">Select time for {time || 'selected time'}...</option>
-              {timeSlots.map(slot => (
-        <option key={slot.id} value={slot.attributes.time}>
-          {slot.attributes.time}
-        </option>
-      ))}
-      </select>
-          </Form.Control>
-        </Form.Field>
-
-        <Form.Field name="time" serverInvalid={!!serverErrors.time}>
-  <Form.Label>Preferred Time *</Form.Label>
-  <Form.Message match="valueMissing">Required</Form.Message>
-  <Form.Control asChild>
-    <select name="time" required>
-      <option value="">Select time...</option>
-      {timeSlots.map(slot => (
-        <option key={slot.id} value={slot.attributes.time}>
-          {slot.attributes.time}
-        </option>
-      ))}
-    </select>
-  </Form.Control>
-</Form.Field>
-
-
           <Form.Field name="size" serverInvalid={!!serverErrors.size}>
             <div>
               <Form.Label>Group Size *</Form.Label>
@@ -264,14 +210,14 @@ useEffect(() => {
         </>
       )}
 
-      <div>
+      <div className="form-actions">
         {step > 1 && (
-          <button type="button" onClick={() => setStep(step - 1)}>
+          <button type="button" onClick={() => setStep(step - 1)} disabled={isSubmitting}>
             Back
           </button>
         )}
         {step < 2 ? (
-          <button type="button" onClick={() => setStep(step + 1)}>
+          <button type="button" onClick={() => setStep(step + 1)} disabled={isSubmitting}>
             Next
           </button>
         ) : (
@@ -284,53 +230,16 @@ useEffect(() => {
       </div>
 
       {submitStatus === 'success' && (
-        <div>Food bank request submitted successfully!</div>
+        <div className="success-message">Food bank request submitted successfully!</div>
       )}
       {submitStatus === 'error' && (
-        <div>Submission failed. Please try again.</div>
+        <div className="error-message">
+          {serverErrors.general || 'Submission failed. Please try again.'}
+        </div>
       )}
     </Form.Root>
   );
 }
-
-
-
-//my solution that i started on
-/* import { useState } from 'react';
-import Button from '../ui/Button.astro';
-
-export default function createFoodBankForm(userData, setUserData) {
-
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
-  const [note, setNote] = useState('');
-  const [seating, setSeating] = useState('');
-  const [time, setTime] = useState('');
-  const [size, setSize] = useState('');
-
-
-  const handleSubmit = (event) => {
- 
-
-  return
-    
-
-} */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

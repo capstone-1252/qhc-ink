@@ -3,8 +3,18 @@
 
 import Layout from '../layouts/Layout.astro';
 import Header from '../components/layout/Header.astro';
-import ReserveSeat from '../components/blocks/ReserveSeat.astro';
-import CreateFoodBankForm from '../components/blocks/Form';
+
+// SERVER-SIDE: Fetch once, pass as prop
+//import form
+import CreateFoodBankForm from '../components/blocks/Form.jsx';
+// import the api fetch request
+import { getFoodBankTimeSlots } from '../lib/strapi';
+import { getFoodBankDinnerDate } from '../lib/strapi';
+
+const timeSlots = await getFoodBankTimeSlots();
+
+const dinnerDate = await getFoodBankDinnerDate();
+
 
 //which links will be passed into the header component: 
 const MenuLinks = [
@@ -21,7 +31,23 @@ const MenuLinks = [
 
 <Layout title='Little Wolf Restaurant - Food Bank'>
 <Header links={MenuLinks} />
-<ReserveSeat /> <!-- will have client:load if we are inserting the upcoming date for the dinner -->
-<!-- editable content components inserted here -->
-<CreateFoodBankForm client:load/>
+
+<section>
+    <h2>Reserve Your Seat</h2>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Asperiores nostrum, nisi explicabo ipsa nam totam corporis provident eaque, accusamus odit velit earum labore doloribus, dignissimos magni voluptate sunt id at. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quod assumenda modi cum voluptates id voluptatum unde odio dolor eius praesentium iste maxime atque perferendis deserunt, illo rem. Hic, ea est. Lorem ipsum, dolor sit amet consectetur adipisicing elit. Vel cum quae exercitationem nemo dolores? Voluptatibus maiores rem consequuntur fuga alias. Quod perspiciatis ut, minus cumque quas recusandae nisi tempore magni!</p>
+    
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas libero repudiandae natus minus fugit quos rerum, sit cum ipsam. Ut explicabo, architecto repellat culpa porro atque maxime dignissimos recusandae ipsa. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit sint ab provident sapiente. Obcaecati animi, esse eius rerum, nemo iusto expedita, atque quis culpa deleniti nam quos assumenda commodi illo?</p>
+</section>
+
+<div>
+    <p>Upcoming Dinner Date</p>
+    <p>{dinnerDate.nextDate}</p>
+
+</div>
+
+<div>
+<p>Important info regarding form. Lorem ipsum, dolor sit amet consectetur adipisicing elit. Repellendus excepturi expedita beatae architecto assumenda sapiente quos libero, itaque rerum adipisci, nesciunt laboriosam at aperiam doloremque deserunt facilis, officiis voluptatem quibusdam.</p>
+</div>
+<!-- function CreateFoodBankForm requires timeSlots as a prop -->
+<CreateFoodBankForm client:load timeSlots={timeSlots}/>
 </Layout>

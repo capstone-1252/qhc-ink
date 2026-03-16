@@ -1,5 +1,13 @@
 --- 
 import Map from "../ui/Map.astro"; 
+
+//fetch the api 
+import { getHours } from "../../lib/strapi.ts"
+
+//fetch hours
+const hours = await getHours();
+
+
 --- 
 
 <footer role="contentinfo">
@@ -12,10 +20,18 @@ import Map from "../ui/Map.astro";
       <div>
         <h2>Hours & Locations</h2>
         <div>
-          <p>Fetch Editable Content</p>
-          <address>
-            123 Wolf Street, Edmonton, AB T5J 2Z1
-          </address>
+          <!-- Here, there is only one object for hours. This object have several keys (monday, tuesday, wednesday) that we're calling -->
+          <h4>Hours</h4>
+          <ul>
+            <li>Monday: {hours.monday}</li>
+            <li>Tuesday: {hours.tuesday}</li>
+            <li>Wednesday: {hours.wednesday}</li>
+            <li>Thursday: {hours.thursday}</li>
+            <li>Friday: {hours.friday}</li>
+            <li>Saturday: {hours.saturday}</li>
+            <li>Sunday: {hours.sunday}</li>
+          </ul>
+          <p>123 Wolf Street, Edmonton, AB T5J 2Z1</p>
         </div>
       </div>
       
