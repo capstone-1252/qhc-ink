@@ -9,15 +9,32 @@
 
 // Export the handler function that Netlify will call on each request
 exports.handler = async (event, context) => {
+  console.log("FUNCTION HIT");
   // --------------------------------------------------------------------------
   // STEP 1: HTTP METHOD VALIDATION
   // --------------------------------------------------------------------------
   // Why: Prevents accidental GET requests or malicious DELETE/PUT attempts
   // Security: Only POST should ever reach this function
   // --------------------------------------------------------------------------
+    if (event.httpMethod === 'OPTIONS') {
+    return {
+      statusCode: 204, // No Content
+      headers: {
+        'Access-Control-Allow-Origin': '*', // Or your frontend URL
+        'Access-Control-Allow-Methods': 'POST, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type',
+      },
+    };
+  }
+
+  // Existing POST check here...
   if (event.httpMethod !== 'POST') {
     return {
-      statusCode: 405, // HTTP 405 = Method Not Allowed
+      statusCode: 405,
+      headers: {
+        'Allow': 'POST, OPTIONS',
+        'Access-Control-Allow-Origin': '*',
+      },
       body: JSON.stringify({ error: 'Method Not Allowed' }),
     };
   }
@@ -36,9 +53,10 @@ exports.handler = async (event, context) => {
     // ------------------------------------------------------------------------
     // Why: Your React form sends a flat object { name, email, phone... }
     //      We extract these to validate and then repackage for Strapi
-    // Note: Fields marked with ? are optional (note in this case)
+    // Note: Fields marked with ? are optional (allergies in this case)
     // ------------------------------------------------------------------------
-    const { name, email, phone, note, seating, time, size } = payload;
+    const { 
+      Name, email, phone, allergies, seating, time, partySize } = payload;
 
     // ------------------------------------------------------------------------
     // STEP 4: VALIDATE REQUIRED FIELDS
@@ -47,9 +65,12 @@ exports.handler = async (event, context) => {
     // Security: Reduces spam and malformed data in your database
     // Note: We check for falsy values (empty strings, null, undefined)
     // ------------------------------------------------------------------------
-    if (!name || !email || !phone || !seating || !time || !size) {
+    if (!Name || !email || !phone || !seating || !time || !partySize) {
       return {
         statusCode: 400, // HTTP 400 = Bad Request
+         headers: {
+       'Access-Control-Allow-Origin': '*',  // <- this is important
+      },
         body: JSON.stringify({ error: 'Missing required fields' }),
       };
     }
@@ -65,6 +86,9 @@ exports.handler = async (event, context) => {
     if (!emailRegex.test(email)) {
       return {
         statusCode: 400,
+           headers: {
+       'Access-Control-Allow-Origin': '*',  // <- this is important
+      },
         body: JSON.stringify({ error: 'Invalid email format' }),
       };
     }
@@ -80,22 +104,28 @@ exports.handler = async (event, context) => {
     if (phoneDigits.length < 10) {
       return {
         statusCode: 400,
+           headers: {
+       'Access-Control-Allow-Origin': '*',  // <- this is important
+      },
         body: JSON.stringify({ error: 'Invalid phone number' }),
       };
     }
 
     // ------------------------------------------------------------------------
-    // STEP 7: GROUP SIZE VALIDATION
+    // STEP 7: GROUP partySize VALIDATION
     // ------------------------------------------------------------------------
-    // Why: Ensures size is a positive integer
+    // Why: Ensures partySize is a positive integer
     // Security: Prevents negative numbers or strings that could break logic
     // Note: parseInt with radix 10 ensures base-10 interpretation
     // ------------------------------------------------------------------------
-    const groupSize = parseInt(size, 10);
+    const groupSize = parseInt(partySize, 10);
     if (isNaN(groupSize) || groupSize < 1) {
       return {
         statusCode: 400,
-        body: JSON.stringify({ error: 'Invalid group size' }),
+           headers: {
+       'Access-Control-Allow-Origin': '*',  // <- this is important
+      },
+        body: JSON.stringify({ error: 'Invalid group partySize' }),
       };
     }
 
@@ -108,13 +138,13 @@ exports.handler = async (event, context) => {
     // ------------------------------------------------------------------------
     const strapiData = {
       data: {
-        name,
+        Name,
         email,
         phone,
-        note: note || '', // Default to empty string if note is undefined
+        allergies: allergies || '', // Default to empty string if note is undefined
         seating,
         time,
-        size: groupSize, // Send as number, not string
+        partySize: groupSize, // Send as number, not string
       },
     };
 
@@ -125,7 +155,7 @@ exports.handler = async (event, context) => {
     // Security: These are injected by Netlify at runtime, not stored in repo
     // Note: process.env is available in serverless functions but NOT in browser
     // ------------------------------------------------------------------------
-    const strapiUrl = process.env.STRAPI_API_URL;
+    const strapiUrl = process.env.STRAPI_URL;
     const strapiToken = process.env.STRAPI_FORM_TOKEN;
 
 
@@ -159,6 +189,9 @@ exports.handler = async (event, context) => {
       console.error('Missing Strapi environment variables');
       return {
         statusCode: 500, // HTTP 500 = Internal Server Error
+           headers: {
+       'Access-Control-Allow-Origin': '*',  // <- this is important
+      },
         body: JSON.stringify({ error: 'Server configuration error' }),
       };
     }
@@ -170,7 +203,7 @@ exports.handler = async (event, context) => {
     // Security: Admin token is sent server-side, never exposed to browser
     // Note: Using fetch (built-in to Node.js 18+, which Netlify uses)
     // ------------------------------------------------------------------------
-    const response = await fetch(`${strapiUrl}/api/food-banks`, {
+    const response = await fetch(`${strapiUrl}/api/food-bank-reservation-forms`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json', // Tell Strapi we're sending JSON
@@ -184,13 +217,17 @@ exports.handler = async (event, context) => {
     // ------------------------------------------------------------------------
     // Why: Strapi might reject the request (validation, auth, rate limit)
     // Security: Don't expose Strapi's internal error messages to users
-    // Note: .catch() prevents crash if Strapi returns invalid JSON
+    // Note: .catch() presvents crash if Strapi returns invalid JSON
     // ------------------------------------------------------------------------
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
       console.error('Strapi error:', errorData); // Log for debugging
+      console.error('Strapi HTTP status:', response.status);
       return {
         statusCode: response.status, // Pass through Strapi's status code
+           headers: {
+       'Access-Control-Allow-Origin': '*',  // <- this is important
+      },
         body: JSON.stringify({ 
           error: errorData.error?.message || 'Strapi submission failed' 
         }),
@@ -214,6 +251,9 @@ exports.handler = async (event, context) => {
     // ------------------------------------------------------------------------
     return {
       statusCode: 200,
+         headers: {
+       'Access-Control-Allow-Origin': '*',  // <- this is important
+      },
       body: JSON.stringify({ success: true, data: result.data }),
     };
   } catch (error) {
@@ -227,6 +267,9 @@ exports.handler = async (event, context) => {
     console.error('Function error:', error);
     return {
       statusCode: 500,
+         headers: {
+       'Access-Control-Allow-Origin': '*',  // <- this is important
+      },
       body: JSON.stringify({ error: 'Internal server error' }),
     };
   }

@@ -15,26 +15,38 @@ export default function CreateFoodBankForm({ timeSlots }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState('idle');
 
+  const [formValues, setFormValues] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    note: '',
+    seating: '',
+    time: '',
+    partySize: ''
+  });
+
 
 
   async function handleSubmit(event) {
     event.preventDefault();
-    const formData = new FormData(event.currentTarget); //formData: This is a built-in browser API that creates an object containing all the form fields and their values. 
-    const data = Object.fromEntries(formData.entries()); // formData.entries returns key-value pairs which Object.fromEntries converts to an individual js object
+/*     const formData = new FormData(event.currentTarget); //formData: This is a built-in browser API that creates an object containing all the form fields and their values.
 
+    const data = Object.fromEntries(formData.entries()); // formData.entries returns key-value pairs which Object.fromEntries converts to an individual js object */
+
+    
 
     // Flatten the data if your function expects a flat object
     // Your function currently expects: { data: { name, email... } }
     // But your fetch sends: { data: { data: { ... } } }
     // Let's adjust to match the function signature we wrote:
     const payload = {
-      name: data.name,
-      email: data.email,
-      phone: data.phone,
-      note: data.note,
-      seating: data.seating,
-      time: data.time,
-      size: data.size
+      Name: formValues.Name,
+      email: formValues.email,
+      phone: formValues.phone,
+      note: formValues.note,
+      seating: formValues.seating,
+      time: formValues.time,
+      partySize: formValues.partySize
     };
 
 
@@ -73,7 +85,15 @@ export default function CreateFoodBankForm({ timeSlots }) {
   
       if (response.ok) {
         setSubmitStatus('success');
-        event.currentTarget.reset(); // Clear all form inputs
+        setFormValues({
+            Name: '',
+            email: '',
+            phone: '',
+            note: '',
+            seating: '',
+            time: '',
+            partySize: ''
+          }); // Clear all form inputs
         setStep(1); // Return to first step
       } else {
         // STEP 7: HANDLE ERRORS FROM FUNCTION
@@ -125,13 +145,18 @@ export default function CreateFoodBankForm({ timeSlots }) {
 
       {step === 1 && (
         <>
-          <Form.Field name="name" serverInvalid={!!serverErrors.name}>
+          <Form.Field name="Name" serverInvalid={!!serverErrors.Name}>
             <div>
               <Form.Label>Name *</Form.Label>
               <Form.Message match="valueMissing">Name required</Form.Message>
             </div>
             <Form.Control asChild>
-              <input name="name" required />
+              <input
+                Name="Name"
+                required
+                value={formValues.Name}
+                onChange={(e) => setFormValues({ ...formValues, Name: e.target.value })}
+              />
             </Form.Control>
           </Form.Field>
 
@@ -142,7 +167,13 @@ export default function CreateFoodBankForm({ timeSlots }) {
               <Form.Message match="typeMismatch">Invalid email</Form.Message>
             </div>
             <Form.Control asChild>
-              <input type="email" name="email" required />
+              <input
+                name="email"
+                type="email"
+                required
+                value={formValues.email}
+                onChange={(e) => setFormValues({ ...formValues, email: e.target.value })}
+              />
             </Form.Control>
           </Form.Field>
 
@@ -152,14 +183,26 @@ export default function CreateFoodBankForm({ timeSlots }) {
               <Form.Message match="valueMissing">Phone required</Form.Message>
             </div>
             <Form.Control asChild>
-              <input type="tel" name="phone" required minLength={10} />
+              <input
+                type="tel"
+                name="phone"
+                required
+                minLength={10}
+                value={formValues.phone}
+                onChange={(e) => setFormValues({ ...formValues, phone: e.target.value })}
+              />
             </Form.Control>
           </Form.Field>
 
           <Form.Field name="note">
             <Form.Label>Questions or Concerns</Form.Label>
             <Form.Control asChild>
-              <textarea name="note" rows={4} />
+              <textarea
+                name="note"
+                rows={4}
+                value={formValues.note}
+                onChange={(e) => setFormValues({ ...formValues, note: e.target.value })}
+              />
             </Form.Control>
           </Form.Field>
         </>
@@ -173,22 +216,33 @@ export default function CreateFoodBankForm({ timeSlots }) {
               <Form.Message match="valueMissing">Required</Form.Message>
             </div>
             <Form.Control asChild>
-              <select name="seating" required>
+              <select
+                name="seating"
+                required
+                value={formValues.seating}
+                onChange={(e) => setFormValues({ ...formValues, seating: e.target.value })}
+              >
                 <option value="">Select...</option>
-                <option value="indoor">Bar Top</option>
-                <option value="outdoor">Bar Bottom</option>
+                <option value="bartop">Bar Top</option>
+                <option value="diningroom">Dining Room</option>
               </select>
             </Form.Control>
           </Form.Field>
 
-        {/* data does not comes in an ARRAY, so we are handling that array when we put in timeSlots.map. (timeSlots and slot are not JSON values, but our own placeholders to handle each instance). Id and time are keys from the key-value pairs in each object of the array.  */}
           <Form.Field name="time" serverInvalid={!!serverErrors.time}>
             <div>
               <Form.Label>Preferred Time *</Form.Label>
               <Form.Message match="valueMissing">Required</Form.Message>
             </div>
+
+              {/* data does not comes in an ARRAY, so we are handling that array when we put in timeSlots.map. (timeSlots and slot are not JSON values, but our own placeholders to handle each instance). Id and time are keys from the key-value pairs in each object of the array.  */}
             <Form.Control asChild>
-              <select name="time" required>
+              <select
+                name="time"
+                required
+                value={formValues.time}
+                onChange={(e) => setFormValues({ ...formValues, time: e.target.value })}
+              >
                 <option value="">Select time...</option>
                 {timeSlots.map(slot => (
                   <option key={slot.id} value={slot.time}>
@@ -198,13 +252,21 @@ export default function CreateFoodBankForm({ timeSlots }) {
               </select>
             </Form.Control>
           </Form.Field>
-          <Form.Field name="size" serverInvalid={!!serverErrors.size}>
+
+          <Form.Field name="partySize" serverInvalid={!!serverErrors.partySize}>
             <div>
-              <Form.Label>Group Size *</Form.Label>
+              <Form.Label>Group partySize *</Form.Label>
               <Form.Message match="valueMissing">Required</Form.Message>
             </div>
             <Form.Control asChild>
-              <input type="number" name="size" min={1} required />
+              <input
+                type="number"
+                name="partySize"
+                min={1}
+                required
+                value={formValues.partySize}
+                onChange={(e) => setFormValues({ ...formValues, partySize: e.target.value })}
+              />
             </Form.Control>
           </Form.Field>
         </>
@@ -241,11 +303,8 @@ export default function CreateFoodBankForm({ timeSlots }) {
   );
 }
 
-
-
-
-
-
+      
+         
 
 
 
