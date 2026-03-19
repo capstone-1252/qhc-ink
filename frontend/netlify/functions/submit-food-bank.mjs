@@ -53,10 +53,10 @@ exports.handler = async (event, context) => {
     // ------------------------------------------------------------------------
     // Why: Your React form sends a flat object { name, email, phone... }
     //      We extract these to validate and then repackage for Strapi
-    // Note: Fields marked with ? are optional (allergies in this case)
+    // Note: Fields marked with ? are optional (note in this case)
     // ------------------------------------------------------------------------
     const { 
-      Name, email, phone, allergies, seating, time, partySize } = payload;
+      name, email, phone, note, seating, time, partySize } = payload;
 
     // ------------------------------------------------------------------------
     // STEP 4: VALIDATE REQUIRED FIELDS
@@ -65,7 +65,7 @@ exports.handler = async (event, context) => {
     // Security: Reduces spam and malformed data in your database
     // Note: We check for falsy values (empty strings, null, undefined)
     // ------------------------------------------------------------------------
-    if (!Name || !email || !phone || !seating || !time || !partySize) {
+    if (!name || !email || !phone || !seating || !time || !partySize) {
       return {
         statusCode: 400, // HTTP 400 = Bad Request
          headers: {
@@ -138,10 +138,10 @@ exports.handler = async (event, context) => {
     // ------------------------------------------------------------------------
     const strapiData = {
       data: {
-        Name,
+        name,
         email,
         phone,
-        allergies: allergies || '', // Default to empty string if note is undefined
+        note: note || '', // Default to empty string if note is undefined
         seating,
         time,
         partySize: groupSize, // Send as number, not string
