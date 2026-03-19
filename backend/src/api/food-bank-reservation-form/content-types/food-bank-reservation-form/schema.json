@@ -29,7 +29,7 @@
       "min": 1,
       "max": 12
     },
-    "Name": {
+    "name": {
       "type": "string",
       "maxLength": 50,
       "required": true
@@ -44,7 +44,7 @@
       "maxLength": 20,
       "required": true
     },
-    "allergies": {
+    "note": {
       "type": "text"
     }
   }
