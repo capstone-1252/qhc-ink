@@ -29,11 +29,7 @@ export default function CreateFoodBankForm({ timeSlots }) {
 
   async function handleSubmit(event) {
     event.preventDefault();
-/*     const formData = new FormData(event.currentTarget); //formData: This is a built-in browser API that creates an object containing all the form fields and their values.
-
-    const data = Object.fromEntries(formData.entries()); // formData.entries returns key-value pairs which Object.fromEntries converts to an individual js object */
-
-    
+  
 
     // Flatten the data if your function expects a flat object
     // Your function currently expects: { data: { name, email... } }
