@@ -48,7 +48,7 @@ export async function getFoodBankTimeSlots() {
 */
 
 export async function getMenuItems() {
-  const data = await fetchStrapi('/menu-items??populate=*');
+  const data = await fetchStrapi('/menu-items?populate=*');
   return data.data;
 }
 
