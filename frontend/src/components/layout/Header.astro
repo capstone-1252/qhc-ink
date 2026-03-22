@@ -1,141 +1,200 @@
 ---
-// src/components/layout/Header.astro
-import logomark from '../../assets/logomark.svg'; 
-import Link from '../ui/Link.astro';
+import logomark from '../../assets/logomark.svg';
 
-interface Props {
-    links: {
-        label: string;
-        url: string;
-    }[]
-}
-
-const {links} = Astro.props as Props; 
+const navLinks = [
+  { label: 'Menu', url: '/menu', external: false },
+  { label: 'Food Bank', url: '/food-bank', external: false },
+  // enable when we are ready: { label: 'Reservations', url: 'https://www.exploretock.com/little-wolf-restaurant', external: true },
+];
 ---
 
 <header>
-  <div>
-    <div>
-      <!-- Logo -->
-      <h1>
-        <a href="/">
-          <img src={logomark.src} alt="Little Wolf Restaurant logo" />
-        </a>
-      </h1>
+  <div class="header-inner">
 
-      <nav 
-        id="main-menu"
-        aria-label="Main navigation"
-        role="navigation"
-        >
-        <ul>
-          {links.map((link) => (
-            <li key={link.url}>
-              <a 
-                href={link.url}
-              >
-                {link.label}
-              </a>
-            </li>
-          ))}
-          <li>
-            <Link 
-              href="/reservations" 
-              label="Reservations" 
-            />
-          </li>
+    <h1 class="logo">
+      <a href="/">
+        <img src={logomark.src} alt="Little Wolf Restaurant home" />
+      </a>
+    </h1>
+
+    <nav 
+      id="main-menu"
+      class="main-nav"
+      aria-label="Main navigation"
+    >
+      <ul class="nav-list">
+        {navLinks.map((link) => (
           <li>
             <a 
-              href="https://instagram.com"
-              target="_blank" 
-              rel="noopener noreferrer"
-              aria-label="Instagram"
+              href={link.url}
+              target={link.external ? '_blank' : undefined}
+              rel={link.external ? 'noopener noreferrer' : undefined}
             >
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-instagram" viewBox="0 0 16 16">
-      <path d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.9 3.9 0 0 0-1.417.923A3.9 3.9 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.9 3.9 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.9 3.9 0 0 0-.923-1.417A3.9 3.9 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599s.453.546.598.92c.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.5 2.5 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.5 2.5 0 0 1-.92-.598 2.5 2.5 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233s.008-2.388.046-3.231c.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92s.546-.453.92-.598c.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92m-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217m0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334"/>
-              </svg>
+              {link.label}
             </a>
           </li>
-        </ul>
-      </nav>
+        ))}
+        <li>
+          <a 
+            href="https://www.instagram.com/littlewolfrestaurant/"
+            target="_blank" 
+            rel="noopener noreferrer"
+            aria-label="Little Wolf on Instagram"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+              <path d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.9 3.9 0 0 0-1.417.923A3.9 3.9 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.9 3.9 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.9 3.9 0 0 0-.923-1.417A3.9 3.9 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599s.453.546.598.92c.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.5 2.5 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.5 2.5 0 0 1-.92-.598 2.5 2.5 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233s.008-2.388.046-3.231c.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92s.546-.453.92-.598c.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92m-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217m0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334"/>
+            </svg>
+          </a>
+        </li>
+      </ul>
+    </nav>
 
-      <!-- Mobile menu toggle - VISIBLE ONLY ON MOBILE -->
-      <button
-        id="mobile-menu-button"
-        type="button"
-        aria-expanded="false"
-        aria-controls="main-menu"
-        aria-label="Toggle main menu"
-      >
-        <span class="sr-only">Toggle main menu</span>
-        <svg id="menu-icon-open" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-        </svg>
-        <svg id="menu-icon-closed" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-        </svg>
-      </button>
-    </div>
+    <button
+      id="mobile-menu-button"
+      class="mobile-toggle"
+      type="button"
+      aria-expanded="false"
+      aria-controls="main-menu"
+      aria-label="Toggle main menu"
+    >
+      <svg id="menu-icon-open" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+      </svg>
+      <svg id="menu-icon-closed" class="nav-hidden" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+
   </div>
 </header>
 
 <script>
-  // Wait for DOM to be ready
-  if (typeof document !== 'undefined') {
-    const button = document.getElementById('mobile-menu-button');
-    const menu = document.getElementById('main-menu');
-    const iconOpen = document.getElementById('menu-icon-open');
-    const iconClosed = document.getElementById('menu-icon-closed');
+  const button = document.getElementById('mobile-menu-button');
+  const menu = document.getElementById('main-menu');
+  const iconOpen = document.getElementById('menu-icon-open');
+  const iconClosed = document.getElementById('menu-icon-closed');
 
-    if (button && menu) {
-      button.addEventListener('click', () => {
-        const isExpanded = button.getAttribute('aria-expanded') === 'true';
-        
-        button.setAttribute('aria-expanded', (!isExpanded).toString());
-        iconOpen.classList.toggle('hidden');
-        iconClosed.classList.toggle('hidden');
-        
-        if (isExpanded) {
-          // Closing
-          menu.classList.add('hidden');
-          document.body.classList.remove('overflow-hidden');
-          button.focus();
-        } else {
-          // Opening
-          menu.classList.remove('hidden');
-          document.body.classList.add('overflow-hidden');
-          const firstLink = menu.querySelector('a');
-          firstLink?.focus();
-        }
-      });
+  if (button && menu) {
+    button.addEventListener('click', () => {
+      const isExpanded = button.getAttribute('aria-expanded') === 'true';
+      button.setAttribute('aria-expanded', (!isExpanded).toString());
+      iconOpen.classList.toggle('nav-hidden');
+      iconClosed.classList.toggle('nav-hidden');
+      menu.classList.toggle('nav-hidden');
+      document.body.classList.toggle('overflow-hidden');
+      if (!isExpanded) {
+        menu.querySelector('a')?.focus();
+      } else {
+        button.focus();
+      }
+    });
 
-      // Close on escape
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && button.getAttribute('aria-expanded') === 'true') {
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && button.getAttribute('aria-expanded') === 'true') {
+        button.click();
+      }
+    });
+
+    document.addEventListener('click', (e) => {
+      if (button.getAttribute('aria-expanded') === 'true' && 
+          !menu.contains(e.target) && !button.contains(e.target)) {
+        button.click();
+      }
+    });
+
+    menu.querySelectorAll('a[href]').forEach(link => {
+      link.addEventListener('click', () => {
+        if (button.getAttribute('aria-expanded') === 'true') {
           button.click();
         }
       });
-
-      // Close on outside click
-      document.addEventListener('click', (e) => {
-        if (button.getAttribute('aria-expanded') === 'true' && 
-            !menu.contains(e.target) && !button.contains(e.target)) {
-          button.click();
-        }
-      });
-
-      // Close on nav link click (mobile)
-      menu.querySelectorAll('a[href]').forEach(link => {
-        link.addEventListener('click', () => {
-          if (button.getAttribute('aria-expanded') === 'true') {
-            button.click();
-          }
-        });
-      });
-    }
+    });
   }
 </script>
 
 <style>
-  
+  header {
+    background-color: var(--color-espresso);
+    border-bottom: 1px solid var(--color-leather);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .header-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo {
+    margin: 0;
+    font-size: 1rem;
+  }
+
+  .logo img {
+    height: 50px;
+    width: auto;
+  }
+
+  .nav-list {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .nav-list a {
+    color: var(--color-cream);
+    font-family: var(--font-body);
+    font-weight: 500;
+    font-size: 1rem;
+    transition: color 0.2s;
+  }
+
+  .nav-list a:hover {
+    color: var(--color-rust);
+  }
+
+  .mobile-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--color-cream);
+    padding: 0.5rem;
+  }
+
+  .nav-hidden {
+    display: none;
+  }
+
+  @media (max-width: 768px) {
+    .mobile-toggle {
+      display: block;
+    }
+
+    .main-nav {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background-color: var(--color-espresso);
+      border-bottom: 1px solid var(--color-leather);
+      padding: 1rem 2rem;
+    }
+
+    .main-nav:not(.nav-hidden) {
+      display: block;
+    }
+
+    .nav-list {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+  }
 </style>
