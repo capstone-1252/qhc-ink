@@ -2,7 +2,7 @@
 
 import { z } from 'zod';
 
-const formSchema = z.object({
+export const formSchema = z.object({
   name: z.string().min(1, "Name required").max(70, "Name is too long"),
   email: z.email("Invalid email").min(1, "Email required"),
   phone: z.string()

@@ -39,6 +39,7 @@ exports.handler = async (event, context) => {
       headers: {
         'Allow': 'POST, OPTIONS',
         'Access-Control-Allow-Origin': '*',
+        
       },
       body: JSON.stringify({ error: 'Method Not Allowed' }),
     };
@@ -164,6 +165,7 @@ exports.handler = async (event, context) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json', // Tell Strapi we're sending JSON
+        'Access-Control-Allow-Origin': '*',
         Authorization: `Bearer ${strapiToken}`, // Authenticate with Strapi
       },
       body: JSON.stringify(strapiData), // Convert object to JSON string
