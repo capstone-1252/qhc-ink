@@ -11,23 +11,29 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
+/* import { z } from 'zod';*/
+import { formSchema } from '@/shared/schema.js'
 
-// STEP 1: Zod schema - ALL validation rules in ONE place
+
+
+/* // STEP 1: Zod schema - ALL validation rules in ONE place
 const formSchema = z.object({
-  name: z.string().min(1, "Name required").max(100, "Name too long"),
+  name: z.string().min(1, "Name required").max(70, "Name is too long"),
   email: z.email("Invalid email").min(1, "Email required"),
   phone: z.string()
-    .min(1, "Phone required")
-    .refine(phone => phone.replace(/\D/g, '').length >= 10, "Phone must be 10+ digits"),
+          .min(1, "Phone required")
+          .refine(
+      phone => {
+      const digits = phone.replace(/\D/g, '');
+      return digits.length === 10 || digits.length === 11;},
+      "Phone must be a valid phone number."),  
   note: z.string().optional(),
   seating: z.enum(["bartop", "diningroom"], { message: "Select seating preference" }),
   time: z.string().min(1, "Select time"),
   partySize: z.coerce
-    .number("Group size required")
-    .min(1, "Must be at least 1 person")
-    .max(20, "Max 20 people")
-});
+  .number()
+  .min(1, "Must be at least 1 person")
+}); */
 
 // timeSlots = an array (unchanged)
 export default function CreateFoodBankForm({ timeSlots }) {
@@ -60,7 +66,7 @@ export default function CreateFoodBankForm({ timeSlots }) {
 
   // STEP 4: Your EXACT fetch handler preserved (just gets data from form)
   async function onFormSubmit(data) {
-    console.log('✅ Form data validated by Zod:', data); // debug
+    console.log('Form data validated on client side:', data); // debug
     // STEP 3-9: Your exact payload + loading + fetch logic preserved
     const payload = {
       name: data.name,
