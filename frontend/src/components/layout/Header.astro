@@ -2,9 +2,8 @@
 import logomark from '../../assets/logomark.svg';
 
 const navLinks = [
-  { label: 'Menu', url: '/menu', external: false },
-  { label: 'Food Bank', url: '/food-bank', external: false },
-  // enable when we are ready: { label: 'Reservations', url: 'https://www.exploretock.com/little-wolf-restaurant', external: true },
+  { label: 'Menu', url: '/menu', external: false, isButton: false },
+  { label: 'Food Bank', url: '/food-bank', external: false, isButton: false },
 ];
 ---
 
@@ -22,6 +21,18 @@ const navLinks = [
       class="main-nav"
       aria-label="Main navigation"
     >
+      <!-- Mobile close button -->
+      <button
+        id="mobile-close-button"
+        class="mobile-close"
+        type="button"
+        aria-label="Close navigation menu"
+      >
+        <svg width="45" height="45" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+
       <ul class="nav-list">
         {navLinks.map((link) => (
           <li>
@@ -34,20 +45,44 @@ const navLinks = [
             </a>
           </li>
         ))}
-        <li>
-          <a 
-            href="https://www.instagram.com/littlewolfrestaurant/"
-            target="_blank" 
-            rel="noopener noreferrer"
-            aria-label="Little Wolf on Instagram"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
-              <path d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.9 3.9 0 0 0-1.417.923A3.9 3.9 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.9 3.9 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.9 3.9 0 0 0-.923-1.417A3.9 3.9 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599s.453.546.598.92c.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.5 2.5 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.5 2.5 0 0 1-.92-.598 2.5 2.5 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233s.008-2.388.046-3.231c.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92s.546-.453.92-.598c.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92m-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217m0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334"/>
-            </svg>
-          </a>
-        </li>
       </ul>
+
+      <!-- Mobile bottom bar -->
+      <div class="nav-footer">
+        <a 
+          href="https://maps.google.com/?q=Little+Wolf+Restaurant+Edmonton"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Find us on Google Maps"
+          class="map-link"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+            <circle cx="12" cy="10" r="3"/>
+          </svg>
+        </a>
+        <a 
+          href="https://www.exploretock.com/little-wolf-restaurant"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="reservations-link"
+        >
+          Reservations
+        </a>
+      </div>
     </nav>
+
+    <!-- Desktop reservations button -->
+    <a
+      href="https://www.exploretock.com/little-wolf-restaurant"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="reservations-link desktop-reservations"
+    >
+      Reservations
+    </a>
+
+    <div id="nav-overlay" class="nav-overlay"></div>
 
     <button
       id="mobile-menu-button"
@@ -57,11 +92,8 @@ const navLinks = [
       aria-controls="main-menu"
       aria-label="Toggle main menu"
     >
-      <svg id="menu-icon-open" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+      <svg width="45" height="45" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-      </svg>
-      <svg id="menu-icon-closed" class="nav-hidden" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
       </svg>
     </button>
 
@@ -70,44 +102,43 @@ const navLinks = [
 
 <script>
   const button = document.getElementById('mobile-menu-button');
+  const closeButton = document.getElementById('mobile-close-button');
   const menu = document.getElementById('main-menu');
-  const iconOpen = document.getElementById('menu-icon-open');
-  const iconClosed = document.getElementById('menu-icon-closed');
+  const overlay = document.getElementById('nav-overlay');
 
-  if (button && menu) {
+  function openMenu() {
+    button.setAttribute('aria-expanded', 'true');
+    menu.classList.add('nav-open');
+    overlay.classList.add('nav-open');
+    document.body.classList.add('overflow-hidden');
+    menu.querySelector('a')?.focus();
+  }
+
+  function closeMenu() {
+    button.setAttribute('aria-expanded', 'false');
+    menu.classList.remove('nav-open');
+    overlay.classList.remove('nav-open');
+    document.body.classList.remove('overflow-hidden');
+    button.focus();
+  }
+
+  if (button && menu && overlay) {
     button.addEventListener('click', () => {
       const isExpanded = button.getAttribute('aria-expanded') === 'true';
-      button.setAttribute('aria-expanded', (!isExpanded).toString());
-      iconOpen.classList.toggle('nav-hidden');
-      iconClosed.classList.toggle('nav-hidden');
-      menu.classList.toggle('nav-hidden');
-      document.body.classList.toggle('overflow-hidden');
-      if (!isExpanded) {
-        menu.querySelector('a')?.focus();
-      } else {
-        button.focus();
-      }
+      isExpanded ? closeMenu() : openMenu();
     });
+
+    closeButton?.addEventListener('click', closeMenu);
+    overlay.addEventListener('click', closeMenu);
 
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && button.getAttribute('aria-expanded') === 'true') {
-        button.click();
-      }
-    });
-
-    document.addEventListener('click', (e) => {
-      if (button.getAttribute('aria-expanded') === 'true' && 
-          !menu.contains(e.target) && !button.contains(e.target)) {
-        button.click();
+        closeMenu();
       }
     });
 
     menu.querySelectorAll('a[href]').forEach(link => {
-      link.addEventListener('click', () => {
-        if (button.getAttribute('aria-expanded') === 'true') {
-          button.click();
-        }
-      });
+      link.addEventListener('click', closeMenu);
     });
   }
 </script>
@@ -128,6 +159,7 @@ const navLinks = [
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 1rem;
   }
 
   .logo {
@@ -135,11 +167,11 @@ const navLinks = [
     font-size: 1rem;
   }
 
-   .logo img {
-      height: 55px;
-      width: auto;
-      filter: brightness(0) saturate(100%) invert(89%) sepia(14%) saturate(400%) hue-rotate(5deg) brightness(98%) contrast(90%);
-   }
+  .logo img {
+    height: 55px;
+    width: auto;
+    filter: brightness(0) saturate(100%) invert(89%) sepia(14%) saturate(400%) hue-rotate(5deg) brightness(98%) contrast(90%);
+  }
 
   .nav-list {
     display: flex;
@@ -159,6 +191,33 @@ const navLinks = [
     color: var(--color-rust);
   }
 
+  .reservations-link {
+    background-color: #C9A84C;
+    color: var(--color-espresso) !important;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 0.9rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.75rem 1.5rem;
+    border-radius: 2rem;
+    transition: background-color 0.2s;
+    white-space: nowrap;
+  }
+
+  .reservations-link:hover {
+    background-color: #b8963e;
+    color: var(--color-espresso) !important;
+  }
+
+  .desktop-reservations {
+    display: block;
+  }
+
+  .nav-footer {
+    display: none;
+  }
+
   .mobile-toggle {
     display: none;
     background: none;
@@ -168,7 +227,15 @@ const navLinks = [
     padding: 0.5rem;
   }
 
+  .mobile-close {
+    display: none;
+  }
+
   .nav-hidden {
+    display: none;
+  }
+
+  .nav-overlay {
     display: none;
   }
 
@@ -177,25 +244,106 @@ const navLinks = [
       display: block;
     }
 
-    .main-nav {
+    .desktop-reservations {
       display: none;
-      position: absolute;
-      top: 100%;
-      left: 0;
-      right: 0;
-      background-color: var(--color-espresso);
-      border-bottom: 1px solid var(--color-leather);
-      padding: 1rem 2rem;
     }
 
-    .main-nav:not(.nav-hidden) {
+    .main-nav {
+      position: fixed;
+      top: 0;
+      right: 0;
+      height: 100vh;
+      width: 280px;
+      background-color: var(--color-leather);
+      border-radius: 0 0 0 1.5rem;
+      transform: translateX(100%);
+      transition: transform 0.3s ease;
+      padding: 2rem;
+      z-index: 200;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .main-nav.nav-open {
+      transform: translateX(0);
+    }
+
+.mobile-close {
+  display: flex;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-cream);
+  padding: 0.5rem;
+  position: absolute;
+  top: 1rem;
+  right: 2rem;
+  z-index: 201;
+  align-items: center;
+  justify-content: center;
+}
+
+    .nav-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 199;
+    }
+
+    .nav-overlay.nav-open {
       display: block;
     }
 
     .nav-list {
       flex-direction: column;
-      align-items: flex-start;
-      gap: 1rem;
+      align-items: flex-end;
+      gap: 0;
+    }
+
+    .nav-list li:not(.nav-instagram) {
+      width: 100%;
+      border-bottom: 1px solid var(--color-rust);
+      padding: 1rem 0;
+      text-align: right;
+    }
+
+    .nav-instagram {
+      padding-top: 1rem;
+      width: 100%;
+      text-align: right;
+      border-bottom: 1px solid var(--color-rust);
+      padding-bottom: 1rem;
+    }
+
+    .nav-list a {
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+
+    .nav-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 1rem;
+    }
+
+    .map-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background-color: var(--color-cream);
+      color: var(--color-espresso);
+      transition: background-color 0.2s;
+    }
+
+    .map-link:hover {
+      background-color: var(--color-rust);
+      color: var(--color-cream);
     }
   }
 </style>
