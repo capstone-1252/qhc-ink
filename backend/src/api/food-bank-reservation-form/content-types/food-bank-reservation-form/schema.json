@@ -36,7 +36,7 @@
     "email": {
       "type": "email",
       "required": true,
-      "unique": true
+      "unique": false
     },
     "phone": {
       "type": "string",
