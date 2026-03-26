@@ -8,7 +8,7 @@
 // 6. Native HTML labels + error messages = accessible by default
 // 7. className fixed (was "classname")
 
-
+import styles from './Form.module.css';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -20,20 +20,32 @@ function ConfirmModal({ isOpen, onClose, onConfirm, isSubmitting }) {
   if (!isOpen) return null;
 
   return (
-    <div onClick={onClose}>
-      <div onClick={(e) => e.stopPropagation()}>
+   <div className={styles.modalOverlay} onClick={onClose}>
+      <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
         <h2>Confirm Submission</h2>
         <p>Are you sure you want to submit?</p>
 
         <p>All the other confirmation/explanation text that goes here.</p>
 
-        <button type="button" onClick={onClose} disabled={isSubmitting}>
-          Back
-        </button>
+        <div className={styles.modalActions}>
+          <button 
+            type="button" 
+            onClick={onClose} 
+            disabled={isSubmitting}
+            className={`${styles.btn} ${styles.btnSecondary}`}
+          >
+            Back
+          </button>
 
-        <button type="button" onClick={onConfirm} disabled={isSubmitting}>
-          {isSubmitting ? 'Submitting...' : 'Submit'}
-        </button>
+          <button 
+            type="button" 
+            onClick={onConfirm} 
+            disabled={isSubmitting}
+            className={`${styles.btn} ${styles.btnPrimary} ${isSubmitting ? styles.btnLoading : ''}`}
+          >
+            {isSubmitting ? 'Submitting...' : 'Submit'}
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -105,7 +117,6 @@ export default function CreateFoodBankForm({ timeSlots }) {
 
       if (response.ok) {
         setSubmitStatus('success');
-        reset(); // Form reset (replaces manual setFormValues)
         window.location.href = '/confirmation'; 
       } else {
         if (result.error) {
@@ -141,216 +152,196 @@ export default function CreateFoodBankForm({ timeSlots }) {
 
   return (
     // STEP 6: Native form (Radix removed, fully accessible)
-    <form onSubmit={handleSubmit(onFormSubmit)} noValidate>
+    <form onSubmit={handleSubmit(onFormSubmit)} className={styles.container} noValidate>
       {/* Step indicator (className fixed) */}
-      <div className="step-indicator">
-        <div>Step {step} of {totalSteps}</div>
-        <div className="steps">
-          <div className={step === 1 ? 'active' : ''}>1</div>
-          <div className={step === 2 ? 'active' : ''}>2</div>
-        </div>
-      </div>
 
+  <div className={styles.stepIndicator}>
+    <div>Step {step} of {totalSteps}</div>
+    <div className={styles.steps}>
+      <div className={step === 1 ? styles.active : ''}>1</div>
+      <div className={step === 2 ? styles.active : ''}>2</div>
+    </div>
+  </div>
 
-      {/* STEP 1 FIELDS */}
-      {step === 1 && (
-        <>
-          {/* Name field - Zod errors display automatically */}
-          <div>
-            <label htmlFor="name">Name *</label>
-            <input
-              id="name"
-              type="text"
-              {...form.register("name")}
-              aria-invalid={!!errors.name}
-              aria-describedby={errors.name ? "name-error" : undefined}
-            />
-            {errors.name && (
-              <p id="name-error" className="error" role="alert">
-                {errors.name.message}
-              </p>
-            )}
-          </div>
-
-
-          {/* Email field */}
-          <div>
-            <label htmlFor="email">Email *</label>
-            <input
-              id="email"
-              type="email"
-              {...form.register("email")}
-              aria-invalid={!!errors.email}
-              aria-describedby={errors.email ? "email-error" : undefined}
-            />
-            {errors.email && (
-              <p id="email-error" className="error" role="alert">
-                {errors.email.message}
-              </p>
-            )}
-          </div>
-
-
-          {/* Phone field */}
-          <div>
-            <label htmlFor="phone">Phone *</label>
-            <input
-              id="phone"
-              type="tel"
-              {...form.register("phone")}
-              aria-invalid={!!errors.phone}
-              aria-describedby={errors.phone ? "phone-error" : undefined}
-            />
-            {errors.phone && (
-              <p id="phone-error" className="error" role="alert">
-                {errors.phone.message}
-              </p>
-            )}
-          </div>
-
-
-          {/* Note field (optional) */}
-          <div>
-            <label htmlFor="note">Questions or Concerns</label>
-            <textarea
-              id="note"
-              rows={4}
-              {...form.register("note")}
-            />
-          </div>
-        </>
-      )}
-
-
-      {/* STEP 2 FIELDS */}
-      {step === 2 && (
-        <>
-          {/* Seating field */}
-          <div>
-            <label htmlFor="seating">Seating Preference *</label>
-            <select
-              id="seating"
-              {...form.register("seating")}
-              aria-invalid={!!errors.seating}
-              aria-describedby={errors.seating ? "seating-error" : undefined}
-            >
-              <option value="">Select...</option>
-              <option value="bartop">Bar Top</option>
-              <option value="diningroom">Dining Room</option>
-            </select>
-            {errors.seating && (
-              <p id="seating-error" className="error" role="alert">
-                {errors.seating.message}
-              </p>
-            )}
-          </div>
-
-
-          {/* Time field - timeSlots unchanged */}
-          <div>
-            <label htmlFor="time">Preferred Time *</label>
-            <select
-              id="time"
-              {...form.register("time")}
-              aria-invalid={!!errors.time}
-              aria-describedby={errors.time ? "time-error" : undefined}
-            >
-              <option value="">Select time...</option>
-              {timeSlots.map(slot => (
-                <option key={slot.id} value={slot.time}>
-                  {slot.time}
-                </option>
-              ))}
-            </select>
-            {errors.time && (
-              <p id="time-error" className="error" role="alert">
-                {errors.time.message}
-              </p>
-            )}
-          </div>
-
-
-          {/* Party Size field */}
-          <div>
-            <label htmlFor="partySize">Group Size *</label>
-            <input
-              id="partySize"
-              type="number"
-              min={1}
-              {...form.register("partySize")}
-              aria-invalid={!!errors.partySize}
-              aria-describedby={errors.partySize ? "partySize-error" : undefined}
-            />
-            {errors.partySize && (
-              <p id="partySize-error" className="error" role="alert">
-                {errors.partySize.message}
-              </p>
-            )}
-          </div>
-        </>
-      )}
-
-
-      {/* Buttons - Next validates current step */}
-      <div className="form-actions">
-        {step > 1 && (
-          <button 
-            type="button" 
-            onClick={() => setStep(step - 1)} 
-            disabled={isSubmitting}
-          >
-            Back
-          </button>
-        )}
-        
-        {step < 2 ? (
-          <button
-            type="button"
-            onClick={async () => {
-              const isValid = await validateCurrentStep();
-              if (isValid) setStep(step + 1);
-            }}
-            disabled={isSubmitting}
-          >
-            Next
-          </button>
-        ) : (
-          <button
-            type="button"
-            onClick={async () => {
-              const isValid = await validateCurrentStep();
-              if (isValid) setShowConfirmModal(true);
-            }}
-            disabled={isSubmitting}
-          >
-            Submit
-          </button>
+  {/* STEP 1 */}
+  {step === 1 && (
+    <>
+      <div className={styles.fieldWrapper}>
+        <label htmlFor="name">Name *</label>
+        <input
+          id="name"
+          type="text"
+          className={`${styles.formInput} ${errors.name ? styles.formInputError : ''}`}
+          {...form.register("name")}
+        />
+        {errors.name && (
+          <p className={styles.validationError}>
+            {errors.name.message}
+          </p>
         )}
       </div>
 
+      <div className={styles.fieldWrapper}>
+        <label htmlFor="email">Email *</label>
+        <input
+          id="email"
+          type="email"
+          className={`${styles.formInput} ${errors.email ? styles.formInputError : ''}`}
+          {...form.register("email")}
+        />
+        {errors.email && (
+          <p className={styles.validationError}>
+            {errors.email.message}
+          </p>
+        )}
+      </div>
 
-      {/* Your existing status messages (unchanged) */}
-      {submitStatus === 'success' && (
-        <div className="success-message">Food bank request submitted successfully!</div>
-      )}
-      {submitStatus === 'error' && (
-        <div className="error-message">
-          {serverErrors.general || 'Submission failed. Please try again.'}
-        </div>
-      )}
+      <div className={styles.fieldWrapper}>
+        <label htmlFor="phone">Phone *</label>
+        <input
+          id="phone"
+          type="tel"
+          className={`${styles.formInput} ${errors.phone ? styles.formInputError : ''}`}
+          {...form.register("phone")}
+        />
+        {errors.phone && (
+          <p className={styles.validationError}>
+            {errors.phone.message}
+          </p>
+        )}
+      </div>
 
-      <ConfirmModal
-        isOpen={showConfirmModal}
-        onClose={() => setShowConfirmModal(false)}
-        onConfirm={() => {
-          setShowConfirmModal(false);
-          // Get current form values directly
-          const data = form.getValues(); 
-          onFormSubmit(data);
+      <div className={styles.fieldWrapper}>
+        <label htmlFor="note">Questions or Concerns</label>
+        <textarea
+          id="note"
+          rows={4}
+          className={`${styles.formInput} ${styles.textarea}`}
+          {...form.register("note")}
+        />
+      </div>
+    </>
+  )}
+
+  {/* STEP 2 */}
+  {step === 2 && (
+    <>
+      <div className={styles.fieldWrapper}>
+        <label htmlFor="seating">Seating Preference *</label>
+        <select
+          id="seating"
+          className={styles.selectField}
+          {...form.register("seating")}
+        >
+          <option value="">Select...</option>
+          <option value="bartop">Bar Top</option>
+          <option value="diningroom">Dining Room</option>
+        </select>
+        {errors.seating && (
+          <p className={styles.validationError}>
+            {errors.seating.message}
+          </p>
+        )}
+      </div>
+
+      <div className={styles.fieldWrapper}>
+        <label htmlFor="time">Preferred Time *</label>
+        <select
+          id="time"
+          className={styles.selectField}
+          {...form.register("time")}
+        >
+          <option value="">Select time...</option>
+          {timeSlots.map(slot => (
+            <option key={slot.id} value={slot.time}>
+              {slot.time}
+            </option>
+          ))}
+        </select>
+        {errors.time && (
+          <p className={styles.validationError}>
+            {errors.time.message}
+          </p>
+        )}
+      </div>
+
+      <div className={styles.fieldWrapper}>
+        <label htmlFor="partySize">Party Size *</label>
+        <input
+          id="partySize"
+          type="number"
+          min={1}
+          className={`${styles.formInput} ${errors.partySize ? styles.formInputError : ''}`}
+          {...form.register("partySize")}
+        />
+        {errors.partySize && (
+          <p className={styles.validationError}>
+            {errors.partySize.message}
+          </p>
+        )}
+      </div>
+    </>
+  )}
+
+  {/* Buttons */}
+  <div className={styles.formActions}>
+    {step > 1 && (
+      <button 
+        type="button" 
+        className={`${styles.btn} ${styles.btnSecondary}`}
+        onClick={() => setStep(step - 1)} 
+        disabled={isSubmitting}
+      >
+        Back
+      </button>
+    )}
+    
+    {step < 2 ? (
+      <button
+        type="button"
+        className={`${styles.btn} ${styles.btnPrimary}`}
+        onClick={async () => {
+          const isValid = await validateCurrentStep();
+          if (isValid) setStep(step + 1);
         }}
-        isSubmitting={isSubmitting}
-      />    
-</form>
+        disabled={isSubmitting}
+      >
+        Next
+      </button>
+    ) : (
+      <button
+        type="button"
+        className={`${styles.btn} ${styles.btnPrimary} ${isSubmitting ? styles.btnLoading : ''}`}
+        onClick={async () => {
+          const isValid = await validateCurrentStep();
+          if (isValid) setShowConfirmModal(true);
+        }}
+        disabled={isSubmitting}
+      >
+        {isSubmitting ? 'Submitting...' : 'Submit'}
+      </button>
+    )}
+  </div>
+
+  {/* Status */}
+  {submitStatus === 'error' && (
+    <div className={styles.errorMessage}>
+      {serverErrors.general || 'Submission failed. Please try again.'}
+    </div>
+  )}
+
+  <ConfirmModal
+    isOpen={showConfirmModal}
+    onClose={() => setShowConfirmModal(false)}
+    onConfirm={() => {
+      setShowConfirmModal(false);
+      const data = form.getValues(); 
+      onFormSubmit(data);
+    }}
+    isSubmitting={isSubmitting}
+  />    
+  
+  </form>
   );
 }
 
