@@ -142,30 +142,30 @@
   cursor: not-allowed;
 }
 
-.btn--primary {
+.btnPrimary {
   background: #3b82f6;
   color: white;
 }
 
-.btn--primary:hover:not(:disabled) {
+.btnPrimary:hover:not(:disabled) {
   background: #2563eb;
 }
 
-.btn--secondary {
+.btnSecondary {
   background: #e5e7eb;
   color: #374151;
 }
 
-.btn--secondary:hover:not(:disabled) {
+.btnSecondary:hover:not(:disabled) {
   background: #d1d5db;
 }
 
-.btn--loading {
+.btnLoading {
   position: relative;
   color: transparent;
 }
 
-.btn--loading::after {
+.btnLoading::after {
   content: "";
   position: absolute;
   left: 50%;

@@ -52,7 +52,6 @@ function ConfirmModal({ isOpen, onClose, onConfirm, isSubmitting }) {
 }
 
 
-// timeSlots = an array (unchanged)
 export default function CreateFoodBankForm({ timeSlots }) {
   // STEP 2: React Hook Form replaces ALL manual state + validation
   const form = useForm({
@@ -139,8 +138,8 @@ export default function CreateFoodBankForm({ timeSlots }) {
   // STEP 5: Step validation (only current step's fields)
   const validateCurrentStep = async () => {
     const fields = step === 1 
-      ? ['name', 'email', 'phone'] 
-      : ['seating', 'time', 'partySize'];
+      ? ['seating', 'time', 'partySize'] 
+      : ['name', 'email', 'phone'];
     
     const isValid = await trigger(fields); // Zod validates ONLY these fields
     return isValid;
@@ -165,66 +164,6 @@ export default function CreateFoodBankForm({ timeSlots }) {
 
   {/* STEP 1 */}
   {step === 1 && (
-    <>
-      <div className={styles.fieldWrapper}>
-        <label htmlFor="name">Name *</label>
-        <input
-          id="name"
-          type="text"
-          className={`${styles.formInput} ${errors.name ? styles.formInputError : ''}`}
-          {...form.register("name")}
-        />
-        {errors.name && (
-          <p className={styles.validationError}>
-            {errors.name.message}
-          </p>
-        )}
-      </div>
-
-      <div className={styles.fieldWrapper}>
-        <label htmlFor="email">Email *</label>
-        <input
-          id="email"
-          type="email"
-          className={`${styles.formInput} ${errors.email ? styles.formInputError : ''}`}
-          {...form.register("email")}
-        />
-        {errors.email && (
-          <p className={styles.validationError}>
-            {errors.email.message}
-          </p>
-        )}
-      </div>
-
-      <div className={styles.fieldWrapper}>
-        <label htmlFor="phone">Phone *</label>
-        <input
-          id="phone"
-          type="tel"
-          className={`${styles.formInput} ${errors.phone ? styles.formInputError : ''}`}
-          {...form.register("phone")}
-        />
-        {errors.phone && (
-          <p className={styles.validationError}>
-            {errors.phone.message}
-          </p>
-        )}
-      </div>
-
-      <div className={styles.fieldWrapper}>
-        <label htmlFor="note">Questions or Concerns</label>
-        <textarea
-          id="note"
-          rows={4}
-          className={`${styles.formInput} ${styles.textarea}`}
-          {...form.register("note")}
-        />
-      </div>
-    </>
-  )}
-
-  {/* STEP 2 */}
-  {step === 2 && (
     <>
       <div className={styles.fieldWrapper}>
         <label htmlFor="seating">Seating Preference *</label>
@@ -279,6 +218,69 @@ export default function CreateFoodBankForm({ timeSlots }) {
             {errors.partySize.message}
           </p>
         )}
+      </div>
+    </>
+    
+  )}
+
+  {/* STEP 2 */}
+  {step === 2 && (
+    
+
+    <>
+      <div className={styles.fieldWrapper}>
+        <label htmlFor="name">Name *</label>
+        <input
+          id="name"
+          type="text"
+          className={`${styles.formInput} ${errors.name ? styles.formInputError : ''}`}
+          {...form.register("name")}
+        />
+        {errors.name && (
+          <p className={styles.validationError}>
+            {errors.name.message}
+          </p>
+        )}
+      </div>
+
+      <div className={styles.fieldWrapper}>
+        <label htmlFor="email">Email *</label>
+        <input
+          id="email"
+          type="email"
+          className={`${styles.formInput} ${errors.email ? styles.formInputError : ''}`}
+          {...form.register("email")}
+        />
+        {errors.email && (
+          <p className={styles.validationError}>
+            {errors.email.message}
+          </p>
+        )}
+      </div>
+
+      <div className={styles.fieldWrapper}>
+        <label htmlFor="phone">Phone *</label>
+        <input
+          id="phone"
+          type="tel"
+          className={`${styles.formInput} ${errors.phone ? styles.formInputError : ''}`}
+          {...form.register("phone")}
+        />
+        {errors.phone && (
+          <p className={styles.validationError}>
+            {errors.phone.message}
+          </p>
+        )}
+      </div>
+
+      <div className={styles.fieldWrapper}>
+        <label htmlFor="note">Questions or Concerns</label>
+        <textarea
+          id="note"
+          rows={4}
+          className={`${styles.formInput} ${styles.textarea}`}
+          {...form.register("note")}
+        />
       </div>
     </>
   )}
