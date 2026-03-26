@@ -8,32 +8,37 @@
 // 6. Native HTML labels + error messages = accessible by default
 // 7. className fixed (was "classname")
 
+
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-/* import { z } from 'zod';*/
 import { formSchema } from '@/shared/schema.js'
 
 
+//this is my modal function
+function ConfirmModal({ isOpen, onClose, onConfirm, isSubmitting }) {
+  if (!isOpen) return null;
 
-/* // STEP 1: Zod schema - ALL validation rules in ONE place
-const formSchema = z.object({
-  name: z.string().min(1, "Name required").max(70, "Name is too long"),
-  email: z.email("Invalid email").min(1, "Email required"),
-  phone: z.string()
-          .min(1, "Phone required")
-          .refine(
-      phone => {
-      const digits = phone.replace(/\D/g, '');
-      return digits.length === 10 || digits.length === 11;},
-      "Phone must be a valid phone number."),  
-  note: z.string().optional(),
-  seating: z.enum(["bartop", "diningroom"], { message: "Select seating preference" }),
-  time: z.string().min(1, "Select time"),
-  partySize: z.coerce
-  .number()
-  .min(1, "Must be at least 1 person")
-}); */
+  return (
+    <div onClick={onClose}>
+      <div onClick={(e) => e.stopPropagation()}>
+        <h2>Confirm Submission</h2>
+        <p>Are you sure you want to submit?</p>
+
+        <p>All the other confirmation/explanation text that goes here.</p>
+
+        <button type="button" onClick={onClose} disabled={isSubmitting}>
+          Back
+        </button>
+
+        <button type="button" onClick={onConfirm} disabled={isSubmitting}>
+          {isSubmitting ? 'Submitting...' : 'Submit'}
+        </button>
+      </div>
+    </div>
+  );
+}
+
 
 // timeSlots = an array (unchanged)
 export default function CreateFoodBankForm({ timeSlots }) {
@@ -51,18 +56,23 @@ export default function CreateFoodBankForm({ timeSlots }) {
     }
   });
 
+
   const { 
     handleSubmit, 
-    formState: { errors, formIsSubmitting: formIsSubmitting }, 
+    formState: { errors, isSubmitting }, 
     trigger,
     reset 
   } = form;
+
+
 
   // STEP 3: Your existing states (unchanged)
   const [step, setStep] = useState(1);
   const [serverErrors, setServerErrors] = useState({});
   const [submitStatus, setSubmitStatus] = useState('idle');
-  /* const [formIsSubmitting, setIsSubmitting] = useState(false); */ // ← YOUR manual state
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  /* const [isSubmitting, setIsSubmitting] = useState(false); */ // ← YOUR manual state
+
 
   // STEP 4: Your EXACT fetch handler preserved (just gets data from form)
   async function onFormSubmit(data) {
@@ -77,10 +87,10 @@ export default function CreateFoodBankForm({ timeSlots }) {
       time: data.time,
       partySize: data.partySize
     };
+  
+      setSubmitStatus('idle');
+      setServerErrors({});
 
-/*     setIsSubmitting(true);
- */    setSubmitStatus('idle');
-    setServerErrors({});
 
     try {
       const response = await fetch('/.netlify/functions/submit-food-bank', {
@@ -89,12 +99,14 @@ export default function CreateFoodBankForm({ timeSlots }) {
         body: JSON.stringify(payload),
       });
 
+
       const result = await response.json();
+
 
       if (response.ok) {
         setSubmitStatus('success');
         reset(); // Form reset (replaces manual setFormValues)
-        setStep(1);
+        window.location.href = '/confirmation'; 
       } else {
         if (result.error) {
           setServerErrors({ general: result.error });
@@ -112,6 +124,7 @@ export default function CreateFoodBankForm({ timeSlots }) {
     } */
   }
 
+
   // STEP 5: Step validation (only current step's fields)
   const validateCurrentStep = async () => {
     const fields = step === 1 
@@ -122,7 +135,9 @@ export default function CreateFoodBankForm({ timeSlots }) {
     return isValid;
   };
 
+
   const totalSteps = 2;
+
 
   return (
     // STEP 6: Native form (Radix removed, fully accessible)
@@ -135,6 +150,7 @@ export default function CreateFoodBankForm({ timeSlots }) {
           <div className={step === 2 ? 'active' : ''}>2</div>
         </div>
       </div>
+
 
       {/* STEP 1 FIELDS */}
       {step === 1 && (
@@ -156,6 +172,7 @@ export default function CreateFoodBankForm({ timeSlots }) {
             )}
           </div>
 
+
           {/* Email field */}
           <div>
             <label htmlFor="email">Email *</label>
@@ -172,6 +189,7 @@ export default function CreateFoodBankForm({ timeSlots }) {
               </p>
             )}
           </div>
+
 
           {/* Phone field */}
           <div>
@@ -190,6 +208,7 @@ export default function CreateFoodBankForm({ timeSlots }) {
             )}
           </div>
 
+
           {/* Note field (optional) */}
           <div>
             <label htmlFor="note">Questions or Concerns</label>
@@ -201,6 +220,7 @@ export default function CreateFoodBankForm({ timeSlots }) {
           </div>
         </>
       )}
+
 
       {/* STEP 2 FIELDS */}
       {step === 2 && (
@@ -225,6 +245,7 @@ export default function CreateFoodBankForm({ timeSlots }) {
             )}
           </div>
 
+
           {/* Time field - timeSlots unchanged */}
           <div>
             <label htmlFor="time">Preferred Time *</label>
@@ -248,6 +269,7 @@ export default function CreateFoodBankForm({ timeSlots }) {
             )}
           </div>
 
+
           {/* Party Size field */}
           <div>
             <label htmlFor="partySize">Group Size *</label>
@@ -268,13 +290,14 @@ export default function CreateFoodBankForm({ timeSlots }) {
         </>
       )}
 
+
       {/* Buttons - Next validates current step */}
       <div className="form-actions">
         {step > 1 && (
           <button 
             type="button" 
             onClick={() => setStep(step - 1)} 
-            disabled={formIsSubmitting}
+            disabled={isSubmitting}
           >
             Back
           </button>
@@ -287,16 +310,24 @@ export default function CreateFoodBankForm({ timeSlots }) {
               const isValid = await validateCurrentStep();
               if (isValid) setStep(step + 1);
             }}
-            disabled={formIsSubmitting}
+            disabled={isSubmitting}
           >
             Next
           </button>
         ) : (
-          <button type="submit" disabled={formIsSubmitting}>
-            {formIsSubmitting ? 'Submitting...' : 'Create Food Bank'}
+          <button
+            type="button"
+            onClick={async () => {
+              const isValid = await validateCurrentStep();
+              if (isValid) setShowConfirmModal(true);
+            }}
+            disabled={isSubmitting}
+          >
+            Submit
           </button>
         )}
       </div>
+
 
       {/* Your existing status messages (unchanged) */}
       {submitStatus === 'success' && (
@@ -307,6 +338,19 @@ export default function CreateFoodBankForm({ timeSlots }) {
           {serverErrors.general || 'Submission failed. Please try again.'}
         </div>
       )}
-    </form>
+
+      <ConfirmModal
+        isOpen={showConfirmModal}
+        onClose={() => setShowConfirmModal(false)}
+        onConfirm={() => {
+          setShowConfirmModal(false);
+          // Get current form values directly
+          const data = form.getValues(); 
+          onFormSubmit(data);
+        }}
+        isSubmitting={isSubmitting}
+      />    
+</form>
   );
 }
+

@@ -1,0 +1,18 @@
+---
+import '../styles/global.css';
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/layout/Header.astro';
+
+const IndexLinks = [
+    {label: 'Food Bank', url: '/food-bank'},
+    {label: 'Menu', url: '/menu'}
+]
+---
+
+<Layout title="Little Wolf Restaurant - Home">
+  <Header links={IndexLinks}/>
+    <h1>Your Reservation has been Sent!</h1>
+    
+    <p>Please wait for an email from us for the next steps.</p>
+
+</Layout>
