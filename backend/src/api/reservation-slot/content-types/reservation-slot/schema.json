@@ -11,15 +11,32 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "food_bank_time_slot": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::food-bank-time-slot.food-bank-time-slot"
+    "slot_label": {
+      "type": "string",
+      "required": true
     },
-    "seating_type": {
+    "time": {
+      "type": "string",
+      "required": true
+    },
+    "seating": {
+      "type": "string",
+      "required": true
+    },
+    "order": {
+      "type": "integer",
+      "required": true
+    },
+    "available": {
+      "type": "boolean",
+      "required": true,
+      "default": true
+    },
+    "food_bank_reservation_forms": {
       "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::seating-type.seating-type"
+      "relation": "oneToMany",
+      "target": "api::food-bank-reservation-form.food-bank-reservation-form",
+      "mappedBy": "reservation_slot"
     }
   }
 }
