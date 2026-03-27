@@ -1,0 +1,25 @@
+{
+  "kind": "collectionType",
+  "collectionName": "reservation_slots",
+  "info": {
+    "singularName": "reservation-slot",
+    "pluralName": "reservation-slots",
+    "displayName": "ReservationSlot"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "food_bank_time_slot": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::food-bank-time-slot.food-bank-time-slot"
+    },
+    "seating_type": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::seating-type.seating-type"
+    }
+  }
+}
