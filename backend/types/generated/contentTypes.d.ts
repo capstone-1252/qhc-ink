@@ -486,14 +486,14 @@ export interface ApiFoodBankReservationFormFoodBankReservationForm
       'api::food-bank-reservation-form.food-bank-reservation-form'
     > &
       Schema.Attribute.Private;
-    name: Schema.Attribute.String &
       Schema.Attribute.Required &
       Schema.Attribute.SetMinMaxLength<{
         maxLength: 100;
         minLength: 1;
       }>;
     note: Schema.Attribute.Text &
-      Schema.Attribute.SetMinMaxLength<{
+      Schema.Attr    name: Schema.Attribute.String &
+ibute.SetMinMaxLength<{
         maxLength: 600;
       }>;
     partySize: Schema.Attribute.Integer &

@@ -140,3 +140,9 @@ build
 .strapi-updater.json
 .strapi-cloud.json
 backend/data/uploads/
+
+############################
+# Strapi
+############################
+.astro/data/
+scripts/
