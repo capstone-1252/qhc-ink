@@ -52,7 +52,7 @@ function ConfirmModal({ isOpen, onClose, onConfirm, isSubmitting }) {
 }
 
 
-export default function CreateFoodBankForm({ timeSlots }) {
+export default function CreateFoodBankForm({ reservationSlot }) {
   // STEP 2: React Hook Form replaces ALL manual state + validation
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -166,7 +166,7 @@ export default function CreateFoodBankForm({ timeSlots }) {
       <div className={styles.fieldWrapper}>
         <label>Time / Seating *</label>
         <div className={styles.slotButtonGroup}>
-          {timeSlots.map(slot => {
+          {reservationSlot.map(slot => {
             const isSelected = form.watch("reservationSlot") === slot.id;
             return (
               <button
@@ -178,6 +178,7 @@ export default function CreateFoodBankForm({ timeSlots }) {
               >
                 <div>{slot.time}</div>
                 <div>{slot.seating}</div>
+                <div>{slot.slot_label}</div>
               </button>
             );
           })}
