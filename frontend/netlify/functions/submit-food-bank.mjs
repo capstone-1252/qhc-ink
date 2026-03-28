@@ -85,7 +85,7 @@ exports.handler = async (event, context) => {
       };
     }
   
-    const { name, email, phone, note, seating, time, partySize } = validation.data;
+    const { name, email, phone, note, reservationSlot, partySize } = validation.data;
 
     // ------------------------------------------------------------------------
     // STEP 8: PREPARE DATA FOR STRAPI
@@ -100,8 +100,7 @@ exports.handler = async (event, context) => {
         email,
         phone,
         note: note || '', // Default to empty string if note is undefined
-        seating,
-        time,
+        reservationSlot,
         partySize,
       },
     };

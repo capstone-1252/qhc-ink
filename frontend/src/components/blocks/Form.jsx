@@ -52,7 +52,7 @@ function ConfirmModal({ isOpen, onClose, onConfirm, isSubmitting }) {
 }
 
 
-export default function CreateFoodBankForm({ timeSlots }) {
+export default function CreateFoodBankForm({ reservationSlot }) {
   // STEP 2: React Hook Form replaces ALL manual state + validation
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -61,8 +61,7 @@ export default function CreateFoodBankForm({ timeSlots }) {
       email: '',
       phone: '',
       note: '',
-      seating: undefined,
-      time: '',
+      reservationSlot: '',
       partySize: ''
     }
   });
@@ -94,8 +93,7 @@ export default function CreateFoodBankForm({ timeSlots }) {
       email: data.email,
       phone: data.phone,
       note: data.note,
-      seating: data.seating,
-      time: data.time,
+      reservationSlot: data.reservationSlot,
       partySize: data.partySize
     };
   
@@ -138,7 +136,7 @@ export default function CreateFoodBankForm({ timeSlots }) {
   // STEP 5: Step validation (only current step's fields)
   const validateCurrentStep = async () => {
     const fields = step === 1 
-      ? ['seating', 'time', 'partySize'] 
+      ? ['reservationSlot', 'partySize'] 
       : ['name', 'email', 'phone'];
     
     const isValid = await trigger(fields); // Zod validates ONLY these fields
@@ -166,41 +164,27 @@ export default function CreateFoodBankForm({ timeSlots }) {
   {step === 1 && (
     <>
       <div className={styles.fieldWrapper}>
-        <label htmlFor="seating">Seating Preference *</label>
-        <select
-          id="seating"
-          className={styles.selectField}
-          {...form.register("seating")}
-        >
-          <option value="">Select...</option>
-          <option value="bartop">Bar Top</option>
-          <option value="diningroom">Dining Room</option>
-        </select>
-        {errors.seating && (
-          <p className={styles.validationError}>
-            {errors.seating.message}
-          </p>
-        )}
-      </div>
-
-      <div className={styles.fieldWrapper}>
-        <label htmlFor="time">Preferred Time *</label>
-        <select
-          id="time"
-          className={styles.selectField}
-          {...form.register("time")}
-        >
-          <option value="">Select time...</option>
-          {timeSlots.map(slot => (
-            <option key={slot.id} value={slot.time}>
-              {slot.time}
-            </option>
-          ))}
-        </select>
-        {errors.time && (
-          <p className={styles.validationError}>
-            {errors.time.message}
-          </p>
+        <label>Time / Seating *</label>
+        <div className={styles.slotButtonGroup}>
+          {reservationSlot.map(slot => {
+            const isSelected = form.watch("reservationSlot") === slot.id;
+            return (
+              <button
+                key={slot.id}
+                type="button"
+                onClick={() => form.setValue("reservationSlot", slot.id, { shouldValidate: true })}
+                className={`${styles.slotButton} ${isSelected ? styles.slotButtonSelected : ''}`}
+                aria-pressed={isSelected}
+              >
+                <div>{slot.time}</div>
+                <div>{slot.seating}</div>
+                <div>{slot.slot_label}</div>
+              </button>
+            );
+          })}
+        </div>
+        {errors.reservationSlot && (
+          <p className={styles.validationError}>{errors.reservationSlot.message}</p>
         )}
       </div>
 
