@@ -11,8 +11,8 @@ import CreateFoodBankForm from '../components/blocks/Form.jsx';
 import { getFoodBankTimeSlots } from '../lib/strapi';
 import { getFoodBankDinnerDate } from '../lib/strapi';
 
-const timeSlots = await getFoodBankTimeSlots();
-const dinnerDate = await getFoodBankDinnerDate();
+/* const timeSlots = await getFoodBankTimeSlots();
+ */const dinnerDate = await getFoodBankDinnerDate();
 
 
 //which links will be passed into the header component: 
@@ -48,5 +48,5 @@ const MenuLinks = [
 <p>Important info regarding form. Lorem ipsum, dolor sit amet consectetur adipisicing elit. Repellendus excepturi expedita beatae architecto assumenda sapiente quos libero, itaque rerum adipisci, nesciunt laboriosam at aperiam doloremque deserunt facilis, officiis voluptatem quibusdam.</p>
 </div>
 <!-- function CreateFoodBankForm requires timeSlots as a prop -->
-<CreateFoodBankForm client:load timeSlots={timeSlots}/>
-</Layout>
+<!-- <CreateFoodBankForm client:load />
+ --></Layout>
