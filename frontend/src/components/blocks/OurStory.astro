@@ -1,24 +1,114 @@
-<section>
-  <div>
-    <div>
-      <h2>
-        Our Story
-      </h2>
+---
+import WaveDivider from '../ui/WaveDivider.astro';
+import Link from '../ui/Link.astro';
+---
+
+<section class="our-story">
+  <div class="our-story-inner">
+
+    <div class="our-story-text">
+      <h2 class="our-story-heading">Our Story</h2>
       <p>
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quisquam totam recusandae debitis voluptate, iste delectus excepturi illum ducimus, dolore veniam a! Amet provident blanditiis ullam rem tempore eum deserunt impedit?
+        We started in 2023 and have been going strong ever since! Making delicious cocktails and fun cuisine using the cities vibrant ethnic eclecticness to give you our version of its story through unique flavours and interesting ingredients.
       </p>
-      <p>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam cupiditate deserunt iure soluta? Totam delectus molestias molestiae. Qui facilis omnis, necessitatibus dolorum autem error, vero delectus repudiandae, quasi illo minus?
-      </p>
+      <Link
+        href="/about"
+        label="Our Story"
+        size="md"
+        variant="outline"
+      />
     </div>
-    <div>
-      <img 
-        src="/slide-1.webp" 
-        alt="Chef preparing signature dish at Little Wolf Restaurant in Edmonton" 
+
+    <div class="our-story-image-wrap">
+      <img
+        src="/slide-1.webp"
+        alt="Chef preparing signature dish at Little Wolf Restaurant in Edmonton"
         loading="lazy"
         width="600"
         height="400"
-      >
+        class="our-story-image"
+      />
     </div>
+
   </div>
+
+  <WaveDivider fill="var(--color-espresso)" />
 </section>
+
+<style>
+  .our-story {
+    background-color: var(--color-cream);
+    overflow: hidden;
+  }
+
+  .our-story-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 4rem 2rem 3rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 4rem;
+  }
+
+  .our-story-text {
+   display: flex;
+   flex-direction: column;
+   gap: 1.25rem;
+   align-items: flex-start;
+   }
+
+  .our-story-heading {
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    color: var(--color-espresso);
+    line-height: 1.2;
+  }
+
+  .our-story-text p {
+    color: var(--color-leather);
+    font-size: 0.95rem;
+    line-height: 1.75;
+    max-width: 55ch;
+  }
+
+  /* Override Link outline variant colours for cream background */
+  .our-story-text :global(.button-outline) {
+    color: var(--color-espresso);
+    border-color: var(--color-espresso);
+  }
+
+  .our-story-text :global(.button-outline:hover) {
+    background-color: var(--color-espresso);
+    color: var(--color-cream);
+  }
+
+  /* Image */
+  .our-story-image-wrap {
+    border-radius: 1rem;
+    overflow: hidden;
+    aspect-ratio: 3 / 2;
+  }
+
+  .our-story-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* Mobile */
+  @media (max-width: 768px) {
+    .our-story-inner {
+      grid-template-columns: 1fr;
+      padding: 3rem 1.5rem 2.5rem;
+      gap: 2rem;
+    }
+
+    .our-story-image-wrap {
+      aspect-ratio: 16 / 9;
+      border-radius: 0.75rem;
+    }
+  }
+</style>

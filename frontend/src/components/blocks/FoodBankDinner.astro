@@ -1,37 +1,140 @@
 ---
-// src/components/FoodBankDinner.astro
 import Link from '../ui/Link.astro';
 ---
 
-<section aria-labelledby="foodbank-heading">
-  <div>
-    <!-- Text Content -->
-    <div>
-      <h2 id="foodbank-heading">
-        Food Bank Dinner
-      </h2>
+<section class="food-bank" aria-labelledby="food-bank-heading">
+
+  <div class="food-bank-text">
+    <!-- Rust cap only on left column -->
+    <div class="food-bank-rust-cap"></div>
+
+    <div class="food-bank-text-inner">
+      <h2 id="food-bank-heading" class="food-bank-heading">Food Bank Dinner</h2>
       <p>
-        Join us for our annual Food Bank Dinner, a special evening where every reservation directly supports 
-        our community's fight against hunger. Your dining experience makes a meaningful difference.
+        Little Wolf Restaurant hosts a three-course vegan dinner menu on the
+        last Monday of each month with a $5 reservation fee — with all proceeds
+        of the dinner going to the Edmonton Food Bank!
       </p>
-      <div>
-        <Link 
-          href="/food-bank" 
-          size="lg" 
-          label='Save Your Seat'
-        >
-      </div>
-    </div>
-    
-    <!-- Image -->
-    <div>
-      <img 
-        src="/slide-3.webp" 
-        alt=""
-        loading="lazy"
-        width="600"
-        height="400"
-      >
+      <Link
+        href="/food-bank"
+        label="Book Your Spot"
+        size="md"
+        variant="default"
+      />
     </div>
   </div>
+
+  <div class="food-bank-image">
+    <img
+      src="/slide-2.webp"
+      alt="Three-course vegan dinner at Little Wolf Restaurant Food Bank Dinner event"
+      loading="lazy"
+    />
+  </div>
+
 </section>
+
+<style>
+  .food-bank {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 500px;
+  background-color: var(--color-cream);
+  /* remove max-width and margin: auto */
+}
+
+  /* Left column */
+  .food-bank-text {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    background-color: var(--color-cream);
+  }
+
+  /* Rust block at top of left column only */
+  .food-bank-rust-cap {
+    background-color: var(--color-rust);
+    height: 80px;
+    position: relative;
+  }
+
+  /* Wave cut — pseudo element on rust cap */
+  .food-bank-rust-cap::after {
+    content: '';
+    position: absolute;
+    bottom: -30px;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background-color: var(--color-cream);
+    clip-path: ellipse(55% 100% at 50% 100%);
+  }
+
+ .food-bank-text-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.25rem;
+  padding: 3rem 2rem;
+  max-width: 600px;
+  margin-left: auto;
+  flex: 1;
+  justify-content: center;
+}
+
+  .food-bank-heading {
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    color: var(--color-espresso);
+  }
+
+  .food-bank-text p {
+    color: var(--color-leather);
+    font-size: 0.95rem;
+    line-height: 1.75;
+  }
+
+  .food-bank-text :global(.button-default) {
+    background-color: var(--color-rust);
+    color: var(--color-espresso);
+  }
+
+  .food-bank-text :global(.button-default:hover) {
+    background-color: var(--color-leather);
+    color: var(--color-cream);
+  }
+
+  /* Full bleed image on right */
+  .food-bank-image {
+    overflow: hidden;
+  }
+
+  .food-bank-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* Mobile */
+  @media (max-width: 768px) {
+    .food-bank {
+      grid-template-columns: 1fr;
+    }
+
+    .food-bank-rust-cap {
+  background-color: var(--color-rust);
+  height: clamp(80px, 8vw, 140px); /* scales with viewport */
+  position: relative;
+}
+
+    .food-bank-text-inner {
+  padding: 3rem 1.5rem 2.5rem;
+  max-width: unset;
+  margin-left: 0;
+}
+
+    .food-bank-image {
+      aspect-ratio: 16 / 9;
+    }
+  }
+</style>

@@ -1,0 +1,60 @@
+---
+interface Props {
+  /** Fill color of the wave shape — matches the NEXT section's background */
+  fill?: string;
+  /** Optional flip — flip vertically so wave points up instead of down */
+  flip?: boolean;
+}
+
+const { fill = 'var(--color-cream)', flip = false } = Astro.props;
+---
+
+<div class:list={['wave-divider', { 'wave-flip': flip }]} aria-hidden="true">
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 1440 80"
+    preserveAspectRatio="none"
+    class="wave-svg"
+  >
+    <!-- Shadow/outline wave slightly offset -->
+    <path
+      d="M0,40 C180,80 360,0 540,40 C720,80 900,0 1080,40 C1260,80 1350,20 1440,40 L1440,80 L0,80 Z"
+      fill="none"
+      stroke="var(--color-rust)"
+      stroke-width="2.5"
+      opacity="0.6"
+      transform="translate(0, 4)"
+    />
+    <!-- Main fill wave -->
+    <path
+      d="M0,40 C180,80 360,0 540,40 C720,80 900,0 1080,40 C1260,80 1350,20 1440,40 L1440,80 L0,80 Z"
+      fill={fill}
+    />
+    <!-- Top stroke of fill wave -->
+    <path
+      d="M0,40 C180,80 360,0 540,40 C720,80 900,0 1080,40 C1260,80 1350,20 1440,40"
+      fill="none"
+      stroke="var(--color-rust)"
+      stroke-width="2"
+      opacity="0.5"
+    />
+  </svg>
+</div>
+
+<style>
+  .wave-divider {
+    display: block;
+    line-height: 0;
+    margin-bottom: -1px; /* prevent hairline gap */
+  }
+
+  .wave-svg {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .wave-flip {
+    transform: scaleY(-1);
+  }
+</style>
