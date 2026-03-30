@@ -1,92 +1,121 @@
-<!-- ---
-//Basically, put a pause on this until Bridgette gives the go-ahead for using React libraries.
+---
+import WaveDivider from '../ui/WaveDivider.astro';
+import Link from '../ui/Link.astro';
 
-//this is our hero section; hours tab will also go in here
-
-import EmblaCarousel from '../ui/EmblaCarousel';
+/* import EmblaCarousel from '../ui/EmblaCarousel';
 import HoursPanel from '../ui/HoursTab';    
-import Button from '../ui/Button.astro';
-import ProfileCard from '../ui/ProfileCard.astro';
+import ProfileCard from '../ui/ProfileCard.astro'; */
+---
 
-// /slide-1 works because astro serves public at the root
-const slides = [
+
+<!-- const slides = [
   { img: '/slide-1.webp' },
   { img: '/slide-2.webp'},
   { img: '/slide-3.webp'}
-];
+]; -->
 
-const options = {
-  loop: true,
-  align: 'start'
-};
+<section class="hero" aria-label="Hero">
+  <div class="hero-inner">
 
-
----
-
-<section class="hero-section">
-  <EmblaCarousel 
-    client:load 
-    slides={slides} 
-    options={options} 
-  />
- <HoursPanel client:load apiUrl="/api/hours" />
-
-</section>
-
-<style is:global> /* is global so it applies to the classes in jsx */
-  .hero-section { max-width: 100%; }
-  .embla {
-  max-width: 48rem;
-  margin: auto;
-  --slide-height: 19rem;
-  --slide-spacing: 1rem;
-  --slide-size: 100%;
-}
-.embla__viewport {
-  overflow: hidden;
-}
-.embla__container {
-  display: flex;
-  touch-action: pan-y pinch-zoom;
-  margin-left: calc(var(--slide-spacing) * -1);
-}
-.embla__slide {
-  flex: 0 0 var(--slide-size);
-  min-width: 0;
-  padding-left: var(--slide-spacing);
-}
-.embla__slide__number {
-  border: 0.2rem solid var(--detail-medium-contrast);
-  border-radius: 1.8rem;
-  font-size: 4rem;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: var(--slide-height);
-  user-select: none;
-}
-
-</style>
- -->
-
- <!-- Just making a really basic  -->
----
-// src/components/Hero.astro
-
-import Link from '../ui/Link.astro';
----
-
-<section>
-  <div>
-    <h2>
-      Little Wolf Restaurant
-    </h2>
-    <p>
-      Exceptional dining experiences with seasonal ingredients and timeless hospitality.
-    </p>
-    <div>
-      <Link href="/reservations" size="lg" label='Reserve' variant='outline'>
+    <div class="hero-content">
+      <h1 class="hero-heading">
+        Where Flavour<br />Meets Fun
+      </h1>
+      <p class="hero-body">
+        Welcome to Little Wolf, Where you can drop in and hang out, (You can also secure yourself a reservation!) We're a small plates & big hearts restaurant and bar in the center of the garneau district. we specialize in craft cocktails, local beers & a veg forward menu with something for everyone.
+      </p>
+      <Link
+        href="/reservations"
+        label="Reserve"
+        size="md"
+        variant="outline"
+      />
     </div>
+
+    <div class="hero-image-wrap">
+      <img
+        src="/slide-1.webp"
+        alt="Guests enjoying dinner at Little Wolf Restaurant in Edmonton"
+        width="640"
+        height="480"
+        loading="eager"
+        class="hero-image"
+      />
+    </div>
+
   </div>
+
+  <WaveDivider fill="var(--color-cream)" />
 </section>
+
+<style>
+  .hero {
+    background-color: var(--color-leather);
+    overflow: hidden;
+  }
+
+  .hero-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 5rem 2rem 3rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 3rem;
+  }
+
+  .hero-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.25rem;
+  }
+
+  .hero-heading {
+    font-family: var(--font-accent);
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    color: var(--color-cream);
+    line-height: 1.05;
+    font-style: italic;
+  }
+
+  .hero-body {
+    font-size: 0.95rem;
+    color: var(--color-taupe);
+    max-width: 42ch;
+    line-height: 1.7;
+  }
+
+  /* Image */
+  .hero-image-wrap {
+    border-radius: 1rem;
+    overflow: hidden;
+    aspect-ratio: 4 / 3;
+  }
+
+  .hero-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* Mobile */
+  @media (max-width: 768px) {
+    .hero-inner {
+      grid-template-columns: 1fr;
+      padding: 4rem 1.5rem 2.5rem;
+      gap: 2rem;
+    }
+
+    .hero-image-wrap {
+      order: -1; /* image above text on mobile */
+      aspect-ratio: 16 / 9;
+      border-radius: 0.75rem;
+    }
+
+    .hero-heading {
+      font-size: clamp(2.2rem, 10vw, 3rem);
+    }
+  }
+</style>

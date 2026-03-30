@@ -1,37 +1,113 @@
 ---
-// src/components/FoodBankDinner.astro
+import WaveDivider from '../ui/WaveDivider.astro';
 import Link from '../ui/Link.astro';
 ---
 
-<section aria-labelledby="foodbank-heading">
-  <div>
-    <!-- Text Content -->
-    <div>
-      <h2 id="foodbank-heading">
-        Food Bank Dinner
-      </h2>
+<section class="food-bank" aria-labelledby="food-bank-heading">
+
+  <div class="food-bank-inner">
+
+    <div class="food-bank-text">
+      <h2 id="food-bank-heading" class="food-bank-heading">Food Bank Dinner</h2>
       <p>
-        Join us for our annual Food Bank Dinner, a special evening where every reservation directly supports 
-        our community's fight against hunger. Your dining experience makes a meaningful difference.
+        Little Wolf Restaurant hosts a three-course vegan dinner menu on the
+        last Monday of each month with a $5 reservation fee — with all proceeds
+        of the dinner going to the Edmonton Food Bank!
       </p>
-      <div>
-        <Link 
-          href="/food-bank" 
-          size="lg" 
-          label='Save Your Seat'
-        >
-      </div>
+      <Link
+        href="/food-bank"
+        label="Book Your Spot"
+        size="md"
+        variant="default"
+      />
     </div>
-    
-    <!-- Image -->
-    <div>
-      <img 
-        src="/slide-3.webp" 
-        alt=""
+
+    <div class="food-bank-image-wrap">
+      <img
+        src="/slide-2.webp"
+        alt="Three-course vegan dinner at Little Wolf Restaurant Food Bank Dinner event"
         loading="lazy"
         width="600"
         height="400"
-      >
+        class="food-bank-image"
+      />
     </div>
+
   </div>
+
+  <WaveDivider fill="var(--color-espresso)" />
 </section>
+
+<style>
+  .food-bank {
+    background-color: var(--color-cream);
+    overflow: hidden;
+  }
+
+  .food-bank-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 4rem 2rem 3rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 4rem;
+  }
+
+  .food-bank-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  align-items: flex-start;
+}
+
+  .food-bank-heading {
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    color: var(--color-espresso);
+  }
+
+  .food-bank-text p {
+    color: var(--color-leather);
+    font-size: 0.95rem;
+    line-height: 1.75;
+  }
+
+  /* Override default Link variant for cream background */
+  .food-bank-text :global(.button-default) {
+    background-color: var(--color-rust);
+    color: var(--color-cream);
+  }
+
+  .food-bank-text :global(.button-default:hover) {
+    background-color: var(--color-leather);
+    color: var(--color-cream);
+  }
+
+  /* Image */
+  .food-bank-image-wrap {
+    border-radius: 1rem;
+    overflow: hidden;
+    aspect-ratio: 3 / 2;
+  }
+
+  .food-bank-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* Mobile */
+  @media (max-width: 768px) {
+    .food-bank-inner {
+      grid-template-columns: 1fr;
+      padding: 3rem 1.5rem 2.5rem;
+      gap: 2rem;
+    }
+
+    .food-bank-image-wrap {
+      aspect-ratio: 16 / 9;
+      border-radius: 0.75rem;
+    }
+  }
+</style>
