@@ -1,0 +1,42 @@
+{
+  "kind": "collectionType",
+  "collectionName": "reservation_slots",
+  "info": {
+    "singularName": "reservation-slot",
+    "pluralName": "reservation-slots",
+    "displayName": "ReservationSlot"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "slot_label": {
+      "type": "string",
+      "required": true
+    },
+    "time": {
+      "type": "string",
+      "required": true
+    },
+    "seating": {
+      "type": "string",
+      "required": true
+    },
+    "order": {
+      "type": "integer",
+      "required": true
+    },
+    "available": {
+      "type": "boolean",
+      "required": true,
+      "default": true
+    },
+    "food_bank_reservation_forms": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::food-bank-reservation-form.food-bank-reservation-form",
+      "mappedBy": "reservation_slot"
+    }
+  }
+}
