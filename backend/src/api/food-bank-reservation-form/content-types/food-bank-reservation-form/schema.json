@@ -44,7 +44,7 @@
       "type": "relation",
       "relation": "manyToOne",
       "target": "api::reservation-slot.reservation-slot",
-      "private": true,
+      "private": false,
       "inversedBy": "food_bank_reservation_forms"
     }
   }
