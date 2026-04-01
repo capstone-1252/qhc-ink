@@ -496,7 +496,6 @@ export interface ApiFoodBankReservationFormFoodBankReservationForm
       Schema.Attribute.SetMinMaxLength<{
         maxLength: 600;
       }>;
-    note: Schema.Attribute.Text;
     partySize: Schema.Attribute.Integer &
       Schema.Attribute.Required &
       Schema.Attribute.SetMinMax<
@@ -516,8 +515,7 @@ export interface ApiFoodBankReservationFormFoodBankReservationForm
     reservation_slot: Schema.Attribute.Relation<
       'manyToOne',
       'api::reservation-slot.reservation-slot'
-    > &
-      Schema.Attribute.Private;
+    >;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -662,8 +660,7 @@ export interface ApiReservationSlotReservationSlot
     food_bank_reservation_forms: Schema.Attribute.Relation<
       'oneToMany',
       'api::food-bank-reservation-form.food-bank-reservation-form'
-    > &
-      Schema.Attribute.Private;
+    >;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
