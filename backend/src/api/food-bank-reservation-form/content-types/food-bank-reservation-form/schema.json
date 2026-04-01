@@ -11,40 +11,41 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "seating": {
-      "type": "enumeration",
-      "required": true,
-      "enum": [
-        "bartop",
-        "diningroom"
-      ]
-    },
-    "time": {
-      "type": "string",
-      "required": true
-    },
     "partySize": {
       "type": "integer",
       "required": true,
-      "min": 1
+      "min": 1,
+      "max": 200
     },
     "name": {
       "type": "string",
-      "maxLength": 70,
+      "minLength": 1,
+      "maxLength": 100,
       "required": true
     },
     "email": {
       "type": "email",
       "required": true,
-      "unique": true
+      "maxLength": 254,
+      "unique": false
     },
     "phone": {
       "type": "string",
+      "minLength": 10,
       "maxLength": 11,
-      "required": true
+      "required": true,
+      "regex": "^[\\d+\\-\\s]+$"
     },
     "note": {
-      "type": "text"
+      "type": "text",
+      "maxLength": 600
+    },
+    "reservation_slot": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::reservation-slot.reservation-slot",
+      "private": false,
+      "inversedBy": "food_bank_reservation_forms"
     }
   }
 }

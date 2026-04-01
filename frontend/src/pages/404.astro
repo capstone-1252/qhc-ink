@@ -1,0 +1,19 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/layout/Header.astro';
+import Link from '../components/ui/Link.astro';
+
+const IndexLinks = [
+    {label: 'Food Bank', url: '/food-bank'},
+    {label: 'Menu', url: '/menu'}
+]
+---
+
+
+<Layout title='404'>
+<Header links={IndexLinks} />
+<!-- svg of our character -->
+<h1>404</h1>
+<p>Oops... we can't seem to find the page you're looking for.</p>
+<Link href='/' label='Back to Home'>
+</Layout>

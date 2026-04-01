@@ -1,55 +1,118 @@
 ---
+import WaveDivider from '../ui/WaveDivider.astro';
 import Link from '../ui/Link.astro';
-
 ---
 
-<section role="region" aria-labelledby="cuisine-heading">
-  <div>
-    <h2 id="cuisine-heading">
-      Our Cuisine
-    </h2>
-    <p>
-      Seasonal ingredients, masterful technique, unforgettable flavor.
-    </p>
-  </div>
-  
-  <div>
-    <div>
+<section class="our-cuisine" role="region" aria-labelledby="cuisine-heading">
+
+  <div class="our-cuisine-inner">
+    <div class="our-cuisine-text">
+      <h2 id="cuisine-heading" class="our-cuisine-heading">Our Cuisine</h2>
       <p>
-        Our cuisine celebrates Alberta's finest seasonal ingredients, transformed through classical techniques 
-        and modern innovation. Each plate reflects our commitment to flavor harmony and visual artistry.
+        While we do focus on a veg forward inclusive menu we borrow from our
+        rich cultural mosaic to bring exciting food from all over the world.
+        We're proud to show you what we can do! Sometimes our menu changes
+        faster than the weather.
       </p>
-      <p>
-        From house-made pastas to wood-fired proteins, every element receives meticulous attention to detail.
-      </p>
+    </div>
+    <div class="our-cuisine-photos">
+      <img
+        src="/slide-1.webp"
+        alt="Wood-fired steak with seasonal vegetables - Little Wolf signature dish"
+        loading="lazy"
+        width="400"
+        height="256"
+        class="cuisine-photo"
+      />
+      <img
+        src="/slide-2.webp"
+        alt="House-made pasta with foraged mushrooms and truffle"
+        loading="lazy"
+        width="400"
+        height="256"
+        class="cuisine-photo"
+      />
+      <img
+        src="/slide-3.webp"
+        alt="Artisanal dessert featuring local berries and housemade gelato"
+        loading="lazy"
+        width="400"
+        height="256"
+        class="cuisine-photo"
+      />
+    </div>
+
+    <div class="our-cuisine-cta">
+      <Link href="/menu" label="View Menu" size="md" variant="outline" />
     </div>
   </div>
 
-  <div>
-    <img 
-      src="/slide-1.webp" 
-      alt="Wood-fired steak with seasonal vegetables - Little Wolf signature dish"
-      loading="lazy"
-      width="400"
-      height="256"
-    >
-    <img 
-      src="/slide-2.webp" 
-      alt="House-made pasta with foraged mushrooms and truffle"
-      loading="lazy"
-      width="400"
-      height="256"
-    >
-    <img 
-      src="/slide-3.webp" 
-      alt="Artisanal dessert featuring local berries and housemade gelato"
-      loading="lazy"
-      width="400"
-      height="256"
-    >
-  </div>
-
-  <div>
-    <Link label="View Menu" size='lg' />
-  </div>
+  
 </section>
+
+<style>
+  .our-cuisine {
+    background-color: var(--color-espresso);
+    overflow: hidden;
+  }
+
+  .our-cuisine-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 4rem 2rem 3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+
+  .our-cuisine-heading {
+      font-size: clamp(1.75rem, 3vw, 2.5rem);
+      color: var(--color-cream);
+   }
+
+   .our-cuisine-text {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+   }
+
+  .our-cuisine-text p {
+    color: var(--color-cream);
+    font-size: 0.95rem;
+    line-height: 1.75;
+    max-width: 60ch;
+  }
+
+  /* 3-photo grid */
+  .our-cuisine-photos {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+  }
+
+  .cuisine-photo {
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+    border-radius: 0.75rem;
+    display: block;
+  }
+
+  .our-cuisine-cta {
+    display: flex;
+    align-items: flex-start;
+  }
+
+  /* Mobile */
+  @media (max-width: 768px) {
+    .our-cuisine-inner {
+      padding: 3rem 1.5rem 2.5rem;
+      gap: 2rem;
+    }
+
+    .our-cuisine-photos {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+  }
+</style>

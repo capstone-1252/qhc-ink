@@ -1,84 +1,121 @@
-//Food Bank Form react component
+// Food Bank Form react component
+// NOTES:
+// 1. Zod schema = ONE source of truth for ALL validation (client + server compatible)
+// 2. React Hook Form manages ALL form state (no more manual formValues)
+// 3. form.trigger() validates ONLY current step's fields on Next
+// 4. Errors display automatically under each field
+// 5. Your exact fetch logic preserved (payload, states, etc.)
+// 6. Native HTML labels + error messages = accessible by default
+// 7. className fixed (was "classname")
 
-//form will be multi-levelled. 
-//currently, I will build form logic before making specific form ui components and implementing them
-
-
-
+import styles from './Form.module.css';
 import { useState } from 'react';
-import * as Form from '@radix-ui/react-form';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { formSchema } from '@/shared/schema.js'
 
-// timeSlots = an array
-export default function CreateFoodBankForm({ timeSlots }) {
+
+//this is my modal function
+function ConfirmModal({ isOpen, onClose, onConfirm, isSubmitting }) {
+  if (!isOpen) return null;
+
+  return (
+   <div className={styles.modalOverlay} onClick={onClose}>
+      <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+        <h2>Confirm Submission</h2>
+        <p>Are you sure you want to submit?</p>
+
+        <p>All the other confirmation/explanation text that goes here.</p>
+
+        <div className={styles.modalActions}>
+          <button 
+            type="button" 
+            onClick={onClose} 
+            disabled={isSubmitting}
+            className={`${styles.btn} ${styles.btnSecondary}`}
+          >
+            Back
+          </button>
+
+          <button 
+            type="button" 
+            onClick={onConfirm} 
+            disabled={isSubmitting}
+            className={`${styles.btn} ${styles.btnPrimary} ${isSubmitting ? styles.btnLoading : ''}`}
+          >
+            {isSubmitting ? 'Submitting...' : 'Submit'}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
+export default function CreateFoodBankForm({ reservationSlot }) {
+  // STEP 2: React Hook Form replaces ALL manual state + validation
+  const form = useForm({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: '',
+      email: '',
+      phone: '',
+      note: '',
+      reservationSlot: '',
+      partySize: ''
+    }
+  });
+
+
+  const { 
+    handleSubmit, 
+    formState: { errors, isSubmitting }, 
+    trigger,
+    reset 
+  } = form;
+
+
+
+  // STEP 3: Your existing states (unchanged)
   const [step, setStep] = useState(1);
   const [serverErrors, setServerErrors] = useState({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState('idle');
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  /* const [isSubmitting, setIsSubmitting] = useState(false); */ // ← YOUR manual state
 
 
-
-  async function handleSubmit(event) {
-    event.preventDefault();
-    const formData = new FormData(event.currentTarget); //formData: This is a built-in browser API that creates an object containing all the form fields and their values. 
-    const data = Object.fromEntries(formData.entries()); // formData.entries returns key-value pairs which Object.fromEntries converts to an individual js object
-
-
-    // Flatten the data if your function expects a flat object
-    // Your function currently expects: { data: { name, email... } }
-    // But your fetch sends: { data: { data: { ... } } }
-    // Let's adjust to match the function signature we wrote:
+  // STEP 4: Your EXACT fetch handler preserved (just gets data from form)
+  async function onFormSubmit(data) {
+    console.log('Form data validated on client side:', data); // debug
+    // STEP 3-9: Your exact payload + loading + fetch logic preserved
     const payload = {
       name: data.name,
       email: data.email,
       phone: data.phone,
       note: data.note,
-      seating: data.seating,
-      time: data.time,
-      size: data.size
+      reservationSlot: data.reservationSlot,
+      partySize: data.partySize
     };
+  
+      setSubmitStatus('idle');
+      setServerErrors({});
 
-
-    // STEP 3: SET LOADING STATES
-    // Why: Disable button, clear previous errors, show "Submitting..."
-    // Security: Prevents user from submitting multiple times while waiting
-
-    setIsSubmitting(true);
-    setSubmitStatus('idle');
-    setServerErrors({});
 
     try {
-  
-      // STEP 4: SEND DATA TO NETLIFY FUNCTION
-      // Why: This is where the actual submission happens
-      // Note: URL must match function filename: submit-food-bank.js
-      // Security: Token is in function, NOT in this browser code
-  
       const response = await fetch('/.netlify/functions/submit-food-bank', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
 
-  
-      // STEP 5: PARSE RESPONSE
-      // Why: Function returns JSON, we need to read it
-      // Note: Always await .json() even if you expect success
-  
+
       const result = await response.json();
 
-  
-      // STEP 6: HANDLE SUCCESS
-      // Why: Reset form, show success message, return to step 1
-      // Note: response.ok is true for status codes 200-299
-  
+
       if (response.ok) {
         setSubmitStatus('success');
-        event.currentTarget.reset(); // Clear all form inputs
-        setStep(1); // Return to first step
+        window.location.href = '/confirmation'; 
       } else {
-        // STEP 7: HANDLE ERRORS FROM FUNCTION
-        // Why: Function may return validation errors or Strapi failures
-        // Note: Store error message to display to user
         if (result.error) {
           setServerErrors({ general: result.error });
         } else {
@@ -87,176 +124,210 @@ export default function CreateFoodBankForm({ timeSlots }) {
         setSubmitStatus('error');
       }
     } catch (error) {
-  
-      // STEP 8: HANDLE NETWORK ERRORS
-      // Why: Internet could be down, function could timeout, etc.
-      // Security: Don't expose raw error to user (could leak info)
-  
-      console.error("Network error:", error); // Log for debugging
+      console.error("Network error:", error);
       setSubmitStatus('error');
       setServerErrors({ general: 'Network error. Please try again.' });
-    } finally {
-  
-      // STEP 9: ALWAYS RESET LOADING STATE
-      // Why: Whether success or failure, we're done submitting
-      // Note: finally() runs even if there's an error
-  
+    } /* finally {
       setIsSubmitting(false);
-    }
+    } */
   }
 
 
-  // RENDER
-  // Why: JSX defines what the user sees
-  // Note: Radix UI Form components provide accessible form semantics
-// src/components/blocks/Form.jsx
+  // STEP 5: Step validation (only current step's fields)
+  const validateCurrentStep = async () => {
+    const fields = step === 1 
+      ? ['reservationSlot', 'partySize'] 
+      : ['name', 'email', 'phone'];
+    
+    const isValid = await trigger(fields); // Zod validates ONLY these fields
+    return isValid;
+  };
+
 
   const totalSteps = 2;
 
+
   return (
-    <Form.Root onSubmit={handleSubmit} onClearServerErrors={() => setServerErrors({})}>
-      <div className="step-indicator">
-        <div>Step {step} of {totalSteps}</div>
-        <div className="steps">
-          <div className={step === 1 ? 'active' : ''}>1</div>
-          <div className={step === 2 ? 'active' : ''}>2</div>
+    // STEP 6: Native form (Radix removed, fully accessible)
+    <form onSubmit={handleSubmit(onFormSubmit)} className={styles.container} noValidate>
+      {/* Step indicator (className fixed) */}
+
+  <div className={styles.stepIndicator}>
+    <div>Step {step} of {totalSteps}</div>
+    <div className={styles.steps}>
+      <div className={step === 1 ? styles.active : ''}>1</div>
+      <div className={step === 2 ? styles.active : ''}>2</div>
+    </div>
+  </div>
+
+  {/* STEP 1 */}
+  {step === 1 && (
+    <>
+      <div className={styles.fieldWrapper}>
+        <label>Time / Seating *</label>
+        <div className={styles.slotButtonGroup}>
+          {reservationSlot.map(slot => {
+            const isSelected = form.watch("reservationSlot") === slot.id;
+            return (
+              <button
+                key={slot.id}
+                type="button"
+                onClick={() => form.setValue("reservationSlot", slot.id, { shouldValidate: true })}
+                className={`${styles.slotButton} ${isSelected ? styles.slotButtonSelected : ''}`}
+                aria-pressed={isSelected}
+              >
+                <div>{slot.time}</div>
+                <div>{slot.seating}</div>
+                <div>{slot.slot_label}</div>
+              </button>
+            );
+          })}
         </div>
-      </div>
-
-      {step === 1 && (
-        <>
-          <Form.Field name="name" serverInvalid={!!serverErrors.name}>
-            <div>
-              <Form.Label>Name *</Form.Label>
-              <Form.Message match="valueMissing">Name required</Form.Message>
-            </div>
-            <Form.Control asChild>
-              <input name="name" required />
-            </Form.Control>
-          </Form.Field>
-
-          <Form.Field name="email" serverInvalid={!!serverErrors.email}>
-            <div>
-              <Form.Label>Email *</Form.Label>
-              <Form.Message match="valueMissing">Email required</Form.Message>
-              <Form.Message match="typeMismatch">Invalid email</Form.Message>
-            </div>
-            <Form.Control asChild>
-              <input type="email" name="email" required />
-            </Form.Control>
-          </Form.Field>
-
-          <Form.Field name="phone" serverInvalid={!!serverErrors.phone}>
-            <div>
-              <Form.Label>Phone *</Form.Label>
-              <Form.Message match="valueMissing">Phone required</Form.Message>
-            </div>
-            <Form.Control asChild>
-              <input type="tel" name="phone" required minLength={10} />
-            </Form.Control>
-          </Form.Field>
-
-          <Form.Field name="note">
-            <Form.Label>Questions or Concerns</Form.Label>
-            <Form.Control asChild>
-              <textarea name="note" rows={4} />
-            </Form.Control>
-          </Form.Field>
-        </>
-      )}
-
-      {step === 2 && (
-        <>
-          <Form.Field name="seating" serverInvalid={!!serverErrors.seating}>
-            <div>
-              <Form.Label>Seating Preference *</Form.Label>
-              <Form.Message match="valueMissing">Required</Form.Message>
-            </div>
-            <Form.Control asChild>
-              <select name="seating" required>
-                <option value="">Select...</option>
-                <option value="indoor">Bar Top</option>
-                <option value="outdoor">Bar Bottom</option>
-              </select>
-            </Form.Control>
-          </Form.Field>
-
-        {/* data does not comes in an ARRAY, so we are handling that array when we put in timeSlots.map. (timeSlots and slot are not JSON values, but our own placeholders to handle each instance). Id and time are keys from the key-value pairs in each object of the array.  */}
-          <Form.Field name="time" serverInvalid={!!serverErrors.time}>
-            <div>
-              <Form.Label>Preferred Time *</Form.Label>
-              <Form.Message match="valueMissing">Required</Form.Message>
-            </div>
-            <Form.Control asChild>
-              <select name="time" required>
-                <option value="">Select time...</option>
-                {timeSlots.map(slot => (
-                  <option key={slot.id} value={slot.time}>
-                    {slot.time}
-                  </option>
-                ))}
-              </select>
-            </Form.Control>
-          </Form.Field>
-          <Form.Field name="size" serverInvalid={!!serverErrors.size}>
-            <div>
-              <Form.Label>Group Size *</Form.Label>
-              <Form.Message match="valueMissing">Required</Form.Message>
-            </div>
-            <Form.Control asChild>
-              <input type="number" name="size" min={1} required />
-            </Form.Control>
-          </Form.Field>
-        </>
-      )}
-
-      <div className="form-actions">
-        {step > 1 && (
-          <button type="button" onClick={() => setStep(step - 1)} disabled={isSubmitting}>
-            Back
-          </button>
-        )}
-        {step < 2 ? (
-          <button type="button" onClick={() => setStep(step + 1)} disabled={isSubmitting}>
-            Next
-          </button>
-        ) : (
-          <Form.Submit asChild>
-            <button disabled={isSubmitting}>
-              {isSubmitting ? 'Submitting...' : 'Create Food Bank'}
-            </button>
-          </Form.Submit>
+        {errors.reservationSlot && (
+          <p className={styles.validationError}>{errors.reservationSlot.message}</p>
         )}
       </div>
 
-      {submitStatus === 'success' && (
-        <div className="success-message">Food bank request submitted successfully!</div>
-      )}
-      {submitStatus === 'error' && (
-        <div className="error-message">
-          {serverErrors.general || 'Submission failed. Please try again.'}
-        </div>
-      )}
-    </Form.Root>
+      <div className={styles.fieldWrapper}>
+        <label htmlFor="partySize">Party Size *</label>
+        <input
+          id="partySize"
+          type="number"
+          min={1}
+          className={`${styles.formInput} ${errors.partySize ? styles.formInputError : ''}`}
+          {...form.register("partySize")}
+        />
+        {errors.partySize && (
+          <p className={styles.validationError}>
+            {errors.partySize.message}
+          </p>
+        )}
+      </div>
+    </>
+    
+  )}
+
+  {/* STEP 2 */}
+  {step === 2 && (
+    
+
+    <>
+      <div className={styles.fieldWrapper}>
+        <label htmlFor="name">Name *</label>
+        <input
+          id="name"
+          type="text"
+          className={`${styles.formInput} ${errors.name ? styles.formInputError : ''}`}
+          {...form.register("name")}
+        />
+        {errors.name && (
+          <p className={styles.validationError}>
+            {errors.name.message}
+          </p>
+        )}
+      </div>
+
+      <div className={styles.fieldWrapper}>
+        <label htmlFor="email">Email *</label>
+        <input
+          id="email"
+          type="email"
+          className={`${styles.formInput} ${errors.email ? styles.formInputError : ''}`}
+          {...form.register("email")}
+        />
+        {errors.email && (
+          <p className={styles.validationError}>
+            {errors.email.message}
+          </p>
+        )}
+      </div>
+
+      <div className={styles.fieldWrapper}>
+        <label htmlFor="phone">Phone *</label>
+        <input
+          id="phone"
+          type="tel"
+          className={`${styles.formInput} ${errors.phone ? styles.formInputError : ''}`}
+          {...form.register("phone")}
+        />
+        {errors.phone && (
+          <p className={styles.validationError}>
+            {errors.phone.message}
+          </p>
+        )}
+      </div>
+
+      <div className={styles.fieldWrapper}>
+        <label htmlFor="note">Questions or Concerns</label>
+        <textarea
+          id="note"
+          rows={4}
+          className={`${styles.formInput} ${styles.textarea}`}
+          {...form.register("note")}
+        />
+      </div>
+    </>
+  )}
+
+  {/* Buttons */}
+  <div className={styles.formActions}>
+    {step > 1 && (
+      <button 
+        type="button" 
+        className={`${styles.btn} ${styles.btnSecondary}`}
+        onClick={() => setStep(step - 1)} 
+        disabled={isSubmitting}
+      >
+        Back
+      </button>
+    )}
+    
+    {step < 2 ? (
+      <button
+        type="button"
+        className={`${styles.btn} ${styles.btnPrimary}`}
+        onClick={async () => {
+          const isValid = await validateCurrentStep();
+          if (isValid) setStep(step + 1);
+        }}
+        disabled={isSubmitting}
+      >
+        Next
+      </button>
+    ) : (
+      <button
+        type="button"
+        className={`${styles.btn} ${styles.btnPrimary} ${isSubmitting ? styles.btnLoading : ''}`}
+        onClick={async () => {
+          const isValid = await validateCurrentStep();
+          if (isValid) setShowConfirmModal(true);
+        }}
+        disabled={isSubmitting}
+      >
+        {isSubmitting ? 'Submitting...' : 'Submit'}
+      </button>
+    )}
+  </div>
+
+  {/* Status */}
+  {submitStatus === 'error' && (
+    <div className={styles.errorMessage}>
+      {serverErrors.general || 'Submission failed. Please try again.'}
+    </div>
+  )}
+
+  <ConfirmModal
+    isOpen={showConfirmModal}
+    onClose={() => setShowConfirmModal(false)}
+    onConfirm={() => {
+      setShowConfirmModal(false);
+      const data = form.getValues(); 
+      onFormSubmit(data);
+    }}
+    isSubmitting={isSubmitting}
+  />    
+  
+  </form>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

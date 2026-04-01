@@ -477,7 +477,9 @@ export interface ApiFoodBankReservationFormFoodBankReservationForm
       Schema.Attribute.Private;
     email: Schema.Attribute.Email &
       Schema.Attribute.Required &
-      Schema.Attribute.Unique;
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 254;
+      }>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -487,13 +489,19 @@ export interface ApiFoodBankReservationFormFoodBankReservationForm
     name: Schema.Attribute.String &
       Schema.Attribute.Required &
       Schema.Attribute.SetMinMaxLength<{
-        maxLength: 70;
+        maxLength: 100;
+        minLength: 1;
+      }>;
+    note: Schema.Attribute.Text &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 600;
       }>;
     note: Schema.Attribute.Text;
     partySize: Schema.Attribute.Integer &
       Schema.Attribute.Required &
       Schema.Attribute.SetMinMax<
         {
+          max: 200;
           min: 1;
         },
         number
@@ -502,43 +510,14 @@ export interface ApiFoodBankReservationFormFoodBankReservationForm
       Schema.Attribute.Required &
       Schema.Attribute.SetMinMaxLength<{
         maxLength: 11;
+        minLength: 10;
       }>;
     publishedAt: Schema.Attribute.DateTime;
-    seating: Schema.Attribute.Enumeration<['bartop', 'diningroom']> &
-      Schema.Attribute.Required;
-    time: Schema.Attribute.String & Schema.Attribute.Required;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-  };
-}
-
-export interface ApiFoodBankTimeSlotFoodBankTimeSlot
-  extends Struct.CollectionTypeSchema {
-  collectionName: 'food_bank_time_slots';
-  info: {
-    displayName: 'FoodBankTimeSlot';
-    pluralName: 'food-bank-time-slots';
-    singularName: 'food-bank-time-slot';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::food-bank-time-slot.food-bank-time-slot'
+    reservation_slot: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::reservation-slot.reservation-slot'
     > &
       Schema.Attribute.Private;
-    order: Schema.Attribute.Integer & Schema.Attribute.Required;
-    publishedAt: Schema.Attribute.DateTime;
-    time: Schema.Attribute.String &
-      Schema.Attribute.Required &
-      Schema.Attribute.DefaultTo<'6:00pm'>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -656,6 +635,46 @@ export interface ApiMenuItemMenuItem extends Struct.CollectionTypeSchema {
         number
       >;
     publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiReservationSlotReservationSlot
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'reservation_slots';
+  info: {
+    displayName: 'ReservationSlot';
+    pluralName: 'reservation-slots';
+    singularName: 'reservation-slot';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    available: Schema.Attribute.Boolean &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<true>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    food_bank_reservation_forms: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::food-bank-reservation-form.food-bank-reservation-form'
+    > &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::reservation-slot.reservation-slot'
+    > &
+      Schema.Attribute.Private;
+    order: Schema.Attribute.Integer & Schema.Attribute.Required;
+    publishedAt: Schema.Attribute.DateTime;
+    seating: Schema.Attribute.String & Schema.Attribute.Required;
+    slot_label: Schema.Attribute.String & Schema.Attribute.Required;
+    time: Schema.Attribute.String & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1175,10 +1194,10 @@ declare module '@strapi/strapi' {
       'admin::user': AdminUser;
       'api::food-bank-dinner-date.food-bank-dinner-date': ApiFoodBankDinnerDateFoodBankDinnerDate;
       'api::food-bank-reservation-form.food-bank-reservation-form': ApiFoodBankReservationFormFoodBankReservationForm;
-      'api::food-bank-time-slot.food-bank-time-slot': ApiFoodBankTimeSlotFoodBankTimeSlot;
       'api::hour.hour': ApiHourHour;
       'api::menu-category.menu-category': ApiMenuCategoryMenuCategory;
       'api::menu-item.menu-item': ApiMenuItemMenuItem;
+      'api::reservation-slot.reservation-slot': ApiReservationSlotReservationSlot;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;
