@@ -472,7 +472,6 @@ export interface ApiFoodBankReservationFormFoodBankReservationForm
     draftAndPublish: true;
   };
   attributes: {
-    allergies: Schema.Attribute.Text;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -485,16 +484,16 @@ export interface ApiFoodBankReservationFormFoodBankReservationForm
       'api::food-bank-reservation-form.food-bank-reservation-form'
     > &
       Schema.Attribute.Private;
-    Name: Schema.Attribute.String &
+    name: Schema.Attribute.String &
       Schema.Attribute.Required &
       Schema.Attribute.SetMinMaxLength<{
-        maxLength: 50;
+        maxLength: 70;
       }>;
+    note: Schema.Attribute.Text;
     partySize: Schema.Attribute.Integer &
       Schema.Attribute.Required &
       Schema.Attribute.SetMinMax<
         {
-          max: 12;
           min: 1;
         },
         number
@@ -502,7 +501,7 @@ export interface ApiFoodBankReservationFormFoodBankReservationForm
     phone: Schema.Attribute.String &
       Schema.Attribute.Required &
       Schema.Attribute.SetMinMaxLength<{
-        maxLength: 20;
+        maxLength: 11;
       }>;
     publishedAt: Schema.Attribute.DateTime;
     seating: Schema.Attribute.Enumeration<['bartop', 'diningroom']> &
@@ -635,6 +634,7 @@ export interface ApiMenuItemMenuItem extends Struct.CollectionTypeSchema {
       Schema.Attribute.DefaultTo<'none'>;
     drinkPriceBottle: Schema.Attribute.Integer;
     drinkPriceGlass: Schema.Attribute.Integer;
+    drinkSize: Schema.Attribute.String;
     image: Schema.Attribute.Media<'images' | 'files'>;
     ingredients: Schema.Attribute.Text;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
