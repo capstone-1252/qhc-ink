@@ -496,6 +496,7 @@ export interface ApiFoodBankReservationFormFoodBankReservationForm
       Schema.Attribute.SetMinMaxLength<{
         maxLength: 600;
       }>;
+    note: Schema.Attribute.Text;
     partySize: Schema.Attribute.Integer &
       Schema.Attribute.Required &
       Schema.Attribute.SetMinMax<
