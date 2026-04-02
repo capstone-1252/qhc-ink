@@ -14,11 +14,11 @@ import ProfileCard from '../ui/ProfileCard.astro'; */
   { img: '/slide-3.webp'}
 ]; -->
 
-<section class="hero" aria-label="Hero">
+<section class="hero" aria-labelledby="hero-heading">
   <div class="hero-inner">
 
     <div class="hero-content">
-      <h1 class="hero-heading">
+      <h1 id="hero-heading" class="hero-heading">
         Where Flavour<br />Meets Fun
       </h1>
       <p class="hero-body">
@@ -82,8 +82,8 @@ import ProfileCard from '../ui/ProfileCard.astro'; */
   .hero-body {
     font-size: 0.95rem;
     color: var(--color-cream);
-    max-width: 42ch;
-    line-height: 1.7;
+    max-width: 55ch;
+   line-height: 1.75;
   }
 
   /* Image */

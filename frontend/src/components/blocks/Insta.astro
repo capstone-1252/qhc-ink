@@ -1,5 +1,6 @@
 ---
 import WaveDivider from '../ui/WaveDivider.astro';
+import Link from '../ui/Link.astro';
 ---
 
 <section class="whats-happening" aria-labelledby="happening-heading">
@@ -28,14 +29,14 @@ import WaveDivider from '../ui/WaveDivider.astro';
       </div>
     </div>
 
-    <a
+   <Link
       href="https://www.instagram.com/littlewolfrestaurant/"
       target="_blank"
       rel="noopener noreferrer"
-      class="insta-link"
-    >
-      More From Us
-    </a>
+      label="More From Us"
+      variant="outline"
+      size="md"
+   />
   </div>
 
   
@@ -48,13 +49,14 @@ import WaveDivider from '../ui/WaveDivider.astro';
   }
 
   .whats-happening-inner {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 4rem 2rem 3rem;
-    display: flex;
-    flex-direction: column;
-    gap: 2.5rem;
-  }
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 4rem 2rem 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  align-items: flex-start;
+}
 
   .whats-happening-heading {
     font-size: clamp(1.75rem, 3vw, 2.5rem);
@@ -62,10 +64,11 @@ import WaveDivider from '../ui/WaveDivider.astro';
   }
 
   .whats-happening-body {
-    color: var(--color-cream);
-    font-size: 0.95rem;
-    max-width: 50ch;
-  }
+      color: var(--color-cream);
+      font-size: 0.95rem;
+      line-height: 1.75;
+      max-width: 55ch;
+   }
 
   /* Placeholder carousel — 3 images side by side */
   .carousel-placeholder {
@@ -89,27 +92,6 @@ import WaveDivider from '../ui/WaveDivider.astro';
     height: 100%;
     object-fit: cover;
     display: block;
-  }
-
-  .insta-link {
-    display: inline-flex;
-    align-items: center;
-    font-family: var(--font-body);
-    font-weight: 600;
-    font-size: 0.9rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--color-cream);
-    border: 2px solid var(--color-cream);
-    padding: 0.75rem 1.75rem;
-    border-radius: 2rem;
-    transition: background-color 0.2s, color 0.2s;
-    align-self: flex-start;
-  }
-
-  .insta-link:hover {
-    background-color: var(--color-cream);
-    color: var(--color-espresso);
   }
 
   /* Mobile */

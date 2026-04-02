@@ -41,21 +41,21 @@ const {
 </a>
 
 <style>
-  .button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-family: var(--font-body);
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    border-radius: 2rem;
-    text-decoration: none;
-    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
-    white-space: nowrap;
-    cursor: pointer;
-    min-width: 160px
-  }
+   .button {
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
+   font-family: var(--font-body);
+   font-weight: 600;
+   letter-spacing: 0.08em;
+   text-transform: uppercase;
+   border-radius: 2rem;
+   text-decoration: none;
+   transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+   white-space: nowrap;
+   cursor: pointer;
+   width: 200px;
+}
 
   /* Sizes */
   .button-sm {
@@ -112,4 +112,13 @@ const {
     cursor: not-allowed;
     pointer-events: none;
   }
+
+  @media (max-width: 768px) {
+  .button {
+    align-self: center;
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+  }
+}
 </style>
