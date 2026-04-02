@@ -176,7 +176,7 @@ export default function CreateFoodBankForm({ reservationSlots }) {
                 onClick={() => form.setValue("reservationSlots", slot.id, { shouldValidate: true })}
                 className={`${styles.slotButton} ${isSelected ? styles.slotButtonSelected : ''} ${isDisabled ? styles.slotButtonDisabled : ''}`}
                 aria-pressed={isSelected}
-                 //native HTML disabled
+                disabled={isDisabled} //native HTML disabled
               > 
                 <div>{slot.slot_label}</div>
               </button>

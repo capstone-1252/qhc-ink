@@ -13,7 +13,7 @@ export const formSchema = z.object({
       return digits.length === 10 || digits.length === 11;},
       "Phone must be a valid phone number."),  
   note: z.string().max(600, "Please keep your query under 600 characters.").optional(),
-  reservationSlots: z.string().min(1, "Select a reservation slot"),
+  reservationSlots: z.number().min(1, "Select a reservation slot"),
   partySize: z.coerce
   .number()
   .min(1, "Must be at least 1 person")
