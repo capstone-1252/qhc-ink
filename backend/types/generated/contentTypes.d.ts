@@ -486,16 +486,17 @@ export interface ApiFoodBankReservationFormFoodBankReservationForm
       'api::food-bank-reservation-form.food-bank-reservation-form'
     > &
       Schema.Attribute.Private;
+    name: Schema.Attribute.String &
       Schema.Attribute.Required &
       Schema.Attribute.SetMinMaxLength<{
         maxLength: 100;
         minLength: 1;
       }>;
     note: Schema.Attribute.Text &
-      Schema.Attr    name: Schema.Attribute.String &
-ibute.SetMinMaxLength<{
+      Schema.Attribute.SetMinMaxLength<{
         maxLength: 600;
       }>;
+    note: Schema.Attribute.Text;
     partySize: Schema.Attribute.Integer &
       Schema.Attribute.Required &
       Schema.Attribute.SetMinMax<
@@ -515,7 +516,8 @@ ibute.SetMinMaxLength<{
     reservation_slot: Schema.Attribute.Relation<
       'manyToOne',
       'api::reservation-slot.reservation-slot'
-    >;
+    > &
+      Schema.Attribute.Private;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -611,6 +613,7 @@ export interface ApiMenuItemMenuItem extends Struct.CollectionTypeSchema {
       Schema.Attribute.DefaultTo<'none'>;
     drinkPriceBottle: Schema.Attribute.Integer;
     drinkPriceGlass: Schema.Attribute.Integer;
+    drinkSize: Schema.Attribute.String;
     image: Schema.Attribute.Media<'images' | 'files'>;
     ingredients: Schema.Attribute.Text;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
@@ -659,7 +662,8 @@ export interface ApiReservationSlotReservationSlot
     food_bank_reservation_forms: Schema.Attribute.Relation<
       'oneToMany',
       'api::food-bank-reservation-form.food-bank-reservation-form'
-    >;
+    > &
+      Schema.Attribute.Private;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',

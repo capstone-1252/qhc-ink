@@ -15,8 +15,8 @@ async function fetchStrapi(endpoint: string) {
 
 
 //content-types/api::food-bank-time-slot.food-bank-time-slot
-export async function getFoodBankTimeSlots() {
-  const data = await fetchStrapi('/food-bank-time-slots?sort=order:asc');
+export async function getFoodBankReservationSlots() {
+  const data = await fetchStrapi('/reservation-slots?sort=order:asc');
   return data.data;
 }
 

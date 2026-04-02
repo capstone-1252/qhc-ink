@@ -52,7 +52,7 @@ function ConfirmModal({ isOpen, onClose, onConfirm, isSubmitting }) {
 }
 
 
-export default function CreateFoodBankForm({ reservationSlot }) {
+export default function CreateFoodBankForm({ reservationSlots }) {
   // STEP 2: React Hook Form replaces ALL manual state + validation
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -61,7 +61,7 @@ export default function CreateFoodBankForm({ reservationSlot }) {
       email: '',
       phone: '',
       note: '',
-      reservationSlot: '',
+      reservationSlots: '',
       partySize: ''
     }
   });
@@ -93,7 +93,7 @@ export default function CreateFoodBankForm({ reservationSlot }) {
       email: data.email,
       phone: data.phone,
       note: data.note,
-      reservationSlot: data.reservationSlot,
+      reservationSlots: data.reservationSlots,
       partySize: data.partySize
     };
   
@@ -136,7 +136,7 @@ export default function CreateFoodBankForm({ reservationSlot }) {
   // STEP 5: Step validation (only current step's fields)
   const validateCurrentStep = async () => {
     const fields = step === 1 
-      ? ['reservationSlot', 'partySize'] 
+      ? ['reservationSlots', 'partySize'] 
       : ['name', 'email', 'phone'];
     
     const isValid = await trigger(fields); // Zod validates ONLY these fields
@@ -166,25 +166,25 @@ export default function CreateFoodBankForm({ reservationSlot }) {
       <div className={styles.fieldWrapper}>
         <label>Time / Seating *</label>
         <div className={styles.slotButtonGroup}>
-          {reservationSlot.map(slot => {
-            const isSelected = form.watch("reservationSlot") === slot.id;
+          {reservationSlots.map(slot => {
+            const isSelected = form.watch("reservationSlots") === slot.id;
+            const isDisabled = !slot.available; //for disabling if unavailable at backend
             return (
               <button
                 key={slot.id}
                 type="button"
-                onClick={() => form.setValue("reservationSlot", slot.id, { shouldValidate: true })}
-                className={`${styles.slotButton} ${isSelected ? styles.slotButtonSelected : ''}`}
+                onClick={() => form.setValue("reservationSlots", slot.id, { shouldValidate: true })}
+                className={`${styles.slotButton} ${isSelected ? styles.slotButtonSelected : ''} ${isDisabled ? styles.slotButtonDisabled : ''}`}
                 aria-pressed={isSelected}
-              >
-                <div>{slot.time}</div>
-                <div>{slot.seating}</div>
+                 //native HTML disabled
+              > 
                 <div>{slot.slot_label}</div>
               </button>
             );
           })}
         </div>
-        {errors.reservationSlot && (
-          <p className={styles.validationError}>{errors.reservationSlot.message}</p>
+        {errors.reservationSlots && (
+          <p className={styles.validationError}>{errors.reservationSlots.message}</p>
         )}
       </div>
 
