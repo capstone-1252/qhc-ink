@@ -2,6 +2,7 @@
 import React, { useEffect } from 'react';
 import Autoplay from 'embla-carousel-autoplay';
 import useEmblaCarousel from 'embla-carousel-react';
+import './EmblaCarousel.css';
 
 const EmblaCarousel = ({ slides, options }) => {
   const [emblaRef, emblaApi] = useEmblaCarousel(options, [Autoplay()]);

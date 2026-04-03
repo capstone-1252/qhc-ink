@@ -1,7 +1,7 @@
 ---
 interface Props {
   label?: string;
-  variant?: 'default' | 'outline' | 'ghost';
+  variant?: 'default' | 'outline' | 'ghost' | 'gold';
   size?: 'sm' | 'md' | 'lg';
   disabled?: boolean;
   href?: string;
@@ -95,6 +95,17 @@ const {
     background-color: var(--color-cream);
     color: var(--color-espresso);
   }
+
+   .button-gold {
+      background-color: var(--color-gold);
+      color: var(--color-espresso);
+      border: 2px solid var(--color-gold);   
+   }
+
+   .button-gold:hover {
+      background-color: var(--color-rust);
+      color: var(--color-gold);
+   }
 
   .button-ghost {
     background-color: transparent;

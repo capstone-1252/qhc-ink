@@ -12,22 +12,25 @@ import Link from '../ui/Link.astro';
     <p class="whats-happening-body">
       Follow along on Instagram to see what's new and stay up to date with everything at Little Wolf.
     </p>
-
-    <!-- TODO: Replace with EmblaCarousel once Bridgette gives go-ahead -->
-    <!-- <EmblaCarousel client:load slides={slides} options={options} /> -->
-    <div class="carousel-placeholder" aria-label="Instagram feed coming soon">
-      <div class="placeholder-slides">
-        <div class="placeholder-slide">
-          <img src="/slide-1.webp" alt="" loading="lazy" />
-        </div>
-        <div class="placeholder-slide">
-          <img src="/slide-2.webp" alt="" loading="lazy" />
-        </div>
-        <div class="placeholder-slide">
-          <img src="/slide-3.webp" alt="" loading="lazy" />
-        </div>
-      </div>
+    
+    <div class="carousel-placeholder" aria-label="Instagram feed">
+  <div class="placeholder-slides" id="insta-slides">
+    <div class="placeholder-slide">
+      <img src="/slide-1.webp" alt="Little Wolf Instagram photo 1" role="presentation" loading="lazy" />
     </div>
+    <div class="placeholder-slide">
+      <img src="/slide-2.webp" alt="Little Wolf Instagram photo 2" role="presentation" loading="lazy" />
+    </div>
+    <div class="placeholder-slide">
+      <img src="/slide-3.webp" alt="Little Wolf Instagram photo 3" role="presentation" loading="lazy" />
+    </div>
+  </div>
+  <div class="carousel-dots" id="insta-dots">
+    <button class="carousel-dot active" aria-label="Slide 1"></button>
+    <button class="carousel-dot" aria-label="Slide 2"></button>
+    <button class="carousel-dot" aria-label="Slide 3"></button>
+  </div>
+</div>
 
    <Link
       href="https://www.instagram.com/littlewolfrestaurant/"
@@ -42,6 +45,22 @@ import Link from '../ui/Link.astro';
   
 </section>
 
+<script>
+  const slides = document.getElementById('insta-slides');
+  const dots = document.querySelectorAll('#insta-dots .carousel-dot');
+
+  slides?.addEventListener('scroll', () => {
+    const index = Math.round(slides.scrollLeft / slides.offsetWidth);
+    dots.forEach((dot, i) => dot.classList.toggle('active', i === index));
+  });
+
+  dots.forEach((dot, i) => {
+    dot.addEventListener('click', () => {
+      slides?.scrollTo({ left: i * slides.offsetWidth, behavior: 'smooth' });
+    });
+  });
+</script>
+
 <style>
   .whats-happening {
     background-color: var(--color-espresso);
@@ -51,7 +70,7 @@ import Link from '../ui/Link.astro';
   .whats-happening-inner {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 4rem 2rem 3rem;
+  padding: 4rem 2rem 5rem;
   display: flex;
   flex-direction: column;
   gap: 2.5rem;
@@ -59,9 +78,9 @@ import Link from '../ui/Link.astro';
 }
 
   .whats-happening-heading {
-    font-size: clamp(1.75rem, 3vw, 2.5rem);
-    color: var(--color-cream);
-  }
+      font-size: clamp(1.75rem, 3vw, 2.5rem);
+      color: var(--color-gold);
+   }
 
   .whats-happening-body {
       color: var(--color-cream);
@@ -96,13 +115,46 @@ import Link from '../ui/Link.astro';
 
   /* Mobile */
   @media (max-width: 768px) {
-    .whats-happening-inner {
-      padding: 3rem 1.5rem 2.5rem;
-    }
-
-    .placeholder-slides {
-      grid-template-columns: 1fr;
-      gap: 1rem;
-    }
+  .whats-happening-inner {
+    padding: 3rem 1.5rem 4.5rem;
   }
+  .carousel-placeholder {
+    position: relative;
+  }
+  .placeholder-slides {
+    display: flex;
+    overflow-x: scroll;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 1rem;
+  }
+  .placeholder-slides::-webkit-scrollbar {
+    display: none;
+  }
+  .placeholder-slide {
+    flex: 0 0 100%;
+    scroll-snap-align: start;
+  }
+  .carousel-dots {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+  .carousel-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--color-taupe);
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  .carousel-dot.active {
+    background-color: var(--color-cream);
+  }
+}
+  
 </style>
