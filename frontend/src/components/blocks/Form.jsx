@@ -84,16 +84,15 @@ export default function CreateFoodBankForm({ reservationSlots }) {
   /* const [isSubmitting, setIsSubmitting] = useState(false); */ // ← YOUR manual state
 
 
-  // STEP 4: Your EXACT fetch handler preserved (just gets data from form)
   async function onFormSubmit(data) {
     console.log('Form data validated on client side:', data); // debug
-    // STEP 3-9: Your exact payload + loading + fetch logic preserved
     const payload = {
       name: data.name,
       email: data.email,
       phone: data.phone,
       note: data.note,
-      reservationSlots: data.reservationSlots,
+     reservation_slot: data.reservationSlots,  // must match backend relation name
+
       partySize: data.partySize
     };
   
@@ -173,7 +172,7 @@ export default function CreateFoodBankForm({ reservationSlots }) {
               <button
                 key={slot.id}
                 type="button"
-                onClick={() => form.setValue("reservationSlots", slot.id, { shouldValidate: true })}
+                onClick={() => form.setValue("reservationSlots", slot.documentId, { shouldValidate: true })}
                 className={`${styles.slotButton} ${isSelected ? styles.slotButtonSelected : ''} ${isDisabled ? styles.slotButtonDisabled : ''}`}
                 aria-pressed={isSelected}
                 disabled={isDisabled} //native HTML disabled

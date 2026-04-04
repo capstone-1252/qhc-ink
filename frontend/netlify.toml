@@ -1,0 +1,7 @@
+[build]
+  publish = "frontend/dist"     
+  functions = "netlify/functions"
+
+[dev]
+  framework = "astro"
+  targetPort = 4321         
