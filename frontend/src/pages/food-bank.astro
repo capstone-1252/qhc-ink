@@ -35,8 +35,8 @@ const MenuLinks = [
 
 <main class="page-wrapper">
     <section class="hero">
-        <h1>Food Bank Dinner</h1>
-        <h2>Reserve your Seat</h2>
+        <h1 class="title-heading">Food Bank Dinner</h1>
+        <h2 class="reserve-heading">Reserve your Seat</h2>
 
         <div class="date-box">
             <p class="date-label">Next Date:</p>
@@ -76,6 +76,16 @@ const MenuLinks = [
         overflow-x: hidden;
         min-width: 240px;
         padding-bottom: 4rem;
+    }
+
+    .title-heading {
+    font-size: clamp(2.25rem, 4vw, 3.25rem);
+    line-height: 1.1;
+    }
+
+
+    .reserve-heading {
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
     }
 
     /* wave */
@@ -118,7 +128,7 @@ const MenuLinks = [
         min-width: 240px;
         max-width: 600px;
         margin: 0 auto;
-        padding: 1.5rem 1rem;
+        padding: 0 1rem 1.5rem 1rem;
         text-align: center;
     }
 
@@ -197,10 +207,11 @@ const MenuLinks = [
 
     /* medium screens */
     @media (min-width: 700px) {
-        .page-wrapper {
+    /*     .page-wrapper {
             padding: 3rem 2rem;
-        }
+        } */
 
+   
         .photo-section {
         max-width: 700px;
         margin: 0 auto 3rem;
