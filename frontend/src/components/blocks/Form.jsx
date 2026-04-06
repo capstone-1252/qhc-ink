@@ -175,21 +175,34 @@ export default function CreateFoodBankForm({ reservationSlots }) {
   {step === 1 && (
     <>
       <div className={styles.fieldWrapper}>
-        <label>Time / Seating *</label>
+        <label>Time / Seating</label>
         <div className={styles.slotButtonGroup}>
           {reservationSlots.map(slot => {
-            const isSelected = form.watch("reservationSlots") === slot.id;
+            const isSelected = form.watch("reservationSlots") === slot.documentId; //slot.id
             const isDisabled = !slot.available; //for disabling if unavailable at backend
             return (
               <button
-                key={slot.id}
+                key={slot.id} //slot.id bcs this is for react 
                 type="button"
+                /*  
                 onClick={() => form.setValue("reservationSlots", slot.documentId, { shouldValidate: true })}
+                */
+                onClick={() => {
+                  form.setValue("reservationSlots", slot.documentId, { shouldValidate: true });
+                  // Force a re-trigger of validation for this specific field immediately
+                  form.trigger("reservationSlots"); 
+                }}
+
+
                 className={`${styles.slotButton} ${isSelected ? styles.slotButtonSelected : ''} ${isDisabled ? styles.slotButtonDisabled : ''}`}
                 aria-pressed={isSelected}
                 disabled={isDisabled} //native HTML disabled
               > 
-                <div>{slot.slot_label}</div>
+                <div className={styles.flex}>
+                  <p>{slot.time}</p> 
+                  <p>{slot.seating}</p>
+                </div>
+  
               </button>
             );
           })}
@@ -200,7 +213,7 @@ export default function CreateFoodBankForm({ reservationSlots }) {
       </div>
 
       <div className={styles.fieldWrapper}>
-        <label htmlFor="partySize">Party Size *</label>
+        <label htmlFor="partySize">Party Size</label>
         <input
           id="partySize"
           type="number"
@@ -224,7 +237,7 @@ export default function CreateFoodBankForm({ reservationSlots }) {
 
     <>
       <div className={styles.fieldWrapper}>
-        <label htmlFor="name">Name *</label>
+        <label htmlFor="name">Name</label>
         <input
           id="name"
           type="text"
@@ -239,7 +252,7 @@ export default function CreateFoodBankForm({ reservationSlots }) {
       </div>
 
       <div className={styles.fieldWrapper}>
-        <label htmlFor="email">Email *</label>
+        <label htmlFor="email">Email</label>
         <input
           id="email"
           type="email"
@@ -254,7 +267,7 @@ export default function CreateFoodBankForm({ reservationSlots }) {
       </div>
 
       <div className={styles.fieldWrapper}>
-        <label htmlFor="phone">Phone *</label>
+        <label htmlFor="phone">Phone</label>
         <input
           id="phone"
           type="tel"
