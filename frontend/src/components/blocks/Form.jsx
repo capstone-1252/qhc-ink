@@ -61,7 +61,7 @@ export default function CreateFoodBankForm({ reservationSlots }) {
       email: '',
       phone: '',
       note: '',
-      reservationSlots: '',
+      reservation_slot: '',
       partySize: ''
     }
   });
@@ -91,7 +91,7 @@ export default function CreateFoodBankForm({ reservationSlots }) {
       email: data.email,
       phone: data.phone,
       note: data.note,
-     reservation_slot: data.reservationSlots,  // must match backend relation name
+     reservation_slot: data.reservation_slot,  // must match backend relation name
 
       partySize: data.partySize
     };
@@ -135,7 +135,7 @@ export default function CreateFoodBankForm({ reservationSlots }) {
   // STEP 5: Step validation (only current step's fields)
   const validateCurrentStep = async () => {
     const fields = step === 1 
-      ? ['reservationSlots', 'partySize'] 
+      ? ['reservation_slot', 'partySize'] 
       : ['name', 'email', 'phone'];
     
     const isValid = await trigger(fields); // Zod validates ONLY these fields
@@ -178,7 +178,7 @@ export default function CreateFoodBankForm({ reservationSlots }) {
         <label>Time / Seating</label>
         <div className={styles.slotButtonGroup}>
           {reservationSlots.map(slot => {
-            const isSelected = form.watch("reservationSlots") === slot.documentId; //slot.id
+            const isSelected = form.watch("reservation_slot") === slot.documentId; //slot.id
             const isDisabled = !slot.available; //for disabling if unavailable at backend
             return (
               <button
@@ -188,9 +188,9 @@ export default function CreateFoodBankForm({ reservationSlots }) {
                 onClick={() => form.setValue("reservationSlots", slot.documentId, { shouldValidate: true })}
                 */
                 onClick={() => {
-                  form.setValue("reservationSlots", slot.documentId, { shouldValidate: true });
+                  form.setValue("reservation_slot", slot.documentId, { shouldValidate: true });
                   // Force a re-trigger of validation for this specific field immediately
-                  form.trigger("reservationSlots"); 
+                  form.trigger("reservation_slot"); 
                 }}
 
 
@@ -207,8 +207,8 @@ export default function CreateFoodBankForm({ reservationSlots }) {
             );
           })}
         </div>
-        {errors.reservationSlots && (
-          <p className={styles.validationError}>{errors.reservationSlots.message}</p>
+        {errors.reservation_slot && (
+          <p className={styles.validationError}>{errors.reservation_slot.message}</p>
         )}
       </div>
 
