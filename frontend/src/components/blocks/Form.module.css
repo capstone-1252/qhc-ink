@@ -178,6 +178,47 @@ body {
   line-height: 1.2;
 }
 
+/* number counter */
+div.formInput.stepper {
+  padding: unset;
+}
+
+.stepper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 2px solid var(--color-cream);
+  border-radius: 999px;
+  padding: 8px 16px;
+  width: 200px;
+  background: transparent;
+}
+
+.stepper button {
+  background: none;
+  border: none;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--color-cream);
+  cursor: pointer;
+  padding: 0.5rem 0.75rem;
+  margin: 0.5rem 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stepper button:hover {
+  background-color: rgba(216, 207, 174, 0.1);
+  border-radius: 999px;
+}
+
+.value {
+  color: var(--color-cream);
+  font-size: 1rem;
+  font-weight: 600;
+}
+
 .formInput {
   color: var(--color-cream);
   width: 100%;

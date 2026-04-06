@@ -62,7 +62,7 @@ export default function CreateFoodBankForm({ reservationSlots }) {
       phone: '',
       note: '',
       reservation_slot: '',
-      partySize: ''
+      partySize: 1
     }
   });
 
@@ -212,7 +212,7 @@ export default function CreateFoodBankForm({ reservationSlots }) {
         )}
       </div>
 
-      <div className={styles.fieldWrapper}>
+    {/*   <div className={styles.fieldWrapper}>
         <label htmlFor="partySize">Party Size</label>
         <input
           id="partySize"
@@ -226,7 +226,51 @@ export default function CreateFoodBankForm({ reservationSlots }) {
             {errors.partySize.message}
           </p>
         )}
-      </div>
+      </div> */}
+
+  <div className={styles.fieldWrapper}>
+  <label>Party Size</label>
+
+  <div className={`${styles.formInput} ${styles.stepper}`}>
+    <button
+    type="button"
+    onClick={() => {
+      const current = form.watch("partySize") || 1;
+      if (current > 1) {
+        form.setValue("partySize", current - 1, { 
+          shouldValidate: true, 
+          shouldDirty: true 
+        });
+      }
+    }}
+  >
+    −
+  </button>
+
+      <span className={styles.value}>
+    {form.watch("partySize") || 1}  
+  </span>
+
+  <button
+    type="button"
+    onClick={() => {
+      const current = form.watch("partySize") || 1;
+      form.setValue("partySize", current + 1, { 
+        shouldValidate: true, 
+        shouldDirty: true 
+      });
+    }}
+  >
+    +
+  </button>
+</div>
+
+{errors.partySize && (
+  <p className={styles.validationError}>
+    {errors.partySize.message}
+  </p>
+)}
+</div>
     </>
     
   )}
