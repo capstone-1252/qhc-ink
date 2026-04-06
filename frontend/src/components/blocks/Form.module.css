@@ -1,9 +1,32 @@
 /* all styling for the form goes here. whatever is in here will ONLY apply to the form component and whatever else it contains. Do NOT worry about affecting HTML outside of that. */
 
+/* text */
+ .secondHeading {
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  text-align: center;
+}
 
-/* form */
 
-    /* validation */
+body {
+  color: var(--color-cream);
+}
+
+/* layout */
+.fieldWrapper {
+  margin-bottom: 1.5rem;
+}
+
+
+
+
+/* inputs */
+
+
+  /* slot buttons */
+
+
+
+/* validation */
 
 
 /* buttons */
@@ -11,49 +34,102 @@
 
 /* modal */
 
-/* .container {
-  margin: 0 auto;
-  padding: 1.5rem;
-} */
 
-/* ===== STEP INDICATOR ===== */
-.stepIndicator {
+
+/* steps indicator */
+.headerBlock {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: center;
-  margin-bottom: 2rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid #e5e7eb;
+  gap: 1rem;
+
+  max-width: 320px;
+  margin: 2rem auto;
+}
+
+.stepIndicator {
+  width: 60%;
 }
 
 .steps {
   display: flex;
-  gap: 0.5rem;
+  align-items: center;
+  width: 100%;
 }
 
-.steps div {
-  width: 2rem;
-  height: 2rem;
+.step:first-child {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.step:last-child {
+  display: flex;
+  align-items: center;
+}
+.circle {
+  width: 2.25rem;
+  height: 2.25rem;
   border-radius: 50%;
-  background: #e5e7eb;
-  color: #6b7280;
+  border: 3px solid #d8cfae;
+  color: #d8cfae;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 600;
+  background: transparent;
+  flex-shrink: 0;
 }
 
-.steps div.active {
-  background: #3b82f6;
-  color: white;
+.active {
+  background: var(--color-rust);
+  color: #fff;
 }
 
-/* ===== FIELD WRAPPERS ===== */
-.fieldWrapper {
-  margin-bottom: 1.5rem;
+.line {
+  flex: 1;                  
+  height: 3px;
+  background: var(--color-cream);
+  margin: 0 0.5rem;
 }
 
-/* ===== FORM INPUTS ===== */
+
+/* buttons: this is repeat-code from header, SHOULD be a component or another version of the link */
+
+  .btn {
+    background-color: var(--color-yolk);
+    color: var(--color-espresso);
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 0.9rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.75rem 1.5rem;
+    border-radius: 2rem;
+    transition: background-color 0.2s;
+    white-space: nowrap;
+    border: none;
+  }
+
+  .btn:hover {
+  background-color: #d9a514; 
+  color: var(--color-espresso);
+  }
+
+  
+  .btnSecondary {
+    background-color: transparent;
+    color: var(--color-cream);
+    border: 2px solid var(--color-cream);
+
+  }
+
+  .btnSecondary:hover {
+  background-color: rgba(216, 207, 174, 0.1); /* soft cream tint */
+  color: var(--color-cream);   
+  }
+
+
 
 /* Slot buttons */
 
@@ -61,6 +137,7 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
+  margin-top: 1rem;
 }
 
 .slotButton {
@@ -68,7 +145,6 @@
   border: 2px solid #fff;
   border-radius: 12px;
   padding: 12px 16px;
-  color: #fff;
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.2s, border-color 0.2s;
@@ -91,10 +167,13 @@
 }
 
 .formInput {
+  color: var(--color-cream);
   width: 100%;
   padding: 0.75rem 1rem;
-  border: 1px solid #d1d5db;
-  border-radius: 0.5rem;
+  margin-top: 1rem;
+  border: 3px solid var(--color-cream);
+  background-color: inherit;
+  border-radius: 15px;
   font-size: 1rem;
   transition: border-color 0.2s, box-shadow 0.2s;
 }
@@ -125,31 +204,12 @@
   min-height: 100px;
 }
 
-/* ===== SELECT FIELDS ===== */
-.selectField {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  border: 1px solid #d1d5db;
-  border-radius: 0.5rem;
-  font-size: 1rem;
-  background: white;
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 0.75rem center;
-  background-size: 1rem;
-  padding-right: 2.5rem;
-}
-
-.selectField:focus {
-  outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+.container {
+  padding: 1rem;
 }
 
 
-
-/* ===== VALIDATION MESSAGES ===== */
+/* validation */
 .validationError {
   color: #ef4444;
   font-size: 0.875rem;
@@ -159,11 +219,8 @@
   gap: 0.25rem;
 }
 
-.validationError::before {
-  content: "⚠";
-}
-
-/* ===== BUTTONS ===== */
+/* buttons */
+/* 
 .btn {
   padding: 0.75rem 1.5rem;
   border: none;
@@ -221,15 +278,15 @@
   to {
     transform: rotate(360deg);
   }
-}
+} */
 
 /* ===== FORM ACTIONS ===== */
 .formActions {
   display: flex;
+  flex-direction: row;
   gap: 1rem;
   margin-top: 2rem;
   padding-top: 1.5rem;
-  border-top: 1px solid #e5e7eb;
 }
 
 /* ===== STATUS MESSAGES ===== */
@@ -308,23 +365,21 @@
   display: flex;
   gap: 1rem;
   justify-content: flex-end;
+  flex-direction: column-reverse;
+
 }
 
-/* ===== RESPONSIVE ===== */
-@media (max-width: 640px) {
-  .container {
-    padding: 1rem;
+
+ 
+
+/* ===== RESPONSIVE : this is not mobile first */
+@media (min-width: 640px) {
+
+   .modalActions {
+    display: flex;
+    flex-direction: row;
   }
 
-  .formActions {
-    flex-direction: column;
-  }
 
-  .btn {
-    width: 100%;
-  }
-
-  .modalActions {
-    flex-direction: column-reverse;
-  }
+  
 }

@@ -150,14 +150,26 @@ export default function CreateFoodBankForm({ reservationSlots }) {
     // STEP 6: Native form (Radix removed, fully accessible)
     <form onSubmit={handleSubmit(onFormSubmit)} className={styles.container} noValidate>
       {/* Step indicator (className fixed) */}
+<div className={styles.headerBlock}>
+  <h2 className={styles.secondHeading}>Request form</h2>
 
   <div className={styles.stepIndicator}>
-    <div>Step {step} of {totalSteps}</div>
     <div className={styles.steps}>
-      <div className={step === 1 ? styles.active : ''}>1</div>
-      <div className={step === 2 ? styles.active : ''}>2</div>
+      <div className={styles.step}>
+        <div className={`${styles.circle} ${step >= 1 ? styles.active : ''}`}>
+          1
+        </div>
+        <div className={styles.line}></div>
+      </div>
+
+      <div className={styles.step}>
+        <div className={`${styles.circle} ${step >= 2 ? styles.active : ''}`}>
+          2
+        </div>
+      </div>
     </div>
   </div>
+</div>
 
   {/* STEP 1 */}
   {step === 1 && (
