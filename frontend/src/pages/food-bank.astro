@@ -33,8 +33,8 @@ const MenuLinks = [
     <div class="wave-line"></div>
 </div>
 
-<main class="page-wrapper">
-    <section class="hero">
+<main>
+    <section class="hero page-wrapper">
         <h1 class="title-heading">Food Bank Dinner</h1>
         <h2 class="second-heading">Reserve your Seat</h2>
 
@@ -47,9 +47,7 @@ const MenuLinks = [
 
         <p>Rest assured, we never skimp out on the dishes, either. Each dinner consists of new and unique dishes from fresh ingredients that local supplies carry.</p>
     </section>
-</main>
-
-<div class="photo-section">
+    <div class="photo-section">
     <img src="/slide-1.webp" alt="Food Bank Dinner photo" />
 </div>
 
@@ -63,6 +61,9 @@ const MenuLinks = [
 <section class="form-section">
     <CreateFoodBankForm client:load reservationSlots={reservationSlots}/>
 </section>
+
+</main>
+
 
 </Layout>
 
@@ -200,18 +201,15 @@ const MenuLinks = [
         display: flex;
         flex-direction: column;
         gap: 1rem;
-        padding: 2rem 1.5rem;
         max-width: 600px;
         margin: 0 auto;
+        margin-bottom: 3rem;
         padding: 0 6rem;
-
     }
 
     /* medium screens */
     @media (min-width: 700px) {
-       /*  .page-wrapper {
-            padding: 3rem 2rem;
-        }
+
  */
         .form-section {
             padding: unset;

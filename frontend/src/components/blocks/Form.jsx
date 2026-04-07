@@ -22,7 +22,7 @@ function ConfirmModal({ isOpen, onClose, onConfirm, isSubmitting }) {
   return (
     <div className={styles.modalOverlay} onClick={onClose}>
       <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-        <h2>Confirm Submission</h2>
+        <h2>Request Food Bank Dinner?</h2>
         <p>Are you sure you want to submit?</p>
 
         <p>All the other confirmation/explanation text that goes here.</p>
@@ -34,7 +34,7 @@ function ConfirmModal({ isOpen, onClose, onConfirm, isSubmitting }) {
             disabled={isSubmitting}
             className={`${styles.btn} ${styles.btnSecondary}`}
           >
-            Back
+            Go Back
           </button>
 
           <button
@@ -271,6 +271,7 @@ export default function CreateFoodBankForm({ reservationSlots }) {
             <input
               id="name"
               type="text"
+              placeholder="Enter your full name."
               ref={nameInputRef}
               className={`${styles.formInput} ${errors.name ? styles.formInputError : ""}`}
               {...form.register("name")}
@@ -285,6 +286,7 @@ export default function CreateFoodBankForm({ reservationSlots }) {
             <input
               id="email"
               type="email"
+              placeholder="example@something.com"
               className={`${styles.formInput} ${errors.email ? styles.formInputError : ""}`}
               {...form.register("email")}
             />
@@ -298,6 +300,7 @@ export default function CreateFoodBankForm({ reservationSlots }) {
             <input
               id="phone"
               type="tel"
+              placeholder="123-123-1234"
               className={`${styles.formInput} ${errors.phone ? styles.formInputError : ""}`}
               {...form.register("phone")}
             />
@@ -311,6 +314,7 @@ export default function CreateFoodBankForm({ reservationSlots }) {
             <textarea
               id="note"
               rows={4}
+              placeholder="Let us know about allergies, questions, or anything else important."
               className={`${styles.formInput} ${styles.textarea}`}
               {...form.register("note")}
             />

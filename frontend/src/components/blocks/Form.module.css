@@ -19,23 +19,6 @@ body {
 
 
 
-/* inputs */
-
-
-  /* slot buttons */
-
-
-
-/* validation */
-
-
-/* buttons */
-
-
-/* modal */
-
-
-
 /* steps indicator */
 .headerBlock {
   display: flex;
@@ -138,7 +121,6 @@ body {
 .slotButtonGroup {
   display: flex;
   flex-direction: column;
-  margin-top: 1rem;
 }
 
 .slotButton {
@@ -233,12 +215,9 @@ div.formInput.stepper {
   outline: none;
   border-color: var(--color-rust);
 }
-/* 
-.formInputError {
-  border-color: #db1b02;
-}
- */
-/* --- Validation Message (Soft, readable) --- */
+
+
+/* validation */
 .validationError {
   color: #d36556      ;
   font-size: 0.9rem;
@@ -252,7 +231,7 @@ div.formInput.stepper {
   background-color: white;
   border: 1px solid #d36556;
   box-shadow: rgba(242, 118, 118, 0.1);
-  border-radius: 20px;
+  border-radius: 15px;
   
 }
 .formInput:disabled {
@@ -271,26 +250,27 @@ div.formInput.stepper {
   padding: 1rem;
 }
 
-/* ===== FORM ACTIONS ===== */
+/* form actions */
 .formActions {
   display: flex;
-  flex-direction: row;
-  gap: 1rem;
-  margin-top: 2rem;
-  padding-top: 1.5rem;
+  flex-direction: row-reverse;
+  justify-content: start;
+  gap: 1.5rem;
+  margin-top: 1rem;
+
 }
 
-/* ===== STATUS MESSAGES ===== */
+/* server side status messages (not client validation) */
 .errorMessage {
   color: #dc2626;
   background: #fef2f2;
   padding: 1rem;
-  border-radius: 0.5rem;
+  border-radius: 15px;
   margin-top: 1rem;
   border: 1px solid #fecaca;
 }
 
-/* ===== MODAL ===== */
+/* modal */
 .modalOverlay {
   position: fixed;
   inset: 0;
@@ -312,7 +292,7 @@ div.formInput.stepper {
 }
 
 .modalContent {
-  background: white;
+  background: var(--color-leather);
   padding: 2rem;
   border-radius: 0.5rem;
   max-width: 400px;
@@ -334,21 +314,30 @@ div.formInput.stepper {
 
 .modalContent h2 {
   margin: 0 0 1rem 0;
-  color: #111827;
+  color: var(--color-cream);
 }
 
 .modalContent p {
-  color: #6b7280;
+  color: var(--color-cream);
   margin: 0 0 1.5rem 0;
-  line-height: 1.5;
 }
 
 .modalActions {
   display: flex;
-  gap: 1rem;
-  justify-content: flex-end;
-  flex-direction: column-reverse;
+  flex-direction: column;
+  gap: 0.5rem;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2rem;
+}
 
+.modalActions .btnSecondary {
+  color: var(--color-cream);
+  border-color: var(--color-cream);
+}
+
+.modalActions .btn {
+  width: 10rem;
 }
 
 
@@ -356,10 +345,6 @@ div.formInput.stepper {
 
 @media (min-width: 700px) {
 
-   .modalActions {
-    display: flex;
-    flex-direction: row;
-  }
 
   .flex {
   display: flex;
