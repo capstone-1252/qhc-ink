@@ -81,11 +81,3 @@ ul {
 .overflow-hidden {
   overflow: hidden;
 }
-
-.hero p {
-    color: #D8CFAE;
-    font-family: 'Outfit', sans-serif;
-    font-weight: 400;
-    text-align: center;
-    max-width: 100%;
-}
