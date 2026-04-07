@@ -3,11 +3,8 @@ import Link from '../ui/Link.astro';
 ---
 
 <section class="food-bank" aria-labelledby="food-bank-heading">
-
   <div class="food-bank-text">
-    <!-- Rust cap only on left column -->
     <div class="food-bank-rust-cap"></div>
-
     <div class="food-bank-text-inner">
       <h2 id="food-bank-heading" class="food-bank-heading">Food Bank Dinner</h2>
       <p>
@@ -15,12 +12,7 @@ import Link from '../ui/Link.astro';
         last Monday of each month with a $5 reservation fee — with all proceeds
         of the dinner going to the Edmonton Food Bank!
       </p>
-      <Link
-        href="/food-bank"
-        label="Book Your Spot"
-        size="md"
-        variant="default"
-      />
+      <Link href="/food-bank" label="Book Your Spot" size="md" variant="default" />
     </div>
   </div>
 
@@ -32,16 +24,19 @@ import Link from '../ui/Link.astro';
     />
   </div>
 
+  <div class="food-bank-cta">
+    <Link href="/food-bank" label="Book Your Spot" size="md" variant="default" />
+  </div>
 </section>
 
 <style>
   .food-bank {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  min-height: 500px;
-  background-color: var(--color-cream);
-  /* remove max-width and margin: auto */
-}
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    min-height: 500px;
+    background-color: var(--color-cream);
+  }
 
   /* Left column */
   .food-bank-text {
@@ -49,6 +44,7 @@ import Link from '../ui/Link.astro';
     flex-direction: column;
     position: relative;
     background-color: var(--color-cream);
+    grid-row: 1;
   }
 
   /* Rust block at top of left column only */
@@ -70,17 +66,17 @@ import Link from '../ui/Link.astro';
     clip-path: ellipse(55% 100% at 50% 100%);
   }
 
- .food-bank-text-inner {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 1.25rem;
-  padding: 3rem 2rem;
-  max-width: 600px;
-  margin-left: auto;
-  flex: 1;
-  justify-content: center;
-}
+  .food-bank-text-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.25rem;
+    padding: 3rem 2rem;
+    max-width: 600px;
+    margin-left: auto;
+    flex: 1;
+    justify-content: center;
+  }
 
   .food-bank-heading {
     font-size: clamp(1.75rem, 3vw, 2.5rem);
@@ -91,6 +87,7 @@ import Link from '../ui/Link.astro';
     color: var(--color-leather);
     font-size: 0.95rem;
     line-height: 1.75;
+    max-width: 55ch;
   }
 
   .food-bank-text :global(.button-default) {
@@ -106,6 +103,7 @@ import Link from '../ui/Link.astro';
   /* Full bleed image on right */
   .food-bank-image {
     overflow: hidden;
+    grid-row: 1;
   }
 
   .food-bank-image img {
@@ -115,6 +113,11 @@ import Link from '../ui/Link.astro';
     display: block;
   }
 
+  /* Desktop CTA below text column */
+  .food-bank-cta {
+    display: none;
+  }
+
   /* Mobile */
   @media (max-width: 768px) {
     .food-bank {
@@ -122,19 +125,30 @@ import Link from '../ui/Link.astro';
     }
 
     .food-bank-rust-cap {
-  background-color: var(--color-rust);
-  height: clamp(80px, 8vw, 140px); /* scales with viewport */
-  position: relative;
-}
+      background-color: var(--color-rust);
+      height: clamp(80px, 8vw, 140px);
+      position: relative;
+    }
 
     .food-bank-text-inner {
-  padding: 3rem 1.5rem 2.5rem;
-  max-width: unset;
-  margin-left: 0;
-}
+      padding: 3rem 1.5rem 2.5rem;
+      max-width: unset;
+      margin-left: 0;
+    }
 
     .food-bank-image {
       aspect-ratio: 16 / 9;
+    }
+
+    .food-bank-cta {
+      display: flex;
+      justify-content: center;
+      padding: 2rem 1.5rem 4rem;
+      background-color: var(--color-cream);
+    }
+
+    .food-bank-text-inner :global(.button) {
+      display: none;
     }
   }
 </style>

@@ -13,7 +13,7 @@ import { formSchema } from '@/shared/schema.js'
 
 
 // Export the handler function that Netlify will call on each request
-exports.handler = async (event, context) => {
+export async function handler(event, context) {
   console.log("FUNCTION HIT");
   // --------------------------------------------------------------------------
   // STEP 1: HTTP METHOD VALIDATION
@@ -75,8 +75,8 @@ exports.handler = async (event, context) => {
     const validation = formSchema.safeParse(payload);
 
     if (!validation.success) {
-      const firstError = validation.error.errors[0]?.message || 'Validation failed';
-      return {
+      const firstError = validation.error?.errors?.[0]?.message || 'Validation failed';     
+return {
         statusCode: 400,
         headers: {
           'Access-Control-Allow-Origin': '*',
@@ -85,8 +85,13 @@ exports.handler = async (event, context) => {
       };
     }
   
-    const { name, email, phone, note, reservationSlot, partySize } = validation.data;
+    const { name, email, phone, note, reservation_slot, partySize } = validation.data;
 
+    console.log('=== DEBUG: Incoming Payload ===');
+console.log('Full payload:', JSON.stringify(payload, null, 2));
+console.log('reservation_slot value:', reservation_slot);
+console.log('reservation_slot type:', typeof reservation_slot);
+console.log('===============================');
     // ------------------------------------------------------------------------
     // STEP 8: PREPARE DATA FOR STRAPI
     // ------------------------------------------------------------------------
@@ -94,16 +99,18 @@ exports.handler = async (event, context) => {
     // Format: { data: { field1: value1, field2: value2, ... } }
     // Note: note is optional, so we provide empty string if undefined
     // ------------------------------------------------------------------------
-    const strapiData = {
-      data: {
-        name,
-        email,
-        phone,
-        note: note || '', // Default to empty string if note is undefined
-        reservationSlot,
-        partySize,
-      },
-    };
+const strapiData = {
+  data: {
+    name,
+    email,
+    phone,
+    note: note || '', // Default to empty string if note is undefined
+    reservation_slot: {
+      connect: [{ documentId: reservation_slot }],
+    },
+    partySize
+  }
+};
 
     // ------------------------------------------------------------------------
     // STEP 9: LOAD ENVIRONMENT VARIABLES
@@ -153,6 +160,8 @@ exports.handler = async (event, context) => {
       };
     }
 
+    
+
     // ------------------------------------------------------------------------
     // STEP 11: CALL STRAPI API
     // ------------------------------------------------------------------------
@@ -198,6 +207,7 @@ exports.handler = async (event, context) => {
     // Why: We need to confirm what Strapi returned
     // Note: Strapi typically returns { data: { id, attributes, ... } }
     // ------------------------------------------------------------------------
+
     const result = await response.json();
 
     // ------------------------------------------------------------------------
