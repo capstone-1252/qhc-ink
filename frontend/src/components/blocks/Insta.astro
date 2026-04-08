@@ -6,43 +6,44 @@ import Link from '../ui/Link.astro';
 <section class="whats-happening" aria-labelledby="happening-heading">
 
   <div class="whats-happening-inner">
-    <h2 id="happening-heading" class="whats-happening-heading">
-      What's Happening at Little Wolf?
-    </h2>
-    <p class="whats-happening-body">
-      Follow along on Instagram to see what's new and stay up to date with everything at Little Wolf.
-    </p>
+    <div class="whats-happening-text">
+      <h2 id="happening-heading" class="whats-happening-heading">
+        What's Happening at Little Wolf?
+      </h2>
+      <p class="whats-happening-body">
+        Follow along on Instagram to see what's new and stay up to date with everything at Little Wolf.
+      </p>
+    </div>
     
     <div class="carousel-placeholder" aria-label="Instagram feed">
-  <div class="placeholder-slides" id="insta-slides">
-    <div class="placeholder-slide">
-      <img src="/slide-1.webp" alt="Little Wolf Instagram photo 1" role="presentation" loading="lazy" />
+      <div class="placeholder-slides" id="insta-slides">
+        <div class="placeholder-slide">
+          <img src="/slide-1.webp" alt="Little Wolf Instagram photo 1" role="presentation" loading="lazy" />
+        </div>
+        <div class="placeholder-slide">
+          <img src="/slide-2.webp" alt="Little Wolf Instagram photo 2" role="presentation" loading="lazy" />
+        </div>
+        <div class="placeholder-slide">
+          <img src="/slide-3.webp" alt="Little Wolf Instagram photo 3" role="presentation" loading="lazy" />
+        </div>
+      </div>
+      <div class="carousel-dots" id="insta-dots">
+        <button class="carousel-dot active" aria-label="Slide 1"></button>
+        <button class="carousel-dot" aria-label="Slide 2"></button>
+        <button class="carousel-dot" aria-label="Slide 3"></button>
+      </div>
     </div>
-    <div class="placeholder-slide">
-      <img src="/slide-2.webp" alt="Little Wolf Instagram photo 2" role="presentation" loading="lazy" />
-    </div>
-    <div class="placeholder-slide">
-      <img src="/slide-3.webp" alt="Little Wolf Instagram photo 3" role="presentation" loading="lazy" />
-    </div>
-  </div>
-  <div class="carousel-dots" id="insta-dots">
-    <button class="carousel-dot active" aria-label="Slide 1"></button>
-    <button class="carousel-dot" aria-label="Slide 2"></button>
-    <button class="carousel-dot" aria-label="Slide 3"></button>
-  </div>
-</div>
 
-   <Link
+    <Link
       href="https://www.instagram.com/littlewolfrestaurant/"
       target="_blank"
       rel="noopener noreferrer"
       label="More From Us"
       variant="outline"
       size="md"
-   />
+    />
   </div>
 
-  
 </section>
 
 <script>
@@ -68,26 +69,34 @@ import Link from '../ui/Link.astro';
   }
 
   .whats-happening-inner {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 4rem 2rem 5rem;
-  display: flex;
-  flex-direction: column;
-  gap: 2.5rem;
-  align-items: flex-start;
-}
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 5rem 2rem 5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+    align-items: flex-start;
+  }
+
+  .whats-happening-text {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
 
   .whats-happening-heading {
-      font-size: clamp(1.75rem, 3vw, 2.5rem);
-      color: var(--color-gold);
-   }
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    color: var(--color-gold);
+  }
 
   .whats-happening-body {
-      color: var(--color-cream);
-      font-size: 0.95rem;
-      line-height: 1.75;
-      max-width: 55ch;
-   }
+    color: var(--color-cream);
+    font-size: 0.95rem;
+    line-height: 1.75;
+    max-width: 55ch;
+  }
 
   /* Placeholder carousel — 3 images side by side */
   .carousel-placeholder {
@@ -113,48 +122,51 @@ import Link from '../ui/Link.astro';
     display: block;
   }
 
-  /* Mobile */
-  @media (max-width: 768px) {
-  .whats-happening-inner {
-    padding: 3rem 1.5rem 4.5rem;
-  }
-  .carousel-placeholder {
-    position: relative;
-  }
-  .placeholder-slides {
-    display: flex;
-    overflow-x: scroll;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    gap: 1rem;
-  }
-  .placeholder-slides::-webkit-scrollbar {
+  .carousel-dots {
     display: none;
   }
-  .placeholder-slide {
-    flex: 0 0 100%;
-    scroll-snap-align: start;
+
+  /* Mobile */
+  @media (max-width: 768px) {
+    .whats-happening-inner {
+      padding: 4rem 1.5rem 3.5rem;
+    }
+    .carousel-placeholder {
+      position: relative;
+    }
+    .placeholder-slides {
+      display: flex;
+      overflow-x: scroll;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      gap: 1rem;
+    }
+    .placeholder-slides::-webkit-scrollbar {
+      display: none;
+    }
+    .placeholder-slide {
+      flex: 0 0 100%;
+      scroll-snap-align: start;
+    }
+    .carousel-dots {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+    .carousel-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: var(--color-taupe);
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    .carousel-dot.active {
+      background-color: var(--color-cream);
+    }
   }
-  .carousel-dots {
-    display: flex;
-    justify-content: center;
-    gap: 0.5rem;
-    margin-top: 1rem;
-  }
-  .carousel-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background-color: var(--color-taupe);
-    border: none;
-    padding: 0;
-    cursor: pointer;
-    transition: background-color 0.2s;
-  }
-  .carousel-dot.active {
-    background-color: var(--color-cream);
-  }
-}
-  
 </style>
