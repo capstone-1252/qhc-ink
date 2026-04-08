@@ -80,13 +80,13 @@ const navLinks = [
           rel="noopener noreferrer"
           class="reservations-link"
         >
-          Reservations
+          Reserve
         </a>
       </div>
     </nav>
 
     <!-- Desktop reservations button -->
-   <a href="https://www.exploretock.com/little-wolf-restaurant" target="_blank" rel="noopener noreferrer" class="reservations-link desktop-reservations">Reservations</a>
+   <a href="https://www.exploretock.com/little-wolf-restaurant" target="_blank" rel="noopener noreferrer" class="reservations-link desktop-reservations">Reserve</a>
 
     <div id="nav-overlay" class="nav-overlay"></div>
 
@@ -216,7 +216,7 @@ const navLinks = [
   }
 
   .reservations-link {
-    background-color: var(--color-yolk); 
+    background-color: var(--color-gold);
     color: var(--color-espresso) !important;
     font-family: var(--font-body);
     font-weight: 600;
@@ -225,8 +225,12 @@ const navLinks = [
     text-transform: uppercase;
     padding: 0.75rem 1.5rem;
     border-radius: 2rem;
+    
     transition: background-color 0.2s;
-    white-space: nowrap;
+    display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      width: 200px;
   }
 
   .reservations-link:hover {
@@ -235,8 +239,11 @@ const navLinks = [
   }
 
   .desktop-reservations {
-    display: block;
-  }
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 200px;
+}
 
   .nav-footer {
     display: none;

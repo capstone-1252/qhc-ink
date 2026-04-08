@@ -33,28 +33,23 @@ import Link from '../ui/Link.astro';
   .food-bank {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto auto;
     min-height: 500px;
     background-color: var(--color-cream);
   }
 
-  /* Left column */
   .food-bank-text {
     display: flex;
     flex-direction: column;
     position: relative;
     background-color: var(--color-cream);
-    grid-row: 1;
   }
 
-  /* Rust block at top of left column only */
   .food-bank-rust-cap {
     background-color: var(--color-rust);
     height: 80px;
     position: relative;
   }
 
-  /* Wave cut — pseudo element on rust cap */
   .food-bank-rust-cap::after {
     content: '';
     position: absolute;
@@ -100,10 +95,8 @@ import Link from '../ui/Link.astro';
     color: var(--color-cream);
   }
 
-  /* Full bleed image on right */
   .food-bank-image {
     overflow: hidden;
-    grid-row: 1;
   }
 
   .food-bank-image img {
@@ -113,7 +106,6 @@ import Link from '../ui/Link.astro';
     display: block;
   }
 
-  /* Desktop CTA below text column */
   .food-bank-cta {
     display: none;
   }
@@ -121,23 +113,26 @@ import Link from '../ui/Link.astro';
   /* Mobile */
   @media (max-width: 768px) {
     .food-bank {
-      grid-template-columns: 1fr;
+      display: flex;
+      flex-direction: column;
     }
 
     .food-bank-rust-cap {
-      background-color: var(--color-rust);
       height: clamp(80px, 8vw, 140px);
-      position: relative;
     }
 
     .food-bank-text-inner {
-      padding: 3rem 1.5rem 2.5rem;
+      padding: 2rem 1.5rem;
       max-width: unset;
       margin-left: 0;
     }
 
+    .food-bank-text-inner :global(.button) {
+      display: none;
+    }
+
     .food-bank-image {
-      aspect-ratio: 16 / 9;
+      aspect-ratio: 4 / 3;
     }
 
     .food-bank-cta {
@@ -147,8 +142,14 @@ import Link from '../ui/Link.astro';
       background-color: var(--color-cream);
     }
 
-    .food-bank-text-inner :global(.button) {
-      display: none;
+    .food-bank-cta :global(.button-default) {
+      background-color: var(--color-rust);
+      color: var(--color-espresso);
+    }
+
+    .food-bank-cta :global(.button-default:hover) {
+      background-color: var(--color-leather);
+      color: var(--color-cream);
     }
   }
 </style>

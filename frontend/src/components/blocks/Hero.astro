@@ -13,68 +13,81 @@ const slides = [
 ];
 ---
 
-<section class="hero" aria-labelledby="hero-heading">
-  <div class="hero-inner">
-    <div class="hero-column-divider" aria-hidden="true">
-      <svg viewBox="0 0 80 600" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M40,0 C60,75 20,150 40,225 C60,300 20,375 40,450 C60,525 20,562 40,600 L-40,600 L-40,0 Z"
-          fill="var(--color-leather)"
-          opacity="1"
+<div class="hero-wrapper">
+  <section class="hero" aria-labelledby="hero-heading">
+    <div class="hero-inner">
+      <div class="hero-column-divider" aria-hidden="true">
+        <svg viewBox="0 0 80 600" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M40,0 C60,75 20,150 40,225 C60,300 20,375 40,450 C60,525 20,562 40,600 L-40,600 L-40,0 Z"
+            fill="var(--color-leather)"
+            opacity="1"
+          />
+          <path d="M40,0 C60,75 20,150 40,225 C60,300 20,375 40,450 C60,525 20,562 40,600"
+            fill="none"
+            stroke="var(--color-cream)"
+            stroke-width="15"
+            opacity="1"
+          />
+        </svg>
+      </div>
+      <div class="hero-content">
+        <h1 id="hero-heading" class="hero-heading">
+          Where Flavour<br />Meets Fun
+        </h1>
+        <p class="hero-body">
+          Welcome to Little Wolf, Where you can drop in and hang out, (You can also secure yourself a reservation!) We're a small plates & big hearts restaurant and bar in the center of the garneau district. we specialize in craft cocktails, local beers & a veg forward menu with something for everyone.
+        </p>
+        <Link
+          href="https://www.exploretock.com/little-wolf-restaurant"
+          target="_blank"
+          rel="noopener noreferrer"
+          label="Reserve"
+          size="md"
+          variant="gold"
         />
-        <path d="M40,0 C60,75 20,150 40,225 C60,300 20,375 40,450 C60,525 20,562 40,600"
-          fill="none"
-         stroke="var(--color-cream)"
-         stroke-width="15"
-         opacity="1"
-        />
-      </svg>
+      </div>
+      <div class="hero-image-wrap">
+        <EmblaCarousel client:load slides={slides} options={{ loop: true }} />
+        <div class="hero-image-fade"></div>
+      </div>
     </div>
-    <div class="hero-content">
-      <h1 id="hero-heading" class="hero-heading">
-        Where Flavour<br />Meets Fun
-      </h1>
-      <p class="hero-body">
-        Welcome to Little Wolf, Where you can drop in and hang out, (You can also secure yourself a reservation!) We're a small plates & big hearts restaurant and bar in the center of the garneau district. we specialize in craft cocktails, local beers & a veg forward menu with something for everyone.
-      </p>
-      <Link
-        href="/reservations"
-        label="Reserve"
-        size="md"
-        variant="gold"
-      />
-    </div>
-    <div class="hero-image-wrap">
-      <EmblaCarousel client:load slides={slides} options={{ loop: true }} />
-    </div>
-  </div>
+  </section>
   <HoursTab client:load hours={hours} />
-</section>
+</div>
 
 <style>
+  .hero-wrapper {
+    position: relative;
+  }
+
   .hero {
     background-color: var(--color-leather);
     overflow: hidden;
   }
+
   .hero-inner {
     display: grid;
     grid-template-columns: 1fr 1fr;
     min-height: 600px;
     position: relative;
   }
-  .hero-column-divider {
-    position: absolute;
-    left: 50%;
-    top: 0;
-    transform: translateX(-50%);
-    height: 100%;
-    width: 80px;
-    z-index: 2;
-    pointer-events: none;
-  }
+  
+.hero-column-divider {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+  height: calc(100% + 80px);
+  width: 80px;
+  z-index: 2;
+  pointer-events: none;
+}
+
   .hero-column-divider svg {
     width: 100%;
     height: 100%;
   }
+
   .hero-content {
     display: flex;
     flex-direction: column;
@@ -83,6 +96,7 @@ const slides = [
     padding: 5rem 3rem 3rem max(2rem, calc((100vw - 1200px) / 2 + 2rem));
     justify-content: center;
   }
+
   .hero-heading {
     font-family: var(--font-accent);
     font-size: clamp(2.5rem, 5vw, 4.5rem);
@@ -90,49 +104,75 @@ const slides = [
     line-height: 1.05;
     font-style: italic;
   }
+
   .hero-body {
     font-size: 0.95rem;
     color: var(--color-cream);
     max-width: 55ch;
     line-height: 1.75;
   }
+
   .hero-image-wrap {
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    min-height: 600px;
+    position: relative;
   }
+
+  .hero-image-fade {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 120px;
+    background: linear-gradient(
+      to bottom,
+      transparent,
+      var(--color-leather)
+    );
+    pointer-events: none;
+    z-index: 1;
+  }
+
   /* Mobile */
   @media (max-width: 768px) {
-  .hero-inner {
-  grid-template-columns: 1fr;
-  height: calc(100svh - 72px);
-  overflow: hidden;
-  position: relative;
-}
-  .hero-image-wrap {
-    position: absolute;
-    inset: 0;
-    aspect-ratio: unset;
-    z-index: 0;
+    .hero-inner {
+      grid-template-columns: 1fr;
+      height: calc(100svh - 72px);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .hero-image-wrap {
+      position: absolute;
+      inset: 0;
+      min-height: unset;
+    }
+
+    .hero-image-fade {
+      display: none;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      padding: 3.5rem 1.5rem 3rem 1.5rem;
+      justify-content: flex-start;
+      background: linear-gradient(
+         to bottom,
+         rgba(35, 28, 24, 0.8) 0%,
+         rgba(35, 28, 24, 0.5) 50%,
+         rgba(35, 28, 24, 0.3) 100%
+      );
   }
-  .hero-content {
-  position: relative;
-  z-index: 1;
-  padding: 8rem 1.5rem 3rem 1.5rem;
-justify-content: flex-start;
-  background: linear-gradient(
-    to bottom,
-    rgba(35, 28, 24, 0.8) 0%,
-    rgba(35, 28, 24, 0.5) 50%,
-    rgba(35, 28, 24, 0.3) 100%
-  );
-  height: calc(100svh - 72px);
-}
-  .hero-heading {
-    font-size: clamp(2.2rem, 10vw, 3rem);
+
+    .hero-heading {
+      font-size: clamp(2.2rem, 10vw, 3rem);
+    }
+
+    .hero-column-divider {
+      display: none;
+    }
   }
-  .hero-column-divider {
-    display: none;
-  }
-}
 </style>
