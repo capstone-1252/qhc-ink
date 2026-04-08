@@ -1,5 +1,4 @@
 ---
-// this will be our menu page
 import Layout from '../layouts/Layout.astro';
 import Header from '../components/layout/Header.astro';
 import { getMenuCategories } from '../lib/strapi';
@@ -19,24 +18,20 @@ type MenuItem = {
   drinkPriceGlass?: number | null;
   drinkPriceBottle?: number | null;
   type: string;
-  menu_category?: {
-    name: string;
-  };
+  menu_category?: { name: string };
 };
 
 const menuCategories: MenuCategory[] = await getMenuCategories();
 const menuItems: MenuItem[] = await getMenuItems();
 
-// split categories
 const foodCategories = menuCategories
-  .filter((category) => category.type === "food")
-  .sort((a,b) => a.order - b.order);
+  .filter((c) => c.type === "food")
+  .sort((a, b) => a.order - b.order);
 
 const drinkCategories = menuCategories
-  .filter((category) => category.type === "drink")
-  .sort((a,b) => a.order - b.order);
+  .filter((c) => c.type === "drink")
+  .sort((a, b) => a.order - b.order);
 
-// header links
 const MenuLinks = [
   { label: 'Home', url: '/' },
   { label: 'Food Bank', url: '/food-bank' }
@@ -46,38 +41,163 @@ const MenuLinks = [
 <Layout title="Little Wolf Restaurant - Menu">
 <Header links={MenuLinks} />
 
-<h2>Menu</h2>
+<div class="menu-hero">
+  <h1>Menu</h1>
+  <p>Menu changes on a regular basis,<br/>below are examples and may not be available</p>
+  <img src="/slide-1.webp" alt="Menu photo" />
+</div>
 
-<h3>Food</h3>
+<div class="menu-body">
 
-{foodCategories.map((category) => (
-  <div>
-    <h4>{category.name}</h4>
-
-    {menuItems
-      .filter((item) => item.menu_category?.name === category.name)
-      .map((item) => (
-        <p>{item.name} - ${item.price}</p>
-      ))}
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab active" data-tab="food">Food</button>
+    <button class="tab" data-tab="drinks">Drinks</button>
   </div>
-))}
 
-<h3>Drinks</h3>
-
-{drinkCategories.map((category) => (
-  <div>
-    <h4>{category.name}</h4>
-
-    {menuItems
-      .filter((item) => item.menu_category?.name === category.name)
-      .map((item) => (
-        <p>
-          {item.name}
-          {item.drinkPriceGlass && ` - Glass $${item.drinkPriceGlass}`}
-          {item.drinkPriceBottle && ` / Bottle $${item.drinkPriceBottle}`}
-        </p>
-      ))}
+  <!-- Food -->
+  <div id="tab-food" class="tab-content">
+    {foodCategories.map((category) => (
+      <div class="category">
+        <h3>{category.name}</h3>
+        {menuItems
+          .filter((item) => item.menu_category?.name === category.name)
+          .map((item) => (
+            <div class="menu-item">
+              <span class="item-name">{item.name}</span>
+              <span class="item-price">${item.price}</span>
+            </div>
+          ))}
+      </div>
+    ))}
   </div>
-))}
 
+  <!-- Drinks -->
+  <div id="tab-drinks" class="tab-content hidden">
+    {drinkCategories.map((category) => (
+      <div class="category">
+        <h3>{category.name}</h3>
+        {menuItems
+          .filter((item) => item.menu_category?.name === category.name)
+          .map((item) => (
+            <div class="menu-item">
+              <span class="item-name">{item.name}</span>
+              <span class="item-price">
+                {item.drinkPriceGlass && `Glass $${item.drinkPriceGlass}`}
+                {item.drinkPriceGlass && item.drinkPriceBottle && ' / '}
+                {item.drinkPriceBottle && `Bottle $${item.drinkPriceBottle}`}
+              </span>
+            </div>
+          ))}
+      </div>
+    ))}
+  </div>
+
+</div>
 </Layout>
+
+<script>
+  const tabs = document.querySelectorAll('.tab');
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+      document.getElementById(`tab-${tab.dataset.tab}`)?.classList.remove('hidden');
+    });
+  });
+</script>
+
+<style>
+  .menu-hero {
+    background-color: var(--color-espresso);
+    text-align: center;
+    padding: 2rem 1rem 0;
+    color: var(--color-cream);
+  }
+
+  .menu-hero h1 {
+    font-style: italic;
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .menu-hero p {
+    font-size: 0.9rem;
+    opacity: 0.85;
+    margin-bottom: 1.5rem;
+  }
+
+  .menu-hero img {
+    width: 100%;
+    max-width: 500px;
+    height: 200px;
+    object-fit: cover;
+    display: block;
+    margin: 0 auto;
+  }
+
+  .menu-body {
+    background-color: var(--color-cream);
+    padding: 2rem 1.5rem;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .tabs {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .tab {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--color-espresso);
+    cursor: pointer;
+    padding: 0;
+    font-family: inherit;
+  }
+
+  .tab.active {
+    color: var(--color-rust);
+    text-decoration: underline;
+  }
+
+  .hidden {
+    display: none;
+  }
+
+  .category {
+    margin-bottom: 2rem;
+  }
+
+  .category h3 {
+  color: var(--color-espresso);
+  font-size: 1rem;
+  font-weight: bold;
+  margin-bottom: 0.75rem;
+  border-bottom: 1px solid var(--color-espresso);
+  padding-bottom: 0.25rem;
+}
+
+  .menu-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    padding: 0.4rem 0;
+  }
+
+  .item-name {
+    flex: 1;
+    font-size: 0.95rem;
+  }
+
+  .item-price {
+    font-size: 0.95rem;
+    white-space: nowrap;
+  }
+</style>

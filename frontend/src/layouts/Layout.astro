@@ -1,25 +1,21 @@
 ---
 import Footer from '../components/layout/Footer.astro';
+import HeadSeo from './HeadSeo.astro';
 import '../styles/global.css';
 
 interface Props {
-    title: string;
+    title?: string;
+    description?: string;
 }
 
-const { title } = Astro.props;
+const { title, description } = Astro.props;
 const actualTitle = title ? `${title} | Little Wolf Restaurant` : 'Little Wolf Restaurant';
+const actualDescription = description || 'Little Wolf Restaurant – fresh meals, cozy atmosphere, local ingredients.';
 ---
 
 <!doctype html>
 <html lang="en" class="scroll-smooth">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-        <link rel="icon" href="/favicon.ico" />
-        <meta name="generator" content={Astro.generator} />
-        <title>{actualTitle}</title>
-    </head>
+<HeadSeo title={actualTitle} description={actualDescription} />       
     <body>
         <slot /> <!-- all page content would inject here -->
         <Footer />
