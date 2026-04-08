@@ -9,6 +9,8 @@ type MenuCategory = {
   name: string;
   order: number;
   type: "food" | "drink";
+  highlight?: boolean;
+  Column?: number | null;
 };
 
 type MenuItem = {
@@ -32,10 +34,17 @@ const drinkCategories = menuCategories
   .filter((c) => c.type === "drink")
   .sort((a, b) => a.order - b.order);
 
+const drinkCol1 = drinkCategories.filter(c => !c.highlight && c.Column === 1);
+const drinkCol2 = drinkCategories.filter(c => !c.highlight && c.Column === 2);
+
 const MenuLinks = [
   { label: 'Home', url: '/' },
   { label: 'Food Bank', url: '/food-bank' }
 ];
+
+function getItems(category: MenuCategory) {
+  return menuItems.filter((item) => item.menu_category?.name === category.name);
+}
 ---
 
 <Layout title="Little Wolf Restaurant - Menu">
@@ -49,7 +58,6 @@ const MenuLinks = [
 
 <div class="menu-body">
 
-  <!-- Tabs -->
   <div class="tabs">
     <button class="tab active" data-tab="food">Food</button>
     <button class="tab" data-tab="drinks">Drinks</button>
@@ -57,40 +65,120 @@ const MenuLinks = [
 
   <!-- Food -->
   <div id="tab-food" class="tab-content">
-    {foodCategories.map((category) => (
-      <div class="category">
-        <h3>{category.name}</h3>
-        {menuItems
-          .filter((item) => item.menu_category?.name === category.name)
-          .map((item) => (
-            <div class="menu-item">
-              <span class="item-name">{item.name}</span>
-              <span class="item-price">${item.price}</span>
-            </div>
-          ))}
+    <div class="two-col-wrapper">
+      <div class="two-col">
+        {foodCategories.filter(c => !c.highlight).map((category) => (
+          <div class="category">
+            <h3>{category.name}</h3>
+            {getItems(category).map((item) => (
+              <div class="menu-item">
+                <span class="item-name">{item.name}</span>
+                <span class="item-price">${item.price}</span>
+              </div>
+            ))}
+          </div>
+        ))}
+        <div class="two-col-photo">
+          <img src="/slide-1.webp" alt="Food photo" />
+        </div>
       </div>
-    ))}
+    </div>
+
+    {foodCategories.filter(c => c.highlight).length > 0 && (
+      <div class="highlight-section">
+        <div class="wave-border">
+          <div class="wave-flat"></div>
+          <div class="wave-top"></div>
+          <div class="wave-line"></div>
+        </div>
+        <div class="highlight-inner">
+          <div class="highlight-grid">
+            {foodCategories.filter(c => c.highlight).map((category) => (
+              <div class="category">
+                <h3>{category.name}</h3>
+                {getItems(category).map((item) => (
+                  <div class="menu-item">
+                    <span class="item-name">{item.name}</span>
+                    <span class="item-price">${item.price}</span>
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    )}
   </div>
 
   <!-- Drinks -->
   <div id="tab-drinks" class="tab-content hidden">
-    {drinkCategories.map((category) => (
-      <div class="category">
-        <h3>{category.name}</h3>
-        {menuItems
-          .filter((item) => item.menu_category?.name === category.name)
-          .map((item) => (
-            <div class="menu-item">
-              <span class="item-name">{item.name}</span>
-              <span class="item-price">
-                {item.drinkPriceGlass && `Glass $${item.drinkPriceGlass}`}
-                {item.drinkPriceGlass && item.drinkPriceBottle && ' / '}
-                {item.drinkPriceBottle && `Bottle $${item.drinkPriceBottle}`}
-              </span>
+    <div class="two-col-wrapper">
+      <div class="two-col">
+        <div class="drink-col">
+          {drinkCol1.map((category) => (
+            <div class="category">
+              <h3>{category.name}</h3>
+              {getItems(category).map((item) => (
+                <div class="menu-item">
+                  <span class="item-name">{item.name}</span>
+                  <span class="item-price">
+                    {item.drinkPriceGlass && `Glass $${item.drinkPriceGlass}`}
+                    {item.drinkPriceGlass && item.drinkPriceBottle && ' / '}
+                    {item.drinkPriceBottle && `Bottle $${item.drinkPriceBottle}`}
+                  </span>
+                </div>
+              ))}
             </div>
           ))}
+        </div>
+
+        <div class="drink-col">
+          {drinkCol2.map((category) => (
+            <div class="category">
+              <h3>{category.name}</h3>
+              {getItems(category).map((item) => (
+                <div class="menu-item">
+                  <span class="item-name">{item.name}</span>
+                  <span class="item-price">
+                    {item.drinkPriceGlass && `Glass $${item.drinkPriceGlass}`}
+                    {item.drinkPriceGlass && item.drinkPriceBottle && ' / '}
+                    {item.drinkPriceBottle && `Bottle $${item.drinkPriceBottle}`}
+                  </span>
+                </div>
+              ))}
+            </div>
+          ))}
+          <div class="two-col-photo">
+            <img src="/slide-1.webp" alt="Drinks photo" />
+          </div>
+        </div>
       </div>
-    ))}
+    </div>
+
+    {drinkCategories.filter(c => c.highlight).length > 0 && (
+      <div class="highlight-section">
+        <div class="wave-border">
+          <div class="wave-flat"></div>
+          <div class="wave-top"></div>
+          <div class="wave-line"></div>
+        </div>
+        <div class="highlight-inner">
+          <div class="highlight-grid">
+            {drinkCategories.filter(c => c.highlight).map((category) => (
+              <div class="category">
+                <h3>{category.name}</h3>
+                {getItems(category).map((item) => (
+                  <div class="menu-item">
+                    <span class="item-name">{item.name}</span>
+                    <span class="item-price">${item.price}</span>
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    )}
   </div>
 
 </div>
@@ -103,51 +191,62 @@ const MenuLinks = [
       tabs.forEach(t => t.classList.remove('active'));
       tab.classList.add('active');
       document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
-      document.getElementById(`tab-${tab.dataset.tab}`)?.classList.remove('hidden');
+      document.getElementById(`tab-${(tab as HTMLElement).dataset.tab}`)?.classList.remove('hidden');
     });
   });
 </script>
 
 <style>
+  * {
+    box-sizing: border-box;
+  }
+
   .menu-hero {
     background-color: var(--color-espresso);
     text-align: center;
-    padding: 2rem 1rem 0;
-    color: var(--color-cream);
+    padding: 2rem 0 0;
+    overflow: hidden;
+    width: 100%;
   }
 
   .menu-hero h1 {
+    color: var(--color-cream);
     font-style: italic;
     font-size: 2.5rem;
-    margin-bottom: 0.5rem;
+    margin: 0 auto 0.5rem;
+    width: 100%;
+    text-align: center;
+    padding: 0 1.5rem;
   }
 
   .menu-hero p {
+    color: var(--color-cream);
     font-size: 0.9rem;
-    opacity: 0.85;
-    margin-bottom: 1.5rem;
+    margin: 0 auto 2.5rem;
+    text-align: center;
+    padding: 0 1.5rem;
+    width: 100%;
   }
 
   .menu-hero img {
     width: 100%;
-    max-width: 500px;
     height: 200px;
     object-fit: cover;
     display: block;
-    margin: 0 auto;
   }
 
   .menu-body {
     background-color: var(--color-cream);
-    padding: 2rem 1.5rem;
-    max-width: 600px;
-    margin: 0 auto;
+    width: 100%;
+    overflow-x: hidden;
   }
 
   .tabs {
     display: flex;
     gap: 2rem;
-    margin-bottom: 2rem;
+    padding: 3rem 1.5rem 0;
+    margin-bottom: 4rem;
+    justify-content: center;
   }
 
   .tab {
@@ -166,7 +265,24 @@ const MenuLinks = [
     text-decoration: underline;
   }
 
-  .hidden {
+  .hidden { display: none; }
+
+  .two-col-wrapper {
+    padding: 0 2rem 2rem;
+  }
+
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .drink-col {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .two-col-photo {
     display: none;
   }
 
@@ -175,29 +291,150 @@ const MenuLinks = [
   }
 
   .category h3 {
-  color: var(--color-espresso);
-  font-size: 1rem;
-  font-weight: bold;
-  margin-bottom: 0.75rem;
-  border-bottom: 1px solid var(--color-espresso);
-  padding-bottom: 0.25rem;
-}
+    color: var(--color-espresso);
+    font-size: 1rem;
+    font-weight: bold;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.25rem;
+  }
 
   .menu-item {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
-    gap: 1rem;
+    gap: 3rem;
     padding: 0.4rem 0;
   }
 
   .item-name {
     flex: 1;
     font-size: 0.95rem;
+    color: var(--color-espresso);
   }
 
   .item-price {
     font-size: 0.95rem;
     white-space: nowrap;
+    color: var(--color-espresso);
+  }
+
+  /* Wave */
+  .highlight-section {
+    width: 100%;
+  }
+
+  .wave-border {
+    width: 100%;
+    overflow: hidden;
+    line-height: 0;
+    background-color: var(--color-rust);
+  }
+
+  .wave-flat {
+    width: 100%;
+    height: 30px;
+    background-color: var(--color-leather);
+  }
+
+  .wave-top {
+    width: 100%;
+    height: 60px;
+    background-color: var(--color-leather);
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M0,25 C25,25 25,0 50,0 C75,0 75,25 100,25 L100,0 L0,0 Z' fill='black'/%3E%3C/svg%3E");
+    -webkit-mask-size: 100px 100px;
+    -webkit-mask-repeat: repeat-x;
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M0,25 C25,25 25,0 50,0 C75,0 75,25 100,25 L100,0 L0,0 Z' fill='black'/%3E%3C/svg%3E");
+    mask-size: 100px 100px;
+    mask-repeat: repeat-x;
+  }
+
+  .wave-line {
+    width: 100%;
+    height: 60px;
+    margin-top: -60px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M0,25 C25,25 25,0 50,0 C75,0 75,25 100,25' fill='none' stroke='%23D8CFAE' stroke-width='16'/%3E%3C/svg%3E");
+    background-size: 100px 100px;
+    background-repeat: repeat-x;
+  }
+
+  .highlight-inner {
+    background-color: var(--color-rust);
+    padding: 2rem 2rem;
+    margin-top: -4px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .highlight-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    width: 100%;
+  }
+
+  .highlight-section .category h3,
+  .highlight-section .item-name,
+  .highlight-section .item-price {
+    color: var(--color-cream);
+  }
+
+  /* Desktop */
+  @media (min-width: 700px) {
+    .menu-hero h1,
+    .menu-hero p {
+      text-align: center;
+      width: 100%;
+    }
+
+    .menu-body {
+      max-width: 100%;
+    }
+
+    .tabs {
+      padding: 3rem 6rem 0;
+    }
+
+    .two-col-wrapper {
+      padding: 0 6rem 2rem;
+    }
+
+    .two-col {
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .menu-item {
+      gap: 4rem;
+    }
+
+    .two-col-photo {
+      display: block;
+      margin-top: 1rem;
+    }
+
+    .two-col-photo img {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    .highlight-section {
+      width: 100%;
+      margin: 0;
+    }
+
+    .highlight-inner {
+      padding: 2rem 6rem;
+      margin-top: -4px;
+    }
+
+    .highlight-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      max-width: 700px;
+    }
   }
 </style>
