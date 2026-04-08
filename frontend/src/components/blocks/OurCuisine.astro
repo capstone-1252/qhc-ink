@@ -16,27 +16,30 @@ import Link from '../ui/Link.astro';
       </p>
     </div>
     <div class="our-cuisine-photos">
-      <img
-        src="/slide-1.webp"
-        alt="Wood-fired steak with seasonal vegetables - Little Wolf signature dish"
-        loading="lazy"
-        
-        class="cuisine-photo"
-      />
-      <img
-        src="/slide-2.webp"
-        alt="House-made pasta with foraged mushrooms and truffle"
-        loading="lazy"
-      
-        class="cuisine-photo"
-      />
-      <img
-        src="/slide-3.webp"
-        alt="Artisanal dessert featuring local berries and housemade gelato"
-        loading="lazy"
-       
-        class="cuisine-photo"
-      />
+     <img
+  src="/slide-1.webp"
+  alt="Wood-fired steak with seasonal vegetables - Little Wolf signature dish"
+  loading="lazy"
+  width="600"
+  height="400"
+  class="cuisine-photo"
+/>
+<img
+  src="/slide-2.webp"
+  alt="House-made pasta with foraged mushrooms and truffle"
+  loading="lazy"
+  width="600"
+  height="400"
+  class="cuisine-photo"
+/>
+<img
+  src="/slide-3.webp"
+  alt="Artisanal dessert featuring local berries and housemade gelato"
+  loading="lazy"
+  width="600"
+  height="400"
+  class="cuisine-photo"
+/>
     </div>
 
     <div class="our-cuisine-cta">
@@ -62,7 +65,9 @@ import Link from '../ui/Link.astro';
     gap: 2.5rem;
   }
 
-  .our-cuisine-heading {
+   .our-cuisine-heading {
+      font-family: var(--font-body);
+      font-weight: 700;
       font-size: clamp(1.75rem, 3vw, 2.5rem);
       color: var(--color-cream);
    }
