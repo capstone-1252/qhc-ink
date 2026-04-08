@@ -6,7 +6,7 @@
   --color-taupe: #85827B;
   --color-cream: #D8CFAE;
   --color-rust: #AF492C;
-
+  --color-gold: #E9B51C;
   --font-accent: 'Vampiro One', cursive;
   --font-body: 'Outfit', sans-serif;
 }
@@ -79,12 +79,4 @@ ul {
 
 .overflow-hidden {
   overflow: hidden;
-}
-
-.hero p {
-    color: #D8CFAE;
-    font-family: 'Outfit', sans-serif;
-    font-weight: 400;
-    text-align: center;
-    max-width: 100%;
 }
