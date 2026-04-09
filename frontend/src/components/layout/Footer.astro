@@ -1,59 +1,161 @@
---- 
+---
 import Map from "../ui/Map.astro"; 
-
-//fetch the api 
 import { getHours } from "../../lib/strapi.ts"
+import primaryLogo from '../../../public/primary-logo.svg';
 
-//fetch hours
 const hours = await getHours();
+---
 
---- 
-
-<footer role="contentinfo">
-  <div>
-    <div>
+<footer>
+<div class="container">
+  
+      <h2 class="title">Hours & Location</h2>
+  
+    <div class="content">
+    <!-- COLUMN 1 -->
+    <div class="map">
       <Map />
     </div>
-    
-    <div>
-      <div>
-        <h2>Hours & Locations</h2>
-        <div>
-          <!-- Here, there is only one object for hours. This object have several keys (monday, tuesday, wednesday) that we're calling -->
-          <h4>Hours</h4>
-          <ul>
-            <li>Monday: {hours.monday}</li>
-            <li>Tuesday: {hours.tuesday}</li>
-            <li>Wednesday: {hours.wednesday}</li>
-            <li>Thursday: {hours.thursday}</li>
-            <li>Friday: {hours.friday}</li>
-            <li>Saturday: {hours.saturday}</li>
-            <li>Sunday: {hours.sunday}</li>
-          </ul>
-          <p>123 Wolf Street, Edmonton, AB T5J 2Z1</p>
-        </div>
-      </div>
-      
-      <div>
+  
+    <!-- COLUMN 2 -->
+    <div class="info">
+      <p>Address: 8424 109 St NW, Edmonton, AB T6G 1E2</p>
+  
+      <ul class="footer-hours">
+        <li><span class="day">Monday:</span><span class="time">{hours.monday}</span></li>
+        <li><span class="day">Tuesday:</span><span class="time">{hours.tuesday}</span></li>
+        <li><span class="day">Wednesday:</span><span class="time">{hours.wednesday}</span></li>
+        <li><span class="day">Thursday:</span><span class="time">{hours.thursday}</span></li>
+        <li><span class="day">Friday:</span><span class="time">{hours.friday}</span></li>
+        <li><span class="day">Saturday:</span><span class="time">{hours.saturday}</span></li>
+        <li><span class="day">Sunday:</span><span class="time">{hours.sunday}</span></li>
+      </ul>
+  
+      <div class="contact">
         <h3>Other Inquiries?</h3>
-        <a 
-          href="mailto:info@littlewolf.com"  
-          aria-label="Send email to Little Wolf Restaurant"
-        > <!-- !!! MUST CHANGE mailto to correct email address once we deploy !!! -->
-          Contact Us
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-          </svg>
-        </a>
+        <a href="mailto:info@littlewolf.com">Contact Us</a>
       </div>
+    </div>
+  
+    <!-- COLUMN 3 -->
+    <div class="logo">
+      <img src="/primary-logo.svg" alt="Little Wolf Restaurant primary logo" />
     </div>
   </div>
   
-  <div>
-    <p>&copy; 2026 Little Wolf Restaurant. All rights reserved. Edmonton, Alberta.</p>
-  </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 Little Wolf Restaurant</p>
+    </div>
+</div>
 </footer>
 
 <style>
- 
+  footer {
+  background: var(--color-cream); 
+  color: var(--color-espresso);
+}
+
+
+footer p {
+  color: var(--color-leather);
+  padding: 1rem 0;
+}
+
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 4rem 2rem 0rem 2rem;
+}
+
+/* typography */
+.title {
+  text-align: center;
+  margin: 1.5rem 0 2rem 0;
+  color: var(--color-espresso);
+  font-size: clamp(1.75rem,3vw,2.5rem);
+}
+
+
+
+ img {
+  width: 200px;
+  margin: 0 auto;
+  margin-top: 5rem;
+  margin-bottom: 10rem;
+ }
+
+ .footer-hours {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 3rem;
+}
+
+.footer-hours li {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 5px;
+}
+
+.time {
+  text-align: left;
+  font-weight: 600;
+  text-decoration: underline;
+}
+.address {
+  margin-bottom: 0.5rem;
+}
+
+/* CONTACT */
+h3 {
+  color: var(--color-espresso);
+  margin-bottom: 1rem;
+  font-size: clamp(1.4rem, 2.2vw, 2rem);
+}
+
+.contact {
+/*   margin-top: 2rem;
+ */  text-align: center;
+}
+
+.contact a {
+  text-decoration: underline;
+  font-size: 1rem;
+}
+
+/* DESKTOP LAYOUT */
+@media (min-width: 768px) {
+  .content {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr auto;
+    gap: 3rem;
+    align-items: stretch; /* important */
+    margin-bottom: 1rem;
+  }
+
+  .info {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .logo {
+    display: flex;
+    align-items: flex-end; /* pushes logo to bottom */
+  }
+
+  .logo img {
+    width: 166px;
+    margin: 0;
+  }
+
+  .contact {
+    text-align: left;
+  }
+
+  .title {
+    text-align: left;
+  }
+}
+
+
 </style>
