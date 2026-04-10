@@ -252,7 +252,7 @@ div.formInput.stepper {
 /* form actions */
 .formActions {
   display: flex;
-  flex-direction: row-reverse;
+  flex-direction: row;
   justify-content: start;
   gap: 1rem;
   margin-top: 1rem;
