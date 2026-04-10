@@ -4,7 +4,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { formSchema } from "../../../shared/schema";
 import { useRef, useEffect } from "react";
-import clsx from "clsx";   // ← NEW IMPORT
 
 function ConfirmModal({ isOpen, onClose, onConfirm, isSubmitting }) {
   if (!isOpen) return null;
@@ -20,7 +19,7 @@ function ConfirmModal({ isOpen, onClose, onConfirm, isSubmitting }) {
             type="button"
             onClick={onClose}
             disabled={isSubmitting}
-            className={clsx(styles.btn, styles.btnSecondary)}
+            className={`${styles.btn} ${styles.btnSecondary}`}
           >
             Go Back
           </button>
@@ -28,11 +27,7 @@ function ConfirmModal({ isOpen, onClose, onConfirm, isSubmitting }) {
             type="button"
             onClick={onConfirm}
             disabled={isSubmitting}
-            className={clsx(
-              styles.btn,
-              styles.btnPrimary,
-              isSubmitting && styles.btnLoading
-            )}
+            className={`${styles.btn} ${styles.btnPrimary} ${isSubmitting ? styles.btnLoading : ""}`}
           >
             {isSubmitting ? "Submitting..." : "Submit"}
           </button>
@@ -44,7 +39,7 @@ function ConfirmModal({ isOpen, onClose, onConfirm, isSubmitting }) {
 
 export default function CreateFoodBankForm({ reservationSlots }) {
   const nameInputRef = useRef(null);
-  
+
   const form = useForm({
     resolver: zodResolver(formSchema),
     mode: "onBlur",
@@ -63,9 +58,6 @@ export default function CreateFoodBankForm({ reservationSlots }) {
     formState: { errors, isSubmitting },
     trigger,
     reset,
-    watch,
-    setValue,
-    getValues,
   } = form;
 
   const [step, setStep] = useState(1);
@@ -108,7 +100,11 @@ export default function CreateFoodBankForm({ reservationSlots }) {
         setSubmitStatus("success");
         window.location.href = "/confirmation";
       } else {
-        setServerErrors({ general: result.error || "Submission failed" });
+        if (result.error) {
+          setServerErrors({ general: result.error });
+        } else {
+          setServerErrors({ general: "Submission failed" });
+        }
         setSubmitStatus("error");
       }
     } catch (error) {
@@ -119,15 +115,13 @@ export default function CreateFoodBankForm({ reservationSlots }) {
   }
 
   const validateCurrentStep = async () => {
-    const fields = step === 1
-      ? ["reservation_slot", "partySize"]
-      : ["name", "email", "phone"];
+    const fields =
+      step === 1
+        ? ["reservation_slot", "partySize"]
+        : ["name", "email", "phone"];
     const isValid = await trigger(fields);
     return isValid;
   };
-
-  const currentReservationSlot = watch("reservation_slot");
-  const currentPartySize = watch("partySize") || 1;
 
   return (
     <form
@@ -140,13 +134,17 @@ export default function CreateFoodBankForm({ reservationSlots }) {
         <div className={styles.stepIndicator}>
           <div className={styles.steps}>
             <div className={styles.step}>
-              <div className={clsx(styles.circle, step >= 1 && styles.active)}>
+              <div
+                className={`${styles.circle} ${step >= 1 ? styles.active : ""}`}
+              >
                 1
               </div>
               <div className={styles.line}></div>
             </div>
             <div className={styles.step}>
-              <div className={clsx(styles.circle, step >= 2 && styles.active)}>
+              <div
+                className={`${styles.circle} ${step >= 2 ? styles.active : ""}`}
+              >
                 2
               </div>
             </div>
@@ -161,7 +159,8 @@ export default function CreateFoodBankForm({ reservationSlots }) {
             <label>Time / Seating</label>
             <div className={styles.slotButtonGroup}>
               {reservationSlots.map((slot) => {
-                const isSelected = currentReservationSlot === slot.documentId;
+                const isSelected =
+                  form.watch("reservation_slot") === slot.documentId;
                 const isDisabled = !slot.available;
 
                 return (
@@ -169,16 +168,14 @@ export default function CreateFoodBankForm({ reservationSlots }) {
                     key={slot.id}
                     type="button"
                     onClick={() => {
-                      setValue("reservation_slot", slot.documentId, {
+                      form.setValue("reservation_slot", slot.documentId, {
                         shouldValidate: true,
                       });
-                      trigger("reservation_slot");
+                      form.trigger("reservation_slot");
                     }}
-                    className={clsx(
-                      styles.slotButton,
-                      isSelected && styles.slotButtonSelected,
-                      isDisabled && styles.slotButtonDisabled
-                    )}
+                    className={`${styles.slotButton} ${
+                      isSelected ? styles.slotButtonSelected : ""
+                    } ${isDisabled ? styles.slotButtonDisabled : ""}`}
                     aria-pressed={isSelected}
                     disabled={isDisabled}
                   >
@@ -203,8 +200,9 @@ export default function CreateFoodBankForm({ reservationSlots }) {
               <button
                 type="button"
                 onClick={() => {
-                  if (currentPartySize > 1) {
-                    setValue("partySize", currentPartySize - 1, {
+                  const current = form.watch("partySize") || 1;
+                  if (current > 1) {
+                    form.setValue("partySize", current - 1, {
                       shouldValidate: true,
                       shouldDirty: true,
                     });
@@ -213,11 +211,14 @@ export default function CreateFoodBankForm({ reservationSlots }) {
               >
                 −
               </button>
-              <span className={styles.value}>{currentPartySize}</span>
+              <span className={styles.value}>
+                {form.watch("partySize") || 1}
+              </span>
               <button
                 type="button"
                 onClick={() => {
-                  setValue("partySize", currentPartySize + 1, {
+                  const current = form.watch("partySize") || 1;
+                  form.setValue("partySize", current + 1, {
                     shouldValidate: true,
                     shouldDirty: true,
                   });
@@ -245,7 +246,7 @@ export default function CreateFoodBankForm({ reservationSlots }) {
               type="text"
               placeholder="Enter your full name."
               ref={nameInputRef}
-              className={clsx(styles.formInput, errors.name && styles.formInputError)}
+              className={`${styles.formInput} ${errors.name ? styles.formInputError : ""}`}
               {...form.register("name")}
             />
             {errors.name && (
@@ -259,7 +260,7 @@ export default function CreateFoodBankForm({ reservationSlots }) {
               id="email"
               type="email"
               placeholder="example@something.com"
-              className={clsx(styles.formInput, errors.email && styles.formInputError)}
+              className={`${styles.formInput} ${errors.email ? styles.formInputError : ""}`}
               {...form.register("email")}
             />
             {errors.email && (
@@ -273,7 +274,7 @@ export default function CreateFoodBankForm({ reservationSlots }) {
               id="phone"
               type="tel"
               placeholder="123-123-1234"
-              className={clsx(styles.formInput, errors.phone && styles.formInputError)}
+              className={`${styles.formInput} ${errors.phone ? styles.formInputError : ""}`}
               {...form.register("phone")}
             />
             {errors.phone && (
@@ -287,7 +288,7 @@ export default function CreateFoodBankForm({ reservationSlots }) {
               id="note"
               rows={4}
               placeholder="Let us know about allergies, questions, or anything else important."
-              className={clsx(styles.formInput, styles.textarea)}
+              className={`${styles.formInput} ${styles.textarea}`}
               {...form.register("note")}
             />
           </div>
@@ -299,7 +300,7 @@ export default function CreateFoodBankForm({ reservationSlots }) {
         {step > 1 && (
           <button
             type="button"
-            className={clsx(styles.btn, styles.btnSecondary)}
+            className={`${styles.btn} ${styles.btnSecondary}`}
             onClick={() => setStep(step - 1)}
             disabled={isSubmitting}
           >
@@ -310,7 +311,7 @@ export default function CreateFoodBankForm({ reservationSlots }) {
         {step < 2 ? (
           <button
             type="button"
-            className={clsx(styles.btn, styles.btnPrimary)}
+            className={`${styles.btn} ${styles.btnPrimary}`}
             onClick={async () => {
               const isValid = await validateCurrentStep();
               if (isValid) setStep(step + 1);
@@ -322,7 +323,7 @@ export default function CreateFoodBankForm({ reservationSlots }) {
         ) : (
           <button
             type="button"
-            className={clsx(styles.btn, styles.btnPrimary, isSubmitting && styles.btnLoading)}
+            className={`${styles.btn} ${styles.btnPrimary} ${isSubmitting ? styles.btnLoading : ""}`}
             onClick={async () => {
               const isValid = await validateCurrentStep();
               if (isValid) setShowConfirmModal(true);
@@ -346,7 +347,7 @@ export default function CreateFoodBankForm({ reservationSlots }) {
         onClose={() => setShowConfirmModal(false)}
         onConfirm={() => {
           setShowConfirmModal(false);
-          const data = getValues();
+          const data = form.getValues();
           onFormSubmit(data);
         }}
         isSubmitting={isSubmitting}
