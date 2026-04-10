@@ -123,7 +123,7 @@ export default function CreateFoodBankForm({ reservationSlots }) {
 
   return (
     <form
-      ref={formRef}                     {/* ← Attach ref to the form */}
+      ref={formRef}              
       onSubmit={handleSubmit(onFormSubmit)}
       className={styles.container}
       noValidate
