@@ -1,7 +1,7 @@
 ---
 interface Props {
   label?: string;
-  variant?: 'default' | 'outline' | 'ghost';
+  variant?: 'default' | 'outline' | 'ghost' | 'gold';
   size?: 'sm' | 'md' | 'lg';
   disabled?: boolean;
   href?: string;
@@ -41,21 +41,21 @@ const {
 </a>
 
 <style>
-  .button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-family: var(--font-body);
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    border-radius: 2rem;
-    text-decoration: none;
-    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
-    white-space: nowrap;
-    cursor: pointer;
-    min-width: 160px
-  }
+   .button {
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
+   font-family: var(--font-body);
+   font-weight: 600;
+   letter-spacing: 0.08em;
+   text-transform: uppercase;
+   border-radius: 2rem;
+   text-decoration: none;
+   transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+   white-space: nowrap;
+   cursor: pointer;
+   width: 200px;
+}
 
   /* Sizes */
   .button-sm {
@@ -96,6 +96,17 @@ const {
     color: var(--color-espresso);
   }
 
+   .button-gold {
+      background-color: var(--color-gold);
+      color: var(--color-espresso);
+      border: 2px solid var(--color-gold);   
+   }
+
+   .button-gold:hover {
+       background-color: #b8963e;
+      color: var(--color-espresso);
+   }
+
   .button-ghost {
     background-color: transparent;
     color: var(--color-cream);
@@ -112,4 +123,12 @@ const {
     cursor: not-allowed;
     pointer-events: none;
   }
+
+  @media (max-width: 768px) {
+  .button {
+    align-self: center;
+    text-align: center;
+    justify-content: center;
+  }
+}
 </style>

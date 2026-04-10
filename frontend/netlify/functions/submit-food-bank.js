@@ -9,11 +9,10 @@
 
 //import zod schema
 
-import { formSchema } from '@/shared/schema.js'
-
+import { formSchema } from '../../shared/schema.js';
 
 // Export the handler function that Netlify will call on each request
-exports.handler = async (event, context) => {
+export async function handler(event, context) {
   console.log("FUNCTION HIT");
   // --------------------------------------------------------------------------
   // STEP 1: HTTP METHOD VALIDATION
@@ -39,7 +38,6 @@ exports.handler = async (event, context) => {
       headers: {
         'Allow': 'POST, OPTIONS',
         'Access-Control-Allow-Origin': '*',
-        
       },
       body: JSON.stringify({ error: 'Method Not Allowed' }),
     };
@@ -75,7 +73,7 @@ exports.handler = async (event, context) => {
     const validation = formSchema.safeParse(payload);
 
     if (!validation.success) {
-      const firstError = validation.error.errors[0]?.message || 'Validation failed';
+      const firstError = validation.error?.errors?.[0]?.message || 'Validation failed';     
       return {
         statusCode: 400,
         headers: {
@@ -85,7 +83,13 @@ exports.handler = async (event, context) => {
       };
     }
   
-    const { name, email, phone, note, reservationSlot, partySize } = validation.data;
+    const { name, email, phone, note, reservation_slot, partySize } = validation.data;
+
+    console.log('=== DEBUG: Incoming Payload ===');
+    console.log('Full payload:', JSON.stringify(payload, null, 2));
+    console.log('reservation_slot value:', reservation_slot);
+    console.log('reservation_slot type:', typeof reservation_slot);
+    console.log('===============================');
 
     // ------------------------------------------------------------------------
     // STEP 8: PREPARE DATA FOR STRAPI
@@ -100,9 +104,11 @@ exports.handler = async (event, context) => {
         email,
         phone,
         note: note || '', // Default to empty string if note is undefined
-        reservationSlot,
-        partySize,
-      },
+        reservation_slot: {
+          connect: [{ documentId: reservation_slot }],
+        },
+        partySize
+      }
     };
 
     // ------------------------------------------------------------------------
@@ -112,29 +118,18 @@ exports.handler = async (event, context) => {
     // Security: These are injected by Netlify at runtime, not stored in repo
     // Note: process.env is available in serverless functions but NOT in browser
     // ------------------------------------------------------------------------
-    const strapiUrl = process.env.STRAPI_URL;
-    const strapiToken = process.env.STRAPI_FORM_TOKEN;
+    const strapiUrl = process.env.STRAPI_PUBLIC_URL?.trim();
+    const strapiToken = process.env.STRAPI_FORM_TOKEN?.trim();
 
 
-    //Why are the variables so low here...
-    
-/* export async function submitReservation(formData: object) {
-  const response = await fetch(`${STRAPI_URL}/api/food-bank-reservation-forms`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${STRAPI_TOKEN}`,
-    },
-    body: JSON.stringify({ data: formData }),
-  });
-
-  if (!response.ok) {
-    throw new Error(`Reservation submission failed: ${response.status}`);
-  }
-
-  return response.json();
-} */
-
+if (!strapiUrl || !strapiToken) {
+  console.error('Missing or empty Strapi environment variables');
+  return {
+    statusCode: 500,
+    headers: { 'Access-Control-Allow-Origin': '*' },
+    body: JSON.stringify({ error: 'Server configuration error' }),
+  };
+}
     // ------------------------------------------------------------------------
     // STEP 10: VERIFY ENVIRONMENT VARIABLES EXIST
     // ------------------------------------------------------------------------
@@ -142,16 +137,8 @@ exports.handler = async (event, context) => {
     // Security: Prevents accidental exposure of misconfigured secrets
     // Note: Log to console (visible in Netlify function logs, not public)
     // ------------------------------------------------------------------------
-    if (!strapiUrl || !strapiToken) {
-      console.error('Missing Strapi environment variables');
-      return {
-        statusCode: 500, // HTTP 500 = Internal Server Error
-           headers: {
-       'Access-Control-Allow-Origin': '*',  // <- this is important
-      },
-        body: JSON.stringify({ error: 'Server configuration error' }),
-      };
-    }
+
+    
 
     // ------------------------------------------------------------------------
     // STEP 11: CALL STRAPI API
@@ -175,7 +162,7 @@ exports.handler = async (event, context) => {
     // ------------------------------------------------------------------------
     // Why: Strapi might reject the request (validation, auth, rate limit)
     // Security: Don't expose Strapi's internal error messages to users
-    // Note: .catch() presvents crash if Strapi returns invalid JSON
+    // Note: .catch() prevents crash if Strapi returns invalid JSON
     // ------------------------------------------------------------------------
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
@@ -183,9 +170,9 @@ exports.handler = async (event, context) => {
       console.error('Strapi HTTP status:', response.status);
       return {
         statusCode: response.status, // Pass through Strapi's status code
-           headers: {
-       'Access-Control-Allow-Origin': '*',  // <- this is important
-      },
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+        },
         body: JSON.stringify({ 
           error: errorData.error?.message || 'Strapi submission failed' 
         }),
@@ -201,7 +188,48 @@ exports.handler = async (event, context) => {
     const result = await response.json();
 
     // ------------------------------------------------------------------------
-    // STEP 14: RETURN SUCCESS RESPONSE TO FRONTEND
+    // STEP 14: SEND EMAIL NOTIFICATION TO CLIENT
+    // ------------------------------------------------------------------------
+    // Why: Client needs to know when a new reservation request comes in
+    // Security: API key is server-side only, never exposed to browser
+    // Note: If email fails, we still return success — form submission wins
+    // ------------------------------------------------------------------------
+    const resendApiKey = process.env.RESEND_API_KEY;
+
+    if (resendApiKey) {
+      const emailResponse = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${resendApiKey}`,
+        },
+        body: JSON.stringify({
+          from: 'Little Wolf Reservations <onboarding@resend.dev>',
+          to: 'qhc.ink@gmail.com', 
+          subject: 'TEST New Food Bank Dinner Reservation Request', // replace with shauns/restaraunt email? might need to ask him
+          html: `
+            <h2>New Food Bank Dinner Reservation</h2>
+            <p><strong>Name:</strong> ${name}</p>
+            <p><strong>Email:</strong> ${email}</p>
+            <p><strong>Phone:</strong> ${phone}</p>
+            <p><strong>Party Size:</strong> ${partySize}</p>
+            <p><strong>Note:</strong> ${note || 'None'}</p>
+          `,
+        }),
+      });
+
+      if (!emailResponse.ok) {
+        console.error('Email send failed:', await emailResponse.json());
+        // We don't return an error here — form submission still succeeded
+      } else {
+        console.log('Email notification sent successfully');
+      }
+    } else {
+      console.warn('RESEND_API_KEY not set — skipping email notification');
+    }
+
+    // ------------------------------------------------------------------------
+    // STEP 15: RETURN SUCCESS RESPONSE TO FRONTEND
     // ------------------------------------------------------------------------
     // Why: The React form needs to know submission succeeded
     // Security: Don't expose Strapi's internal IDs or sensitive data
@@ -209,11 +237,12 @@ exports.handler = async (event, context) => {
     // ------------------------------------------------------------------------
     return {
       statusCode: 200,
-         headers: {
-       'Access-Control-Allow-Origin': '*',  // <- this is important
+      headers: {
+        'Access-Control-Allow-Origin': '*',
       },
       body: JSON.stringify({ success: true, data: result.data }),
     };
+
   } catch (error) {
     // ------------------------------------------------------------------------
     // STEP 15: CATCH ALL UNEXPECTED ERRORS
@@ -225,8 +254,8 @@ exports.handler = async (event, context) => {
     console.error('Function error:', error);
     return {
       statusCode: 500,
-         headers: {
-       'Access-Control-Allow-Origin': '*',  // <- this is important
+      headers: {
+        'Access-Control-Allow-Origin': '*',
       },
       body: JSON.stringify({ error: 'Internal server error' }),
     };

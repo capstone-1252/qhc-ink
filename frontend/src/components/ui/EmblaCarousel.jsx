@@ -2,6 +2,7 @@
 import React, { useEffect } from 'react';
 import Autoplay from 'embla-carousel-autoplay';
 import useEmblaCarousel from 'embla-carousel-react';
+import './EmblaCarousel.css';
 
 const EmblaCarousel = ({ slides, options }) => {
   const [emblaRef, emblaApi] = useEmblaCarousel(options, [Autoplay()]);
@@ -19,7 +20,10 @@ const EmblaCarousel = ({ slides, options }) => {
         <div className="embla__container">
           {slides.map((slide, index) => (
             <div className="embla__slide" key={index}>
-              <img src={slide.img} alt={slide.title} />
+              <picture>
+                <source media="(max-width: 768px)" srcSet={slide.imgMobile} />
+                <img src={slide.img} alt={slide.title} />
+              </picture>
             </div>
           ))}
         </div>

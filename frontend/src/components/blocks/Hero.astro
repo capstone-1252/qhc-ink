@@ -46,26 +46,42 @@ import ProfileCard from '../ui/ProfileCard.astro'; */
         class="hero-image"
       />
     </div>
-
-  </div>
-
-  <WaveDivider fill="var(--color-cream)" />
-</section>
+  </section>
+  <HoursTab client:load hours={hours} />
+</div>
 
 <style>
+  .hero-wrapper {
+      position: relative;
+      overflow-x: hidden;
+   }
+
   .hero {
     background-color: var(--color-leather);
     overflow: hidden;
   }
 
   .hero-inner {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 5rem 2rem 3rem;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    align-items: center;
-    gap: 3rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  height: clamp(400px, 50vw, 650px);
+  position: relative;
+}
+  
+.hero-column-divider {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+  height: calc(100% + 80px);
+  width: 80px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+  .hero-column-divider svg {
+    width: 100%;
+    height: 100%;
   }
 
   .hero-content {
@@ -73,6 +89,8 @@ import ProfileCard from '../ui/ProfileCard.astro'; */
     flex-direction: column;
     align-items: flex-start;
     gap: 1.25rem;
+    padding: 5rem 3rem 3rem max(2rem, calc((100vw - 1200px) / 2 + 2rem));
+    justify-content: center;
   }
 
   .hero-heading {
@@ -86,22 +104,31 @@ import ProfileCard from '../ui/ProfileCard.astro'; */
   .hero-body {
     font-size: 0.95rem;
     color: var(--color-cream);
-    max-width: 42ch;
-    line-height: 1.7;
+    max-width: 55ch;
+    line-height: 1.75;
   }
 
-  /* Image */
   .hero-image-wrap {
-    border-radius: 1rem;
     overflow: hidden;
-    aspect-ratio: 4 / 3;
+    display: flex;
+    flex-direction: column;
+    min-height: 600px;
+    position: relative;
   }
 
-  .hero-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
+  .hero-image-fade {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 120px;
+    background: linear-gradient(
+      to bottom,
+      transparent,
+      var(--color-leather)
+    );
+    pointer-events: none;
+    z-index: 1;
   }
 
   /* googly eyes */
@@ -112,18 +139,44 @@ import ProfileCard from '../ui/ProfileCard.astro'; */
   }
 
   /* Mobile */
+
+  @media (max-width: 1024px) {
+  .hero-inner {
+    height: auto;
+    min-height: 500px;
+  }
+}
+
   @media (max-width: 768px) {
     .hero-inner {
       grid-template-columns: 1fr;
-      padding: 4rem 1.5rem 2.5rem;
-      gap: 2rem;
+      height: calc(100svh - 72px);
+      overflow: hidden;
+      position: relative;
     }
 
     .hero-image-wrap {
-      order: -1; /* image above text on mobile */
-      aspect-ratio: 16 / 9;
-      border-radius: 0.75rem;
+      position: absolute;
+      inset: 0;
+      min-height: unset;
     }
+
+    .hero-image-fade {
+      display: none;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      padding: 3.5rem 1.5rem 3rem 1.5rem;
+      justify-content: flex-start;
+      background: linear-gradient(
+         to bottom,
+         rgba(35, 28, 24, 0.8) 0%,
+         rgba(35, 28, 24, 0.5) 50%,
+         rgba(35, 28, 24, 0.3) 100%
+      );
+  }
 
     .hero-heading {
       font-size: clamp(2.2rem, 10vw, 3rem);

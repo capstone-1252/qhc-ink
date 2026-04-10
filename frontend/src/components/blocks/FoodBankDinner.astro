@@ -3,11 +3,8 @@ import Link from '../ui/Link.astro';
 ---
 
 <section class="food-bank" aria-labelledby="food-bank-heading">
-
   <div class="food-bank-text">
-    <!-- Rust cap only on left column -->
     <div class="food-bank-rust-cap"></div>
-
     <div class="food-bank-text-inner">
       <h2 id="food-bank-heading" class="food-bank-heading">Food Bank Dinner</h2>
       <p>
@@ -15,35 +12,32 @@ import Link from '../ui/Link.astro';
         last Monday of each month with a $5 reservation fee — with all proceeds
         of the dinner going to the Edmonton Food Bank!
       </p>
-      <Link
-        href="/food-bank"
-        label="Book Your Spot"
-        size="md"
-        variant="default"
-      />
+      <Link href="/food-bank" label="Book Your Spot" size="md" variant="default" />
     </div>
   </div>
 
   <div class="food-bank-image">
-    <img
-      src="/slide-2.webp"
-      alt="Three-course vegan dinner at Little Wolf Restaurant Food Bank Dinner event"
-      loading="lazy"
-    />
+    <picture class="food-bank-picture">
+      <source media="(max-width: 768px)" srcset="/images/food-bank/foodbank-vege-mobile.webp" />
+      <img src="/images/food-bank/foodbank-vege.webp" alt="Three-course vegan dinner at Little Wolf Restaurant Food Bank Dinner event" loading="lazy" class="food-bank-img" />
+    </picture>
   </div>
 
+  <div class="food-bank-cta">
+    <Link href="/food-bank" label="Book Your Spot" size="md" variant="default" />
+  </div>
 </section>
 
 <style>
-  .food-bank {
+.food-bank {
   display: grid;
   grid-template-columns: 1fr 1fr;
   min-height: 500px;
+  height: clamp(400px, 50vw, 650px);
   background-color: var(--color-cream);
-  /* remove max-width and margin: auto */
+  overflow: hidden;
 }
 
-  /* Left column */
   .food-bank-text {
     display: flex;
     flex-direction: column;
@@ -51,14 +45,12 @@ import Link from '../ui/Link.astro';
     background-color: var(--color-cream);
   }
 
-  /* Rust block at top of left column only */
   .food-bank-rust-cap {
     background-color: var(--color-rust);
     height: 80px;
     position: relative;
   }
 
-  /* Wave cut — pseudo element on rust cap */
   .food-bank-rust-cap::after {
     content: '';
     position: absolute;
@@ -70,17 +62,17 @@ import Link from '../ui/Link.astro';
     clip-path: ellipse(55% 100% at 50% 100%);
   }
 
- .food-bank-text-inner {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 1.25rem;
-  padding: 3rem 2rem;
-  max-width: 600px;
-  margin-left: auto;
-  flex: 1;
-  justify-content: center;
-}
+  .food-bank-text-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.25rem;
+    padding: 3rem 2rem;
+    max-width: 600px;
+    margin-left: auto;
+    flex: 1;
+    justify-content: center;
+  }
 
   .food-bank-heading {
     font-size: clamp(1.75rem, 3vw, 2.5rem);
@@ -91,6 +83,7 @@ import Link from '../ui/Link.astro';
     color: var(--color-leather);
     font-size: 0.95rem;
     line-height: 1.75;
+    max-width: 55ch;
   }
 
   .food-bank-text :global(.button-default) {
@@ -103,38 +96,77 @@ import Link from '../ui/Link.astro';
     color: var(--color-cream);
   }
 
-  /* Full bleed image on right */
   .food-bank-image {
     overflow: hidden;
   }
 
-  .food-bank-image img {
+  .food-bank-picture {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .food-bank-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     display: block;
   }
 
+  .food-bank-cta {
+    display: none;
+  }
+
   /* Mobile */
+  @media (max-width: 1024px) {
+  .food-bank {
+    height: auto;
+  }
+}
+
   @media (max-width: 768px) {
     .food-bank {
-      grid-template-columns: 1fr;
+      display: flex;
+      flex-direction: column;
     }
 
     .food-bank-rust-cap {
-  background-color: var(--color-rust);
-  height: clamp(80px, 8vw, 140px); /* scales with viewport */
-  position: relative;
-}
+      height: clamp(80px, 8vw, 140px);
+    }
 
     .food-bank-text-inner {
-  padding: 3rem 1.5rem 2.5rem;
-  max-width: unset;
-  margin-left: 0;
-}
+      padding: 2rem 1.5rem;
+      max-width: unset;
+      margin-left: 0;
+    }
+
+    .food-bank-text-inner :global(.button) {
+      display: none;
+    }
 
     .food-bank-image {
-      aspect-ratio: 16 / 9;
+      aspect-ratio: 4 / 3;
+    }
+
+    .food-bank-picture {
+      height: 100%;
+    }
+
+    .food-bank-cta {
+      display: flex;
+      justify-content: center;
+      padding: 2rem 1.5rem 4rem;
+      background-color: var(--color-cream);
+    }
+
+    .food-bank-cta :global(.button-default) {
+      background-color: var(--color-rust);
+      color: var(--color-espresso);
+    }
+
+    .food-bank-cta :global(.button-default:hover) {
+      background-color: var(--color-leather);
+      color: var(--color-cream);
     }
   }
 </style>

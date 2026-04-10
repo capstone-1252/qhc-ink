@@ -1,3 +1,101 @@
 ---
-//this is where all our SEO stuff that goes in the head will be defined. These will be used in our layout on the head.
+interface Props {
+  title: string;
+  description: string;
+  image?: string; // optional OG image path
+}
+
+const { 
+  title, 
+  description, 
+  image = "/og-image.webp" 
+} = Astro.props;
+
+// Safe base URL — this eliminates the "Invalid URL" error
+const baseURL = Astro.site 
+  ? Astro.site.toString().replace(/\/$/, '') + '/' 
+  : "https://www.littlewolfrestaurant.com/";
+
+const canonicalURL = new URL(Astro.url.pathname, baseURL).toString();
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "Restaurant",
+  "name": "Little Wolf Restaurant",
+  "description": "Independent small plates restaurant and cocktail spot in Edmonton's Garneau neighbourhood. Creative, veggie-forward dishes and inventive cocktails in a low-key, welcoming space.",
+  "image": new URL(image, baseURL).toString(),
+  "url": baseURL,
+  "telephone": "+1-780-757-2600",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "8424 109 St NW",
+    "addressLocality": "Edmonton",
+    "addressRegion": "AB",
+    "postalCode": "T6G 1E2",
+    "addressCountry": "CA"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": 53.5206063,
+    "longitude": -113.5125206
+  },
+  "servesCuisine": ["Canadian", "Small Plates", "Vegetarian", "Vegan options", "Modern Canadian"],
+  "priceRange": "$$",
+  "openingHoursSpecification": [
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": ["Wednesday", "Thursday"],
+      "opens": "17:00",
+      "closes": "23:00"
+    },
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": ["Friday", "Saturday", "Sunday"],
+      "opens": "17:00",
+      "closes": "00:00"
+    }
+    // Closed Monday & Tuesday — no entry needed
+  ],
+  "sameAs": [
+    "https://www.instagram.com/eatlilwolf/",
+    "https://www.exploretock.com/little-wolf-restaurant"
+  ],
+  "hasMenu": `${baseURL}menu`,
+  "acceptsReservations": "https://www.exploretock.com/little-wolf-restaurant"
+};
+
+const actualTitle = title || "Little Wolf Restaurant | Creative Small Plates & Cocktails in Garneau, Edmonton";
+const actualDescription = description || "Low-key neighbourhood favourite in Garneau. Inventive veggie-forward small plates, creative cocktails, and a warm atmosphere. Walk-ins welcome. Reservations via Tock.";
 ---
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="generator" content={Astro.generator} />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="icon" href="/favicon.ico" />
+
+  <!-- Core SEO -->
+  <title>{actualTitle}</title>
+  <meta name="description" content={actualDescription} />
+  <link rel="canonical" href={canonicalURL} />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content={canonicalURL} />
+  <meta property="og:title" content={actualTitle} />
+  <meta property="og:description" content={actualDescription} />
+  <meta property="og:image" content={new URL(image, baseURL).toString()} />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Little Wolf Restaurant — charred focaccia and warm, low-light neighbourhood glow in Garneau, Edmonton" />
+  <meta property="og:locale" content="en_CA" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={actualTitle} />
+  <meta name="twitter:description" content={actualDescription} />
+  <meta name="twitter:image" content={new URL(image, baseURL).toString()} />
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+</head>

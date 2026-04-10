@@ -3,7 +3,7 @@ import logomark from '../../assets/logomark.svg';
 
 const navLinks = [
   { label: 'Home', url: '/', external: false },   
-  { label: 'Menu', url: '/menu', external: false },
+  { label: 'Example Menu', url: '/menu', external: false },
   { label: 'Food Bank Dinner', url: '/food-bank', external: false },
 ];
 ---
@@ -13,7 +13,7 @@ const navLinks = [
 
     <div class="logo">
       <a href="/">
-        <img src={logomark.src} alt="Little Wolf Restaurant home" />
+        <img src={logomark.src} alt="Little Wolf Restaurant logo" />
       </a>
     </div>
 
@@ -48,7 +48,7 @@ const navLinks = [
         ))}
         <li class="nav-instagram">
           <a 
-            href="https://www.instagram.com/littlewolfrestaurant/"
+            href="https://www.instagram.com/eatlilwolf/"
             target="_blank" 
             rel="noopener noreferrer"
             aria-label="Little Wolf on Instagram"
@@ -80,13 +80,13 @@ const navLinks = [
           rel="noopener noreferrer"
           class="reservations-link"
         >
-          Reservations
+          Reserve
         </a>
       </div>
     </nav>
 
     <!-- Desktop reservations button -->
-   <a href="https://www.exploretock.com/little-wolf-restaurant" target="_blank" rel="noopener noreferrer" class="reservations-link desktop-reservations">Reservations</a>
+   <a href="https://www.exploretock.com/little-wolf-restaurant" target="_blank" rel="noopener noreferrer" class="reservations-link desktop-reservations">Reserve</a>
 
     <div id="nav-overlay" class="nav-overlay"></div>
 
@@ -216,7 +216,7 @@ const navLinks = [
   }
 
   .reservations-link {
-    background-color: #C9A84C;
+    background-color: var(--color-gold);
     color: var(--color-espresso) !important;
     font-family: var(--font-body);
     font-weight: 600;
@@ -225,18 +225,25 @@ const navLinks = [
     text-transform: uppercase;
     padding: 0.75rem 1.5rem;
     border-radius: 2rem;
+    
     transition: background-color 0.2s;
-    white-space: nowrap;
+    display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      width: 200px;
   }
 
   .reservations-link:hover {
-    background-color: #b8963e;
+   background-color: #d9a514; 
     color: var(--color-espresso) !important;
   }
 
   .desktop-reservations {
-    display: block;
-  }
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 200px;
+}
 
   .nav-footer {
     display: none;
