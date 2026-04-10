@@ -29,6 +29,12 @@
         "food",
         "drink"
       ]
+    },
+    "highlight": {
+      "type": "boolean"
+    },
+    "Column": {
+      "type": "integer"
     }
   }
 }
