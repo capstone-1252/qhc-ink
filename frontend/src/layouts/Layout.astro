@@ -2,6 +2,9 @@
 import Footer from '../components/layout/Footer.astro';
 import HeadSeo from './HeadSeo.astro';
 import '../styles/global.css';
+import EggEasterEgg from '../components/EggEasterEgg.astro';
+import GooglyEyes from '../components/GooglyEyes.astro';
+import ShakeTrigger from '../components/ShakeTrigger.astro';
 
 interface Props {
     title?: string;
@@ -20,7 +23,9 @@ const actualDescription = description
 <html lang="en-CA" class="scroll-smooth">
 <HeadSeo title={actualTitle} description={actualDescription} />       
     <body>
-        <slot /> <!-- all page content would inject here -->
+        <slot />
+        <EggEasterEgg />
+        <ShakeTrigger />
         <Footer />
     </body>
 </html>
