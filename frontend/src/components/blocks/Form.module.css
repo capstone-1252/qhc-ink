@@ -77,7 +77,7 @@ body {
 /* buttons: this is repeat-code from header, SHOULD be a component or another version of the link */
 
   .btn {
-    background-color: var(--color-yolk);
+    background-color: var(--color-gold);
     color: var(--color-espresso);
     font-family: var(--font-body);
     font-weight: 600;
@@ -139,8 +139,8 @@ body {
 }
 
 .slotButtonSelected {
-  background-color: var(--color-yolk); /* example highlight color */
-  border-color: var(--color-yolk);
+  background-color: var(--color-gold); /* example highlight color */
+  border-color: var(--color-gold);
 }
 
 .slotButtonSelected p {
@@ -252,7 +252,7 @@ div.formInput.stepper {
 /* form actions */
 .formActions {
   display: flex;
-  flex-direction: row-reverse;
+  flex-direction: row;
   justify-content: start;
   gap: 1rem;
   margin-top: 1rem;

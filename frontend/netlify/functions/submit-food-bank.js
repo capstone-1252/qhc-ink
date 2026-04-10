@@ -118,29 +118,18 @@ const strapiData = {
     // Security: These are injected by Netlify at runtime, not stored in repo
     // Note: process.env is available in serverless functions but NOT in browser
     // ------------------------------------------------------------------------
-    const strapiUrl = process.env.STRAPI_URL;
-    const strapiToken = process.env.STRAPI_FORM_TOKEN;
+    const strapiUrl = process.env.STRAPI_PUBLIC_URL?.trim();
+    const strapiToken = process.env.STRAPI_FORM_TOKEN?.trim();
 
 
-    //Why are the variables so low here...
-    
-/* export async function submitReservation(formData: object) {
-  const response = await fetch(`${STRAPI_URL}/api/food-bank-reservation-forms`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${STRAPI_TOKEN}`,
-    },
-    body: JSON.stringify({ data: formData }),
-  });
-
-  if (!response.ok) {
-    throw new Error(`Reservation submission failed: ${response.status}`);
-  }
-
-  return response.json();
-} */
-
+if (!strapiUrl || !strapiToken) {
+  console.error('Missing or empty Strapi environment variables');
+  return {
+    statusCode: 500,
+    headers: { 'Access-Control-Allow-Origin': '*' },
+    body: JSON.stringify({ error: 'Server configuration error' }),
+  };
+}
     // ------------------------------------------------------------------------
     // STEP 10: VERIFY ENVIRONMENT VARIABLES EXIST
     // ------------------------------------------------------------------------
@@ -148,16 +137,6 @@ const strapiData = {
     // Security: Prevents accidental exposure of misconfigured secrets
     // Note: Log to console (visible in Netlify function logs, not public)
     // ------------------------------------------------------------------------
-    if (!strapiUrl || !strapiToken) {
-      console.error('Missing Strapi environment variables');
-      return {
-        statusCode: 500, // HTTP 500 = Internal Server Error
-           headers: {
-       'Access-Control-Allow-Origin': '*',  // <- this is important
-      },
-        body: JSON.stringify({ error: 'Server configuration error' }),
-      };
-    }
 
     
 

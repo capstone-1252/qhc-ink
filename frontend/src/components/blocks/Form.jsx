@@ -1,11 +1,8 @@
-
 import styles from "./Form.module.css";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { formSchema } from "../../../shared/schema";
-import { useRef, useEffect } from "react";
-
 
 function ConfirmModal({ isOpen, onClose, onConfirm, isSubmitting }) {
   if (!isOpen) return null;
@@ -15,9 +12,7 @@ function ConfirmModal({ isOpen, onClose, onConfirm, isSubmitting }) {
       <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
         <h2>Request Food Bank Dinner?</h2>
         <p>Are you sure you want to submit?</p>
-
         <p>All the other confirmation/explanation text that goes here.</p>
-
         <div className={styles.modalActions}>
           <button
             type="button"
@@ -27,7 +22,6 @@ function ConfirmModal({ isOpen, onClose, onConfirm, isSubmitting }) {
           >
             Go Back
           </button>
-
           <button
             type="button"
             onClick={onConfirm}
@@ -43,11 +37,12 @@ function ConfirmModal({ isOpen, onClose, onConfirm, isSubmitting }) {
 }
 
 export default function CreateFoodBankForm({ reservationSlots }) {
-    const nameInputRef = useRef(null);
+  const formRef = useRef(null);           // NEW: ref on the whole form
+  const nameInputRef = useRef(null);
 
   const form = useForm({
     resolver: zodResolver(formSchema),
-    mode: "onBlur", 
+    mode: "onBlur",
     defaultValues: {
       name: "",
       email: "",
@@ -62,7 +57,7 @@ export default function CreateFoodBankForm({ reservationSlots }) {
     handleSubmit,
     formState: { errors, isSubmitting },
     trigger,
-    reset,
+    getValues,
   } = form;
 
   const [step, setStep] = useState(1);
@@ -70,14 +65,18 @@ export default function CreateFoodBankForm({ reservationSlots }) {
   const [submitStatus, setSubmitStatus] = useState("idle");
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
-   useEffect(() => {
-    if (step === 2) {
+  // ==================== ACCESSIBLE FOCUS RESET ====================
+  useEffect(() => {
+    if (step === 2 && nameInputRef.current && formRef.current) {
+      // Small delay to let the DOM stabilize after re-render
       const timer = setTimeout(() => {
-        nameInputRef.current?.focus();
-      }, 50);
+        nameInputRef.current.focus();
+      }, 80);
+
       return () => clearTimeout(timer);
     }
   }, [step]);
+  // ============================================================
 
   async function onFormSubmit(data) {
     const payload = {
@@ -105,88 +104,66 @@ export default function CreateFoodBankForm({ reservationSlots }) {
         setSubmitStatus("success");
         window.location.href = "/confirmation";
       } else {
-        if (result.error) {
-          setServerErrors({ general: result.error });
-        } else {
-          setServerErrors({ general: "Submission failed" });
-        }
+        setServerErrors({ general: result.error || "Submission failed" });
         setSubmitStatus("error");
       }
     } catch (error) {
       console.error("Network error:", error);
-      setSubmitStatus("error");
       setServerErrors({ general: "Network error. Please try again." });
-    } 
+      setSubmitStatus("error");
+    }
   }
 
   const validateCurrentStep = async () => {
-    const fields =
-      step === 1
-        ? ["reservation_slot", "partySize"]
-        : ["name", "email", "phone"];
-
-    const isValid = await trigger(fields);
-    return isValid;
+    const fields = step === 1
+      ? ["reservation_slot", "partySize"]
+      : ["name", "email", "phone"];
+    return await trigger(fields);
   };
-
-  const totalSteps = 2;
 
   return (
     <form
+      ref={formRef}              
       onSubmit={handleSubmit(onFormSubmit)}
       className={styles.container}
       noValidate
     >
       <div className={styles.headerBlock}>
         <h2 className={styles.secondHeading}>Request form</h2>
-
         <div className={styles.stepIndicator}>
           <div className={styles.steps}>
             <div className={styles.step}>
-              <div
-                className={`${styles.circle} ${step >= 1 ? styles.active : ""}`}
-              >
-                1
-              </div>
+              <div className={`${styles.circle} ${step >= 1 ? styles.active : ""}`}>1</div>
               <div className={styles.line}></div>
             </div>
-
             <div className={styles.step}>
-              <div
-                className={`${styles.circle} ${step >= 2 ? styles.active : ""}`}
-              >
-                2
-              </div>
+              <div className={`${styles.circle} ${step >= 2 ? styles.active : ""}`}>2</div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* STEP 1 */}
+      {/* STEP 1 - unchanged */}
       {step === 1 && (
         <>
           <div className={styles.fieldWrapper}>
             <label>Time / Seating</label>
             <div className={styles.slotButtonGroup}>
               {reservationSlots.map((slot) => {
-                const isSelected =
-                  form.watch("reservation_slot") === slot.documentId; 
-                const isDisabled = !slot.available; 
+                const isSelected = form.watch("reservation_slot") === slot.documentId;
+                const isDisabled = !slot.available;
+
                 return (
                   <button
-                    key={slot.id} 
+                    key={slot.id}
                     type="button"
-                    
                     onClick={() => {
-                      form.setValue("reservation_slot", slot.documentId, {
-                        shouldValidate: true,
-                      });
-                     
+                      form.setValue("reservation_slot", slot.documentId, { shouldValidate: true });
                       form.trigger("reservation_slot");
                     }}
                     className={`${styles.slotButton} ${isSelected ? styles.slotButtonSelected : ""} ${isDisabled ? styles.slotButtonDisabled : ""}`}
                     aria-pressed={isSelected}
-                    disabled={isDisabled} 
+                    disabled={isDisabled}
                   >
                     <div className={styles.flex}>
                       <p>{slot.time}</p>
@@ -196,55 +173,23 @@ export default function CreateFoodBankForm({ reservationSlots }) {
                 );
               })}
             </div>
-            {errors.reservation_slot && (
-              <p className={styles.validationError}>
-                {errors.reservation_slot.message}
-              </p>
-            )}
+            {errors.reservation_slot && <p className={styles.validationError}>{errors.reservation_slot.message}</p>}
           </div>
 
           <div className={styles.fieldWrapper}>
             <label>Party Size</label>
-
             <div className={`${styles.formInput} ${styles.stepper}`}>
-              <button
-                type="button"
-                onClick={() => {
-                  const current = form.watch("partySize") || 1;
-                  if (current > 1) {
-                    form.setValue("partySize", current - 1, {
-                      shouldValidate: true,
-                      shouldDirty: true,
-                    });
-                  }
-                }}
-              >
-                −
-              </button>
-
-              <span className={styles.value}>
-                {form.watch("partySize") || 1}
-              </span>
-
-              <button
-                type="button"
-                onClick={() => {
-                  const current = form.watch("partySize") || 1;
-                  form.setValue("partySize", current + 1, {
-                    shouldValidate: true,
-                    shouldDirty: true,
-                  });
-                }}
-              >
-                +
-              </button>
+              <button type="button" onClick={() => {
+                const current = form.watch("partySize") || 1;
+                if (current > 1) form.setValue("partySize", current - 1, { shouldValidate: true, shouldDirty: true });
+              }}>−</button>
+              <span className={styles.value}>{form.watch("partySize") || 1}</span>
+              <button type="button" onClick={() => {
+                const current = form.watch("partySize") || 1;
+                form.setValue("partySize", current + 1, { shouldValidate: true, shouldDirty: true });
+              }}>+</button>
             </div>
-
-            {errors.partySize && (
-              <p className={styles.validationError}>
-                {errors.partySize.message}
-              </p>
-            )}
+            {errors.partySize && <p className={styles.validationError}>{errors.partySize.message}</p>}
           </div>
         </>
       )}
@@ -262,9 +207,7 @@ export default function CreateFoodBankForm({ reservationSlots }) {
               className={`${styles.formInput} ${errors.name ? styles.formInputError : ""}`}
               {...form.register("name")}
             />
-            {errors.name && (
-              <p className={styles.validationError}>{errors.name.message}</p>
-            )}
+            {errors.name && <p className={styles.validationError}>{errors.name.message}</p>}
           </div>
 
           <div className={styles.fieldWrapper}>
@@ -276,9 +219,7 @@ export default function CreateFoodBankForm({ reservationSlots }) {
               className={`${styles.formInput} ${errors.email ? styles.formInputError : ""}`}
               {...form.register("email")}
             />
-            {errors.email && (
-              <p className={styles.validationError}>{errors.email.message}</p>
-            )}
+            {errors.email && <p className={styles.validationError}>{errors.email.message}</p>}
           </div>
 
           <div className={styles.fieldWrapper}>
@@ -290,9 +231,7 @@ export default function CreateFoodBankForm({ reservationSlots }) {
               className={`${styles.formInput} ${errors.phone ? styles.formInputError : ""}`}
               {...form.register("phone")}
             />
-            {errors.phone && (
-              <p className={styles.validationError}>{errors.phone.message}</p>
-            )}
+            {errors.phone && <p className={styles.validationError}>{errors.phone.message}</p>}
           </div>
 
           <div className={styles.fieldWrapper}>
@@ -348,7 +287,6 @@ export default function CreateFoodBankForm({ reservationSlots }) {
         )}
       </div>
 
-      {/* Status */}
       {submitStatus === "error" && (
         <div className={styles.errorMessage}>
           {serverErrors.general || "Submission failed. Please try again."}
