@@ -15,22 +15,22 @@ import Link from '../ui/Link.astro';
       </p>
     </div>
     
-    <div class="carousel-placeholder" aria-label="Instagram feed">
-      <div class="placeholder-slides" id="insta-slides">
-        <div class="placeholder-slide">
-          <img src="/slide-1.webp" alt="Little Wolf Instagram photo 1" role="presentation" loading="lazy" />
+    <div class="insta-feed" aria-label="Instagram feed">
+      <div class="insta-feed-slides" id="insta-slides">
+        <div class="insta-feed-slide">
+          <img src="/images/insta/happening-egg.webp" alt="" role="presentation" loading="lazy" />
         </div>
-        <div class="placeholder-slide">
-          <img src="/slide-2.webp" alt="Little Wolf Instagram photo 2" role="presentation" loading="lazy" />
+        <div class="insta-feed-slide">
+          <img src="/images/insta/happening-drink.webp" alt="" role="presentation" loading="lazy" />
         </div>
-        <div class="placeholder-slide">
-          <img src="/slide-3.webp" alt="Little Wolf Instagram photo 3" role="presentation" loading="lazy" />
+        <div class="insta-feed-slide">
+          <img src="/images/insta/happening-duck.webp" alt="" role="presentation" loading="lazy" />
         </div>
       </div>
-      <div class="carousel-dots" id="insta-dots">
-        <button class="carousel-dot active" aria-label="Slide 1"></button>
-        <button class="carousel-dot" aria-label="Slide 2"></button>
-        <button class="carousel-dot" aria-label="Slide 3"></button>
+      <div class="insta-feed-dots" id="insta-dots">
+        <button class="insta-feed-dot active" aria-label="Slide 1"></button>
+        <button class="insta-feed-dot" aria-label="Slide 2"></button>
+        <button class="insta-feed-dot" aria-label="Slide 3"></button>
       </div>
     </div>
 
@@ -48,7 +48,7 @@ import Link from '../ui/Link.astro';
 
 <script>
   const slides = document.getElementById('insta-slides');
-  const dots = document.querySelectorAll('#insta-dots .carousel-dot');
+  const dots = document.querySelectorAll('#insta-dots .insta-feed-dot');
 
   slides?.addEventListener('scroll', () => {
     const index = Math.round(slides.scrollLeft / slides.offsetWidth);
@@ -98,31 +98,30 @@ import Link from '../ui/Link.astro';
     max-width: 55ch;
   }
 
-  /* Placeholder carousel — 3 images side by side */
-  .carousel-placeholder {
+  .insta-feed {
     width: 100%;
   }
 
-  .placeholder-slides {
+  .insta-feed-slides {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 1.25rem;
   }
 
-  .placeholder-slide {
+  .insta-feed-slide {
     border-radius: 0.75rem;
     overflow: hidden;
     aspect-ratio: 1 / 1;
   }
 
-  .placeholder-slide img {
+  .insta-feed-slide img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     display: block;
   }
 
-  .carousel-dots {
+  .insta-feed-dots {
     display: none;
   }
 
@@ -131,10 +130,12 @@ import Link from '../ui/Link.astro';
     .whats-happening-inner {
       padding: 4rem 1.5rem 3.5rem;
     }
-    .carousel-placeholder {
+
+    .insta-feed {
       position: relative;
     }
-    .placeholder-slides {
+
+    .insta-feed-slides {
       display: flex;
       overflow-x: scroll;
       scroll-snap-type: x mandatory;
@@ -142,20 +143,24 @@ import Link from '../ui/Link.astro';
       scrollbar-width: none;
       gap: 1rem;
     }
-    .placeholder-slides::-webkit-scrollbar {
+
+    .insta-feed-slides::-webkit-scrollbar {
       display: none;
     }
-    .placeholder-slide {
+
+    .insta-feed-slide {
       flex: 0 0 100%;
       scroll-snap-align: start;
     }
-    .carousel-dots {
+
+    .insta-feed-dots {
       display: flex;
       justify-content: center;
       gap: 0.5rem;
       margin-top: 1rem;
     }
-    .carousel-dot {
+
+    .insta-feed-dot {
       width: 8px;
       height: 8px;
       border-radius: 50%;
@@ -165,7 +170,8 @@ import Link from '../ui/Link.astro';
       cursor: pointer;
       transition: background-color 0.2s;
     }
-    .carousel-dot.active {
+
+    .insta-feed-dot.active {
       background-color: var(--color-cream);
     }
   }
