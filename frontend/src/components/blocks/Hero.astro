@@ -1,6 +1,7 @@
 ---
 import WaveDivider from '../ui/WaveDivider.astro';
 import Link from '../ui/Link.astro';
+import GooglyEyes from '../GooglyEyes.astro';
 
 /* import EmblaCarousel from '../ui/EmblaCarousel';
 import HoursPanel from '../ui/HoursTab';    
@@ -30,6 +31,9 @@ import ProfileCard from '../ui/ProfileCard.astro'; */
         size="md"
         variant="outline"
       />
+      <div class="eyes" data-egg-trigger>
+        <GooglyEyes style="width: 70px; height: 45px;" />
+      </div>
     </div>
 
     <div class="hero-image-wrap">
@@ -100,6 +104,13 @@ import ProfileCard from '../ui/ProfileCard.astro'; */
     display: block;
   }
 
+  /* googly eyes */
+  .eyes {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+
   /* Mobile */
   @media (max-width: 768px) {
     .hero-inner {
@@ -116,6 +127,10 @@ import ProfileCard from '../ui/ProfileCard.astro'; */
 
     .hero-heading {
       font-size: clamp(2.2rem, 10vw, 3rem);
+    }
+
+    .eyes {
+    justify-content: flex-start;
     }
   }
 </style>
