@@ -3,6 +3,8 @@ import '../styles/global.css';
 import Layout from '../layouts/Layout.astro';
 import Header from '../components/layout/Header.astro';
 import Link from '../components/ui/Link.astro'
+import foodBankLogo from '../../public/edmonton-food-bank-logo.png';
+import { Image } from 'astro:assets';  
 
 const IndexLinks = [
     {label: 'Food Bank', url: '/food-bank'},
@@ -22,6 +24,13 @@ const IndexLinks = [
     <main class="page-wrapper hero">
       <div class="character">
         <img src="edmonton-food-bank-logo.png" alt="Edmonton food bank logo.">
+      <Image 
+        src={foodBankLogo}
+        alt="Edmonton food bank logo."
+        width={300}
+        height={160}   
+        loading="lazy"
+      />
       </div>
       <h1 class="title-heading">We've Got Your Request!</h1>
       <p>We'll check availability and email you shortly with the next steps.</p>
