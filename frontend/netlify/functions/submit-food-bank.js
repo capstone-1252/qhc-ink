@@ -5,12 +5,11 @@
 //          and forwards it to Strapi's API.
 // LOCATION: Must be in netlify/functions/ folder (root level, not in src/)
 // URL: /.netlify/functions/submit-food-bank (matches filename without .js)
-// ============================================================================
+// ========================================================================
 
 //import zod schema
 
-import { formSchema } from '@/shared/schema.js'
-
+import { formSchema } from '../../shared/schema.js';
 
 // Export the handler function that Netlify will call on each request
 export async function handler(event, context) {
