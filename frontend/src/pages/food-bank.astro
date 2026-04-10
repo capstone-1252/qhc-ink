@@ -47,23 +47,32 @@ const MenuLinks = [
 
         <p>Rest assured, we never skimp out on the dishes, either. Each dinner consists of new and unique dishes from fresh ingredients that local supplies carry.</p>
     </section>
+
     <div class="photo-section">
-    <img src="/slide-1.webp" alt="Food Bank Dinner photo" />
-</div>
-
-<section class="info-section">
-    <div class="info-inner">
-        <p>By completing the form below, you are requesting a seat at the Food Bank Dinner. Once seating is confirmed, you will receive an email with instructions to pay the $5 reservation fee. Your reservation will be finalized after payment is received.</p>
-        <p>Looking to make a regular reservation? <a href="/reservation">Click here.</a></p>
+        <picture>
+            <source media="(max-width: 768px)" srcset="/images/food-bank/foodbank-dinner-outside-mobile.webp" />
+            <img src="/images/food-bank/foodbank-dinner-outside.webp" alt="Three-course vegan dinner at Little Wolf Restaurant Food Bank Dinner event" />
+        </picture>
     </div>
-</section>
 
+<<<<<<< form-debugging
 <section class="form-section">
     <CreateFoodBankForm client:load reservationSlots={reservationSlots}/>
 </section>
+=======
+    <section class="info-section">
+        <div class="info-inner">
+            <p>By completing the form below, you are requesting a seat at the Food Bank Dinner. Once seating is confirmed, you will receive an email with instructions to pay the $5 reservation fee. Your reservation will be finalized after payment is received.</p>
+            <p>Looking to make a regular reservation? <a href="/reservation">Click here.</a></p>
+        </div>
+    </section>
+
+    <section class="form-section">
+        <CreateFoodBankForm client:visible reservationSlots={reservationSlots}/>
+    </section>
+>>>>>>> main
 
 </main>
-
 
 </Layout>
 
@@ -79,13 +88,12 @@ const MenuLinks = [
     }
 
     .title-heading {
-    font-size: clamp(2.25rem, 4vw, 3.25rem);
-    line-height: 1.1;
+        font-size: clamp(2.25rem, 4vw, 3.25rem);
+        line-height: 1.1;
     }
 
-
     .second-heading {
-    font-size: clamp(1.75rem, 3vw, 2.5rem);
+        font-size: clamp(1.75rem, 3vw, 2.5rem);
     }
 
     /* wave */
@@ -141,12 +149,12 @@ const MenuLinks = [
     }
 
     .hero p {
-    color: #D8CFAE;
-    font-family: 'Outfit', sans-serif;
-    font-weight: 400;
-    text-align: center;
-    max-width: 100%;
-}
+        color: #D8CFAE;
+        font-family: 'Outfit', sans-serif;
+        font-weight: 400;
+        text-align: center;
+        max-width: 100%;
+    }
 
     .date-box {
         border: 1px solid var(--color-cream);
@@ -165,8 +173,6 @@ const MenuLinks = [
         color: var(--color-rust);
         font-weight: 900;
         font-size: 1.25rem;
-
-
     }
 
     /* photo */
@@ -174,6 +180,11 @@ const MenuLinks = [
         width: 100%;
         max-width: 100%;
         margin: 0 auto;
+    }
+
+    .photo-section picture {
+        display: block;
+        width: 100%;
     }
 
     .photo-section img {
@@ -220,18 +231,21 @@ const MenuLinks = [
 
     /* medium screens */
     @media (min-width: 700px) {
+<<<<<<< form-debugging
 
+=======
+>>>>>>> main
         .form-section {
             padding: unset;
         }
-   
+
         .photo-section {
-        max-width: 700px;
-        margin: 0 auto 3rem;
+            max-width: 700px;
+            margin: 0 auto 3rem;
         }
 
         .photo-section img {
-        border-radius: 8px;
+            border-radius: 8px;
         }
     }
 

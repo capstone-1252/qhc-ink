@@ -7,9 +7,9 @@ import { getHours } from '../../lib/strapi.ts';
 
 const hours = await getHours();
 const slides = [
-  { img: '/slide-1.webp', title: 'Little Wolf dish 1' },
-  { img: '/slide-2.webp', title: 'Little Wolf dish 2' },
-  { img: '/slide-3.webp', title: 'Little Wolf dish 3' },
+  { img: '/images/hero/hero-carousel1.webp', imgMobile: '/images/hero/hero-carousel1-mobile.webp', title: 'Guests dining by candlelight at Little Wolf Restaurant' },
+  { img: '/images/hero/hero-carousel2.webp', imgMobile: '/images/hero/hero-carousel2-mobile.webp', title: 'Bar interior with hanging wine glasses at Little Wolf' },
+  { img: '/images/hero/hero-carousel3.webp', imgMobile: '/images/hero/hero-carousel3-mobile.webp', title: 'Candlelit ambiance at Little Wolf Restaurant' },
 ];
 ---
 
@@ -57,8 +57,9 @@ const slides = [
 
 <style>
   .hero-wrapper {
-    position: relative;
-  }
+      position: relative;
+      overflow-x: hidden;
+   }
 
   .hero {
     background-color: var(--color-leather);
@@ -66,11 +67,11 @@ const slides = [
   }
 
   .hero-inner {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    min-height: 600px;
-    position: relative;
-  }
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  height: clamp(400px, 50vw, 650px);
+  position: relative;
+}
   
 .hero-column-divider {
   position: absolute;
@@ -136,6 +137,14 @@ const slides = [
   }
 
   /* Mobile */
+
+  @media (max-width: 1024px) {
+  .hero-inner {
+    height: auto;
+    min-height: 500px;
+  }
+}
+
   @media (max-width: 768px) {
     .hero-inner {
       grid-template-columns: 1fr;

@@ -16,38 +16,24 @@ import Link from '../ui/Link.astro';
       </p>
     </div>
     <div class="our-cuisine-photos">
-     <img
-  src="/slide-1.webp"
-  alt="Wood-fired steak with seasonal vegetables - Little Wolf signature dish"
-  loading="lazy"
-  width="600"
-  height="400"
-  class="cuisine-photo"
-/>
-<img
-  src="/slide-2.webp"
-  alt="House-made pasta with foraged mushrooms and truffle"
-  loading="lazy"
-  width="600"
-  height="400"
-  class="cuisine-photo"
-/>
-<img
-  src="/slide-3.webp"
-  alt="Artisanal dessert featuring local berries and housemade gelato"
-  loading="lazy"
-  width="600"
-  height="400"
-  class="cuisine-photo"
-/>
+      <picture class="cuisine-picture">
+        <source media="(max-width: 768px)" srcset="/images/our-cuisine/cuisine-tomato-mobile.webp" />
+        <img src="/images/our-cuisine/cuisine-tomato.webp" alt="Roasted tomato dish at Little Wolf Restaurant" loading="lazy" class="cuisine-photo" />
+      </picture>
+      <picture class="cuisine-picture">
+        <source media="(max-width: 768px)" srcset="/images/our-cuisine/cuisine-mush-soup-mobile.webp" />
+        <img src="/images/our-cuisine/cuisine-mush-soup.webp" alt="Mushroom soup with garnish at Little Wolf Restaurant" loading="lazy" class="cuisine-photo" />
+      </picture>
+      <picture class="cuisine-picture">
+        <source media="(max-width: 768px)" srcset="/images/our-cuisine/cuisine-bread-mobile.webp" />
+        <img src="/images/our-cuisine/cuisine-bread.webp" alt="Freshly baked bread with accompaniments at Little Wolf Restaurant" loading="lazy" class="cuisine-photo" />
+      </picture>
     </div>
 
     <div class="our-cuisine-cta">
-      <Link href="/menu" label="View Menu" size="md" variant="outline" />
-    </div>
+      <Link href="/menu" label="Example Menu" size="md" variant="outline" />    </div>
   </div>
 
-  
 </section>
 
 <style>
@@ -65,18 +51,18 @@ import Link from '../ui/Link.astro';
     gap: 2.5rem;
   }
 
-   .our-cuisine-heading {
-      font-family: var(--font-body);
-      font-weight: 700;
-      font-size: clamp(1.75rem, 3vw, 2.5rem);
-      color: var(--color-cream);
-   }
+  .our-cuisine-heading {
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    color: var(--color-cream);
+  }
 
-   .our-cuisine-text {
-      display: flex;
-      flex-direction: column;
-      gap: 1.25rem;
-   }
+  .our-cuisine-text {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
 
   .our-cuisine-text p {
     color: var(--color-cream);
@@ -92,45 +78,57 @@ import Link from '../ui/Link.astro';
     gap: 1.25rem;
   }
 
-  .cuisine-photo {
-    width: 100%;
-    aspect-ratio: 3 / 2;
-    object-fit: cover;
-    border-radius: 0.75rem;
-    display: block;
-  }
-
-.our-cuisine-cta {
-  display: flex;
-  align-items: flex-start;
+ .cuisine-picture {
+  display: block;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  aspect-ratio: 1 / 1;
+  width: 100%;
 }
 
+.cuisine-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+  .our-cuisine-cta {
+    display: flex;
+    align-items: flex-start;
+  }
 
   /* Mobile */
   @media (max-width: 768px) {
     .our-cuisine-inner {
-    padding: 3rem 1.5rem 3.5rem;
-    gap: 2rem;
+      padding: 3rem 1.5rem 3.5rem;
+      gap: 2rem;
+    }
+
+    .our-cuisine-cta {
+      justify-content: center;
+    }
+
+    .our-cuisine-photos {
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 0.75rem;
+      height: 60vw;
+    }
+
+    .cuisine-picture {
+      aspect-ratio: unset;
+      height: 100%;
+      border-radius: 0.75rem;
+    }
+
+    .cuisine-picture:first-child {
+      grid-column: 1;
+      grid-row: 1 / 3;
+    }
+
+    .cuisine-picture:not(:first-child) {
+      grid-column: 2;
+    }
   }
-  .our-cuisine-cta {
-    justify-content: center;
-  }
-  .our-cuisine-photos {
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 1fr;
-  gap: 0.75rem;
-  height: 60vw;
-}
-  .cuisine-photo:first-child {
-    grid-column: 1;
-    grid-row: 1 / 3;
-    height: 100%;
-    aspect-ratio: unset;
-  }
-  .cuisine-photo:not(:first-child) {
-    grid-column: 2;
-    height: 100%;
-    aspect-ratio: unset;
-  }
-}
 </style>
