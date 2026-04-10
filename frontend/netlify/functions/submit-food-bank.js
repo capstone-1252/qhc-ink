@@ -122,13 +122,6 @@ const strapiData = {
     const strapiToken = process.env.STRAPI_FORM_TOKEN?.trim();
 
 
-console.log('=== ENV DEBUG ===');
-console.log('STRAPI_PUBLIC_URL raw:', process.env.STRAPI_PUBLIC_URL);
-console.log('STRAPI_PUBLIC_URL trimmed:', strapiUrl);
-console.log('STRAPI_FORM_TOKEN raw length:', process.env.STRAPI_FORM_TOKEN?.length || 0);
-console.log('STRAPI_FORM_TOKEN trimmed length:', strapiToken?.length || 0);
-console.log('=================');
-
 if (!strapiUrl || !strapiToken) {
   console.error('Missing or empty Strapi environment variables');
   return {
