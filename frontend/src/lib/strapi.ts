@@ -1,6 +1,6 @@
   //you can expose this because its got read only permissions
 
-  const STRAPI_URL = import.meta.env.PUBLIC_STRAPI_URL;
+  const STRAPI_URL = import.meta.env.STRAPI_PUBLIC_URL;
 
 
   async function fetchStrapi(endpoint: string) {
