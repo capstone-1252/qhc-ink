@@ -1,175 +1,101 @@
 ---
-//headSEO.astro page. This is the <head> tag with all the SEO stuff configured
-
 interface Props {
   title: string;
   description: string;
-  image?: string;
+  image?: string; // optional OG image path
 }
 
-const { title, description } = Astro.props;
-/* const image = "/images/og-image.jpg"; */ //until we have a banner image for this: requirements: 1200 × 630 px, webp, keep under 300KB
-/* const canonicalURL = new URL(Astro.url.pathname, Astro.site);
-8424 109 St NW, Edmonton, AB T6G 1E2
- */
+const { 
+  title, 
+  description, 
+  image = "/og-image.webp" 
+} = Astro.props;
+
+// Safe base URL — this eliminates the "Invalid URL" error
+const baseURL = Astro.site 
+  ? Astro.site.toString().replace(/\/$/, '') + '/' 
+  : "https://www.littlewolfrestaurant.com/";
+
+const canonicalURL = new URL(Astro.url.pathname, baseURL).toString();
+
 const schema = {
   "@context": "https://schema.org",
   "@type": "Restaurant",
   "name": "Little Wolf Restaurant",
-/*   "image": new URL(Astro.site).toString(),
-  "url": Astro.site.toString(),
- */  "address": {
+  "description": "Independent small plates restaurant and cocktail spot in Edmonton's Garneau neighbourhood. Creative, veggie-forward dishes and inventive cocktails in a low-key, welcoming space.",
+  "image": new URL(image, baseURL).toString(),
+  "url": baseURL,
+  "telephone": "+1-780-757-2600",
+  "address": {
     "@type": "PostalAddress",
-    "streetAddress": "123 Main Street",
-    "addressLocality": "Your City",
-    "addressRegion": "CA",
-    "postalCode": "90000",
-    "addressCountry": "US"
+    "streetAddress": "8424 109 St NW",
+    "addressLocality": "Edmonton",
+    "addressRegion": "AB",
+    "postalCode": "T6G 1E2",
+    "addressCountry": "CA"
   },
-  "telephone": "+1-555-123-4567",
-  "servesCuisine": "American, Bistro",
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": 53.5206063,
+    "longitude": -113.5125206
+  },
+  "servesCuisine": ["Canadian", "Small Plates", "Vegetarian", "Vegan options", "Modern Canadian"],
+  "priceRange": "$$",
+  "openingHoursSpecification": [
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": ["Wednesday", "Thursday"],
+      "opens": "17:00",
+      "closes": "23:00"
+    },
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": ["Friday", "Saturday", "Sunday"],
+      "opens": "17:00",
+      "closes": "00:00"
+    }
+    // Closed Monday & Tuesday — no entry needed
+  ],
   "sameAs": [
-    "https://www.facebook.com/YourPage",
-    "https://www.instagram.com/YourPage",
-    "https://twitter.com/YourPage"
-  ]
+    "https://www.instagram.com/eatlilwolf/",
+    "https://www.exploretock.com/little-wolf-restaurant"
+  ],
+  "hasMenu": `${baseURL}menu`,
+  "acceptsReservations": "https://www.exploretock.com/little-wolf-restaurant"
 };
 
-// Site Configuration
-// Centralized configuration for site metadata, SEO, and branding
-
-export const SITE_TITLE = 'Demo: Bistro - Restaurant Landing Page | Shadcn Studio'
-export const SITE_DESCRIPTION =
-  'Enjoy fresh ingredients, thoughtfully prepared meals, and a welcoming space designed for memorable moments. Experience bistro dining made simple and delicious.'
-
-export const GITHUB_URL = 'https://github.com/yourusername/shadcn-astro-bistro-landing-page'
-export const SITE_URL = 'https://shadcnstudio.com/'
-
-export const SITE_METADATA = {
-  title: {
-    default: 'Demo: Bistro - Restaurant Landing Page | Shadcn Studio'
-  },
-  description:
-    'Enjoy fresh ingredients, thoughtfully prepared meals, and a welcoming space designed for memorable moments. Experience bistro dining made simple and delicious.',
-  authors: [{ name: 'shadcn Studio', url: SITE_URL }],
-  creator: 'shadcn Studio',
-  publisher: 'shadcn Studio',
-  robots: {
-    index: true,
-    follow: true
-  },
-  language: 'en-US',
-  locale: 'en_US',
-  icons: {
-    icon: [
-      { url: '/favicon/favicon.ico', sizes: '48x48' },
-      { url: '/favicon/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
-      { url: '/favicon/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
-      { url: '/favicon/android-chrome-192x192.png', sizes: '192x192', type: 'image/png' },
-      { url: '/favicon/android-chrome-512x512.png', sizes: '512x512', type: 'image/png' }
-    ],
-    apple: [{ url: '/favicon/apple-touch-icon.png', sizes: '180x180' }],
-    shortcut: [{ url: '/favicon/favicon.ico' }]
-  },
-  openGraph: {
-    type: 'website',
-    locale: 'en_US',
-    siteName: 'Bistro',
-    title: 'Demo: Bistro - Restaurant Landing Page | Shadcn Studio',
-    description:
-      'Enjoy fresh ingredients, thoughtfully prepared meals, and a welcoming space designed for memorable moments. Experience bistro dining made simple and delicious.',
-    images: [
-      {
-        url: '/images/og-image.png',
-        width: 1200,
-        height: 630,
-        alt: 'Demo: Bistro - Restaurant Landing Page | Shadcn Studio',
-        type: 'image/png'
-      }
-    ]
-  },
-  twitter: {
-    card: 'summary_large_image',
-    site: '@shadcnstudio',
-    creator: '@shadcnstudio',
-    title: 'Demo: Bistro - Restaurant Landing Page | Shadcn Studio',
-    description:
-      'Enjoy fresh ingredients, thoughtfully prepared meals, and a welcoming space designed for memorable moments. Experience bistro dining made simple and delicious.',
-    images: ['/images/og-image.png']
-  },
-  verification: {
-    google: '', // Add your Google verification code
-    yandex: '', // Add your Yandex verification code
-    bing: '' // Add your Bing verification code
-  }
-}
-
-// Social media links
-export const SOCIAL_LINKS = {
-  github: GITHUB_URL,
-  twitter: 'https://twitter.com/shadcnstudio',
-  linkedin: 'https://linkedin.com/company/shadcnstudio',
-  discord: 'https://discord.gg/shadcnstudio'
-}
-
-// Company information for structured data
-export const COMPANY_INFO = {
-  name: 'shadcn Studio',
-  legalName: 'shadcn Studio Inc.',
-  url: SITE_URL,
-  logo: `/images/site-logo.png`,
-  foundingDate: '2024',
-  address: {
-    streetAddress: '123 Web Dev Street',
-    addressLocality: 'San Francisco',
-    addressRegion: 'CA',
-    postalCode: '94102',
-    addressCountry: 'US'
-  },
-  contactPoint: {
-    telephone: '+1-555-123-4567',
-    contactType: 'customer support',
-    email: 'support@shadcnstudio.com'
-  },
-  sameAs: Object.values(SOCIAL_LINKS)
-}
-
-
-
-
+const actualTitle = title || "Little Wolf Restaurant | Creative Small Plates & Cocktails in Garneau, Edmonton";
+const actualDescription = description || "Low-key neighbourhood favourite in Garneau. Inventive veggie-forward small plates, creative cocktails, and a warm atmosphere. Walk-ins welcome. Reservations via Tock.";
 ---
-
 <head>
-  <!-- Basic meta -->
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="generator" content={Astro.generator} />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="icon" href="/favicon.ico" />
 
+  <!-- Core SEO -->
+  <title>{actualTitle}</title>
+  <meta name="description" content={actualDescription} />
+  <link rel="canonical" href={canonicalURL} />
 
-  <!-- SEO -->
-  <title>{title}</title>
-  <meta name="description" content={description} />
-<!--   <link rel="canonical" href={canonicalURL} />
- -->
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
-<!--   <meta property="og:url" content={canonicalURL} />
- -->  <meta property="og:title" content={title} />
-  <meta property="og:description" content={description} />
-<!--   <meta property="og:image" content={new URL(image, Astro.site)} />
- -->
+  <meta property="og:url" content={canonicalURL} />
+  <meta property="og:title" content={actualTitle} />
+  <meta property="og:description" content={actualDescription} />
+  <meta property="og:image" content={new URL(image, baseURL).toString()} />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Little Wolf Restaurant — charred focaccia and warm, low-light neighbourhood glow in Garneau, Edmonton" />
+  <meta property="og:locale" content="en_CA" />
+
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content={title} />
-  <meta name="twitter:description" content={description} />
-<!--   <meta name="twitter:image" content={new URL(image, Astro.site)} />
- -->
+  <meta name="twitter:title" content={actualTitle} />
+  <meta name="twitter:description" content={actualDescription} />
+  <meta name="twitter:image" content={new URL(image, baseURL).toString()} />
 
-   <!-- JSON-LD Structured Data -->
+  <!-- JSON-LD Structured Data -->
   <script type="application/ld+json" set:html={JSON.stringify(schema)} />
-</head>
-
-
 </head>

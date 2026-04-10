@@ -21,7 +21,7 @@ const IndexLinks = [
 
     <main class="page-wrapper hero">
       <div class="character">
-        <img src="wolf-head.svg" alt="Little Wolf restaurant chef.">
+        <img src="edmonton-food-bank-logo.png" alt="Edmonton food bank logo.">
       </div>
       <h1 class="title-heading">We've Got Your Request!</h1>
       <p>We'll check availability and email you shortly with the next steps.</p>
@@ -46,7 +46,6 @@ const IndexLinks = [
     body {
         overflow-x: hidden;
         min-width: 240px;
-        padding-bottom: 4rem;
     }
 
        .page-wrapper {
@@ -59,13 +58,19 @@ const IndexLinks = [
     }
 
 
+
     .hero {
         display: flex;
         flex-direction: column;
         align-items: center;
         gap: 1.5rem;
-        margin-bottom: 3rem;
-        padding: 0 6rem;
+        margin-bottom: 6.5rem;
+        padding: 0 2rem;
+
+    }
+
+    .hero p {
+              color: var(--color-cream);
 
     }
 
@@ -116,8 +121,8 @@ const IndexLinks = [
   }
 
   .character img {
-    height: 160px;
-    width: auto;
+/*     height: 160px;
+ */    width: 300px;
     filter: brightness(0) saturate(100%) invert(89%) sepia(14%) saturate(400%) hue-rotate(5deg) brightness(98%) contrast(90%);
   }
 

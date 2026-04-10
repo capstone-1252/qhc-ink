@@ -17,8 +17,6 @@ body {
 }
 
 
-
-
 /* steps indicator */
 .headerBlock {
   display: flex;
@@ -30,7 +28,8 @@ body {
 }
 
 .stepIndicator {
-  width: 60%;
+  width: 100%;
+  margin-top: 1.5rem;
 }
 
 .steps {
@@ -255,7 +254,7 @@ div.formInput.stepper {
   display: flex;
   flex-direction: row-reverse;
   justify-content: start;
-  gap: 1.5rem;
+  gap: 1rem;
   margin-top: 1rem;
 
 }
@@ -313,7 +312,7 @@ div.formInput.stepper {
 }
 
 .modalContent h2 {
-  margin: 0 0 1rem 0;
+  margin-bottom: 1.5rem;
   color: var(--color-cream);
 }
 
