@@ -2,49 +2,58 @@
 import WaveDivider from '../ui/WaveDivider.astro';
 import Link from '../ui/Link.astro';
 import GooglyEyes from '../GooglyEyes.astro';
+import EmblaCarousel from '../ui/EmblaCarousel';
+import HoursTab from '../ui/HoursTab';
+import { getHours } from '../../lib/strapi.ts';
 
-/* import EmblaCarousel from '../ui/EmblaCarousel';
-import HoursPanel from '../ui/HoursTab';    
-import ProfileCard from '../ui/ProfileCard.astro'; */
+const hours = await getHours();
+const slides = [
+  { img: '/images/hero/hero-carousel1.webp', imgMobile: '/images/hero/hero-carousel1-mobile.webp', title: 'Guests dining by candlelight at Little Wolf Restaurant' },
+  { img: '/images/hero/hero-carousel2.webp', imgMobile: '/images/hero/hero-carousel2-mobile.webp', title: 'Bar interior with hanging wine glasses at Little Wolf' },
+  { img: '/images/hero/hero-carousel3.webp', imgMobile: '/images/hero/hero-carousel3-mobile.webp', title: 'Candlelit ambiance at Little Wolf Restaurant' },
+];
 ---
 
-
-<!-- const slides = [
-  { img: '/slide-1.webp' },
-  { img: '/slide-2.webp'},
-  { img: '/slide-3.webp'}
-]; -->
-
-<section class="hero" aria-label="Hero">
-  <div class="hero-inner">
-
-    <div class="hero-content">
-      <h1 class="hero-heading">
-        Where Flavour<br />Meets Fun
-      </h1>
-      <p class="hero-body">
-        Welcome to Little Wolf, Where you can drop in and hang out, (You can also secure yourself a reservation!) We're a small plates & big hearts restaurant and bar in the center of the garneau district. we specialize in craft cocktails, local beers & a veg forward menu with something for everyone.
-      </p>
-      <Link
-        href="/reservations"
-        label="Reserve"
-        size="md"
-        variant="outline"
-      />
-      <div class="eyes" data-egg-trigger>
-        <GooglyEyes style="width: 70px; height: 45px;" />
+<div class="hero-wrapper">
+  <section class="hero" aria-labelledby="hero-heading">
+    <div class="hero-inner">
+      <div class="hero-column-divider" aria-hidden="true">
+        <svg viewBox="0 0 80 600" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M40,0 C60,75 20,150 40,225 C60,300 20,375 40,450 C60,525 20,562 40,600 L-40,600 L-40,0 Z"
+            fill="var(--color-leather)"
+            opacity="1"
+          />
+          <path d="M40,0 C60,75 20,150 40,225 C60,300 20,375 40,450 C60,525 20,562 40,600"
+            fill="none"
+            stroke="var(--color-cream)"
+            stroke-width="15"
+            opacity="1"
+          />
+        </svg>
       </div>
-    </div>
-
-    <div class="hero-image-wrap">
-      <img
-        src="/slide-1.webp"
-        alt="Guests enjoying dinner at Little Wolf Restaurant in Edmonton"
-        width="640"
-        height="480"
-        loading="eager"
-        class="hero-image"
-      />
+      <div class="hero-content">
+        <h1 id="hero-heading" class="hero-heading">
+          Where Flavour<br />Meets Fun
+        </h1>
+        <p class="hero-body">
+          Welcome to Little Wolf, Where you can drop in and hang out, (You can also secure yourself a reservation!) We're a small plates & big hearts restaurant and bar in the center of the garneau district. we specialize in craft cocktails, local beers & a veg forward menu with something for everyone.
+        </p>
+        <Link
+          href="https://www.exploretock.com/little-wolf-restaurant"
+          target="_blank"
+          rel="noopener noreferrer"
+          label="Reserve"
+          size="md"
+          variant="gold"
+        />
+        <div class="eyes" data-egg-trigger>
+          <GooglyEyes style="width: 70px; height: 45px;" />
+        </div>
+      </div>
+      <div class="hero-image-wrap">
+        <EmblaCarousel client:load slides={slides} options={{ loop: true }} />
+        <div class="hero-image-fade"></div>
+      </div>
     </div>
   </section>
   <HoursTab client:load hours={hours} />
@@ -131,12 +140,12 @@ import ProfileCard from '../ui/ProfileCard.astro'; */
     z-index: 1;
   }
 
-  /* googly eyes */
+  /* Mobile */
   .eyes {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-  }
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
 
   /* Mobile */
 
@@ -182,8 +191,12 @@ import ProfileCard from '../ui/ProfileCard.astro'; */
       font-size: clamp(2.2rem, 10vw, 3rem);
     }
 
+    .hero-column-divider {
+      display: none;
+    }
+
     .eyes {
     justify-content: flex-start;
-    }
+  }
   }
 </style>
