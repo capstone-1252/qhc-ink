@@ -9,7 +9,7 @@
 
 //import zod schema
 
-import { formSchema } from '../../../shared/schema.js';
+import { formSchema } from '../../shared/schema.js';
 
 // Export the handler function that Netlify will call on each request
 export async function handler(event, context) {
