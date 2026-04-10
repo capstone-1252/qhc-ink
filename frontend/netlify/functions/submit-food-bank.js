@@ -205,8 +205,8 @@ if (!strapiUrl || !strapiToken) {
         },
         body: JSON.stringify({
           from: 'Little Wolf Reservations <onboarding@resend.dev>',
-          to: 'qhc.ink@gmail.com', 
-          subject: 'TEST New Food Bank Dinner Reservation Request', // replace with shauns/restaraunt email? might need to ask him
+          to: 'info@littlewolf.com', 
+          subject: 'New Food Bank Dinner Reservation Request',
           html: `
             <h2>New Food Bank Dinner Reservation</h2>
             <p><strong>Name:</strong> ${name}</p>
