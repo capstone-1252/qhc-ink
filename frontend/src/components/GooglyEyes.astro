@@ -1,0 +1,164 @@
+---
+// GooglyEyes.astro
+// Crops directly to the eye region of eyes-white.svg — no wasted canvas.
+// Default: 280×179px. Override with style prop (keep 250:160 ratio).
+// Usage: <GooglyEyes style="width: 320px; height: 205px;" />
+const { class: className = '', style = '' } = Astro.props;
+---
+
+<div class:list={['gg-wrap', className]} style={style} aria-hidden="true">
+  <canvas class="gg-canvas" data-googly></canvas>
+</div>
+
+<style>
+  .gg-wrap {
+    position: relative;
+    display: inline-block;
+    /* default size — ratio is 250:160 (the eye crop region)
+       so height = width * 0.64, e.g. 280x179, 320x205, 400x256 */
+    width: 280px;
+    height: 179px;
+    /* background-size and background-position set by JS to crop to eye region */
+    background-image: url('/egg-animation/eyes-white.svg');
+    background-repeat: no-repeat;
+    pointer-events: none;
+    user-select: none;
+  }
+  .gg-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    display: block;
+  }
+</style>
+
+<script>
+  // The eyes in eyes-white.svg sit in a 1080x1080 viewBox.
+  // We crop to just the eye region so they fill the component nicely.
+  // Crop region (SVG coords): x=155, y=95, w=250, h=160
+  const CROP = { x: 155, y: 95, w: 250, h: 160 };
+
+  // Eye positions mapped into crop-relative fractions (0-1)
+  // formula: (svgCoord - cropStart) / cropSize
+  const EYES = [
+    {
+      fx: (238.19 - CROP.x) / CROP.w,  // ~0.333
+      fy: (177.11 - CROP.y) / CROP.h,  // ~0.513
+      rx: 36.91 / CROP.w,              // ~0.148
+      ry: 44.96 / CROP.h,              // ~0.281
+    },
+    {
+      fx: (328.64 - CROP.x) / CROP.w,  // ~0.695
+      fy: (177.11 - CROP.y) / CROP.h,  // ~0.513
+      rx: 36.91 / CROP.w,
+      ry: 44.96 / CROP.h,
+    },
+  ];
+
+  // Pupil radius as fraction of eye rx (19.7 / 36.91 from eyes-black.svg)
+  const PUPIL_FRAC = 0.53;
+
+  function initGoogly(canvas: HTMLCanvasElement) {
+    const wrap = canvas.parentElement as HTMLElement;
+    const ctx  = canvas.getContext('2d')!;
+    let tX = 0, tY = 0;
+    const offsets = EYES.map(() => ({ x: 0, y: 0 }));
+
+    function syncBg() {
+      // Scale the full SVG so that CROP.w maps to the wrapper width
+      const W     = wrap.offsetWidth;
+      const scale = W / CROP.w;            // px per SVG unit
+      const sz    = Math.round(1080 * scale);
+      const bx    = Math.round(-CROP.x * scale);
+      const by    = Math.round(-CROP.y * scale);
+      wrap.style.backgroundSize     = `${sz}px ${sz}px`;
+      wrap.style.backgroundPosition = `${bx}px ${by}px`;
+    }
+
+    function resize() {
+      const r = canvas.getBoundingClientRect();
+      canvas.width  = Math.round(r.width  * devicePixelRatio);
+      canvas.height = Math.round(r.height * devicePixelRatio);
+    }
+
+    function draw() {
+      const W = canvas.width, H = canvas.height;
+      ctx.clearRect(0, 0, W, H);
+
+      EYES.forEach((eye, i) => {
+        const cx  = eye.fx * W;
+        const cy  = eye.fy * H;
+        const erx = eye.rx * W;
+        const ery = eye.ry * H;
+        const pr  = erx * PUPIL_FRAC;
+
+        // Lerp toward target
+        offsets[i].x += (tX - offsets[i].x) * 0.1;
+        offsets[i].y += (tY - offsets[i].y) * 0.1;
+
+        // Clamp pupil inside eye ellipse
+        const ox = offsets[i].x, oy = offsets[i].y;
+        const angle  = Math.atan2(oy, ox);
+        const boundX = Math.cos(angle) * (erx - pr) * 0.78;
+        const boundY = Math.sin(angle) * (ery - pr) * 0.78;
+        const len    = Math.sqrt(ox * ox + oy * oy);
+        const maxLen = Math.sqrt(boundX * boundX + boundY * boundY);
+        const s      = len > maxLen ? maxLen / len : 1;
+        const px = ox * s, py = oy * s;
+
+        // Pupil
+        ctx.beginPath();
+        ctx.arc(cx + px, cy + py, pr, 0, Math.PI * 2);
+        ctx.fillStyle = '#111';
+        ctx.fill();
+
+        // Shine
+        ctx.beginPath();
+        ctx.arc(cx + px + pr * 0.3, cy + py - pr * 0.3, pr * 0.28, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(255,255,255,0.9)';
+        ctx.fill();
+      });
+    }
+
+    function setTarget(nx: number, ny: number) {
+      const W = canvas.width, H = canvas.height;
+      tX = nx * EYES[0].rx * W * 1.5;
+      tY = ny * EYES[0].ry * H * 1.5;
+    }
+
+    window.addEventListener('mousemove', (e) => {
+      setTarget(
+        (e.clientX / window.innerWidth  - 0.5) * 2,
+        (e.clientY / window.innerHeight - 0.5) * 2
+      );
+    });
+
+    window.addEventListener('touchmove', (e) => {
+      const t = e.touches[0];
+      setTarget(
+        (t.clientX / window.innerWidth  - 0.5) * 2,
+        (t.clientY / window.innerHeight - 0.5) * 2
+      );
+    }, { passive: true });
+
+    window.addEventListener('deviceorientation', (e) => {
+      if (e.gamma == null || e.beta == null) return;
+      setTarget(
+        Math.max(-1, Math.min(1, e.gamma / 28)),
+        Math.max(-1, Math.min(1, (e.beta - 30) / 32))
+      );
+    });
+
+    const ro = new ResizeObserver(() => { syncBg(); resize(); draw(); });
+    ro.observe(wrap);
+    syncBg();
+    resize();
+    (function loop() { draw(); requestAnimationFrame(loop); })();
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll<HTMLCanvasElement>('canvas[data-googly]').forEach(initGoogly);
+  });
+</script>

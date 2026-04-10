@@ -3,6 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import Header from '../components/layout/Header.astro';
 import { getMenuCategories } from '../lib/strapi';
 import { getMenuItems } from '../lib/strapi';
+import GooglyEyes from '../components/GooglyEyes.astro';
 
 type MenuCategory = {
   id: number;
@@ -53,6 +54,9 @@ function getItems(category: MenuCategory) {
 <div class="menu-hero">
   <h1>Menu</h1>
   <p>Menu changes on a regular basis,<br/>below are examples and may not be available</p>
+  <div style="display: flex; justify-content: center; margin: 1rem 0;" data-egg-trigger>
+  <GooglyEyes style="width: 80px; height: 51px;" />
+</div>
   <img src="/slide-1.webp" alt="Menu photo" />
 </div>
 

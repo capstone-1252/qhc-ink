@@ -1,0 +1,332 @@
+---
+---
+
+<!-- z-order FIXED: pan → white → yolk → rim (over egg contents) → shells (fly above) → plate → cooked → wolf -->
+<div id="ee-ov" aria-hidden="true">
+  <div id="ee-pan" class="ee"><img src="/egg-animation/frying-pan.svg"        alt="" draggable="false"></div>
+  <div id="ee-wht" class="ee"><img src="/egg-animation/egg-white.svg"         alt="" draggable="false"></div>
+  <div id="ee-ylk" class="ee"><img src="/egg-animation/egg-yolk.svg"          alt="" draggable="false"></div>
+  <div id="ee-rim" class="ee"><img src="/egg-animation/frying-pan-rim.svg"    alt="" draggable="false"></div>
+  <div id="ee-shl" class="ee"><img src="/egg-animation/egg-left.svg"          alt="" draggable="false"></div>
+  <div id="ee-shr" class="ee"><img src="/egg-animation/egg-right.svg"         alt="" draggable="false"></div>
+  <div id="ee-plt" class="ee"><img src="/egg-animation/plate.svg"             alt="" draggable="false"></div>
+  <div id="ee-ckd" class="ee"><img src="/egg-animation/cooked-egg.svg"        alt="" draggable="false"></div>
+  <div id="ee-wlf" class="ee"><img src="/egg-animation/wolf-full-colored.svg" alt="" draggable="false"></div>
+  <div id="ee-pts"></div>
+</div>
+
+<style>
+  #ee-ov { position:fixed; inset:0; z-index:9999; pointer-events:none; display:none; overflow:hidden; }
+  #ee-ov.on { display:block; }
+  .ee { position:fixed; opacity:0; pointer-events:none; will-change:transform,opacity; }
+  .ee img { width:100%; height:100%; display:block; object-fit:contain; user-select:none; -webkit-user-drag:none; }
+  #ee-pts { position:fixed; inset:0; pointer-events:none; z-index:10001; }
+
+  /* ── PAN: dizzy and fast, 2 full spins, tiny dizzy wobble at end ── */
+  @keyframes eePanFly {
+    0%   { transform: translateX(-115vw) rotate(-10deg) scale(0.7); }
+    50%  { transform: translateX(3%)    rotate(715deg)  scale(1.02); }
+    62%  { transform: translateX(-4px)  rotate(713deg); }
+    72%  { transform: translateX(3px)   rotate(718deg); }
+    80%  { transform: translateX(-2px)  rotate(716deg); }
+    90%  { transform: translateX(1px)   rotate(719deg); }
+    100% { transform: translateX(0)     rotate(720deg)  scale(1); }
+  }
+  /* subtle sizzle vibration */
+  @keyframes eeSizzleShake {
+    0%,100% { transform: translateX(0) rotate(0deg); }
+    25% { transform: translateX(-2px) rotate(-0.8deg); }
+    75% { transform: translateX(2px)  rotate(0.8deg); }
+  }
+  @keyframes eePanExit {
+    0%   { transform: translateX(0) rotate(0deg); opacity:1; }
+    100% { transform: translateX(-120vw) rotate(-25deg); opacity:0; }
+  }
+
+  /* ── EGG FALL: fast gravity drop ── */
+  @keyframes eeEggFall {
+    0%   { transform: translateY(-110vh) rotate(8deg); }
+    65%  { transform: translateY(3%) rotate(-2deg); }
+    82%  { transform: translateY(-0.8%); }
+    100% { transform: translateY(0) rotate(0deg); }
+  }
+
+  /* ── CRACK: shells rotate apart like human hands, slow deliberate ── */
+  @keyframes eeCrackL {
+    0%   { transform: translate(0,0)         rotate(0deg);    opacity:1; }
+    18%  { transform: translate(-12px,-22px) rotate(-35deg);  opacity:1; }
+    36%  { transform: translate(-30px,-38px) rotate(-70deg);  opacity:1; }
+    58%  { transform: translate(-110px,-50px) rotate(-165deg); opacity:0.85; }
+    100% { transform: translate(-265px, 35px) rotate(-310deg); opacity:0; }
+  }
+  @keyframes eeCrackR {
+    0%   { transform: translate(0,0)         rotate(0deg);   opacity:1; }
+    18%  { transform: translate(12px,-22px)  rotate(35deg);  opacity:1; }
+    36%  { transform: translate(30px,-38px)  rotate(70deg);  opacity:1; }
+    58%  { transform: translate(110px,-50px) rotate(165deg); opacity:0.85; }
+    100% { transform: translate(265px, 35px) rotate(310deg); opacity:0; }
+  }
+
+  /* ── WHITE: pours fast from crack, drips down, spreads ── */
+  @keyframes eeWhitePour {
+    0%   { transform: scaleX(0.12) scaleY(0);    opacity:0; }
+    18%  { transform: scaleX(0.4)  scaleY(0.45); opacity:1; }
+    38%  { transform: scaleX(0.82) scaleY(0.88); }
+    58%  { transform: scaleX(1.1)  scaleY(0.9);  }
+    78%  { transform: scaleX(0.97) scaleY(1.04); }
+    100% { transform: scaleX(1)    scaleY(1);    opacity:1; }
+  }
+
+  /* ── YOLK: fast plop ── */
+  @keyframes eeYolkPlop {
+    0%   { transform: translateY(-8%) scale(0.25); opacity:0; }
+    32%  { transform: translateY(2%)  scale(1.18); opacity:1; }
+    56%  { transform: translateY(-1%) scale(0.93); }
+    78%  { transform: translateY(0.4%) scale(1.04); }
+    100% { transform: translateY(0)   scale(1);    opacity:1; }
+  }
+
+  /* ── SMOKE ── */
+  @keyframes eeSmoke {
+    0%   { transform: translateY(0)      translateX(0)        scale(0.2);  opacity:0.5; }
+    25%  { opacity:0.42; }
+    65%  { opacity:0.18; }
+    100% { transform: translateY(-95px) translateX(var(--dx)) scale(2.4); opacity:0; }
+  }
+
+  /* ── COOKED REVEAL: glow, no stars ── */
+  @keyframes eeCookedReveal {
+    0%,42%  { opacity:0; transform:scale(0.88) rotate(-3deg); filter:brightness(1); }
+    64%     { opacity:1; transform:scale(1.06) rotate(2deg);
+              filter:brightness(1.55) drop-shadow(0 0 20px rgba(255,210,0,0.9)); }
+    83%     { transform:scale(0.98) rotate(-1deg);
+              filter:brightness(1.18) drop-shadow(0 0 8px rgba(255,195,0,0.45)); }
+    100%    { opacity:1; transform:scale(1) rotate(0deg);
+              filter:brightness(1) drop-shadow(0 0 0px transparent); }
+  }
+
+  /* ── ARC: up and back to same position ── */
+  @keyframes eeCookedArc {
+    0%   { transform: translate(0,0)      rotate(0deg)    scale(1);   opacity:1; }
+    40%  { transform: translate(3%,-58vh) rotate(-185deg) scale(1.1); opacity:1; }
+    100% { transform: translate(0,0)      rotate(-360deg) scale(1);   opacity:1; }
+  }
+  /* minimal land settle */
+  @keyframes eeCookedLand {
+    0%   { transform: translateY(-18px) scale(1.1); opacity:1; }
+    40%  { transform: translateY(6px)   scale(0.96); }
+    70%  { transform: translateY(-3px)  scale(1.02); }
+    100% { transform: translateY(0)     scale(1);   opacity:1; }
+  }
+
+  /* ── PLATE ── */
+  @keyframes eePlateIn {
+    0%   { transform: translateX(115vw); opacity:0; }
+    72%  { transform: translateX(1.5%); opacity:1; }
+    86%  { transform: translateX(-0.8%); }
+    100% { transform: translateX(0);    opacity:1; }
+  }
+
+  /* ── WOLF: Disney fast run-in (squash+stretch), then steady walk ── */
+  @keyframes eeWolfRun {
+    0%   { transform: translateX(140vw) scaleX(1.55); }
+    68%  { transform: translateX(2%)    scaleX(0.82); }
+    82%  { transform: translateX(-1%)   scaleX(1.1);  }
+    100% { transform: translateX(0)     scaleX(1);    }
+  }
+  /* simple walk, no wobble */
+  @keyframes eeWolfWalk {
+    0%   { transform: translateX(0);      opacity:1; }
+    78%  { transform: translateX(-112vw); opacity:1; }
+    100% { transform: translateX(-135vw); opacity:0; }
+  }
+  @keyframes eeItemWalk {
+    0%   { transform: translateX(0);      opacity:1; }
+    78%  { transform: translateX(-112vw); opacity:1; }
+    100% { transform: translateX(-135vw); opacity:0; }
+  }
+</style>
+
+<script>
+  const ov  = document.getElementById('ee-ov')  as HTMLElement;
+  const rim = document.getElementById('ee-rim') as HTMLElement;
+  const pan = document.getElementById('ee-pan') as HTMLElement;
+  const wht = document.getElementById('ee-wht') as HTMLElement;
+  const ylk = document.getElementById('ee-ylk') as HTMLElement;
+  const shl = document.getElementById('ee-shl') as HTMLElement;
+  const shr = document.getElementById('ee-shr') as HTMLElement;
+  const plt = document.getElementById('ee-plt') as HTMLElement;
+  const ckd = document.getElementById('ee-ckd') as HTMLElement;
+  const wlf = document.getElementById('ee-wlf') as HTMLElement;
+  const pts = document.getElementById('ee-pts') as HTMLElement;
+
+  let running = false;
+  const $ = (ms: number) => new Promise<void>(r => setTimeout(r, ms));
+
+  function place(el: HTMLElement, x: number, y: number, w: number, h?: number) {
+    el.style.cssText = `position:fixed;left:${x}px;top:${y}px;width:${w}px;height:${h ?? w}px;opacity:0;pointer-events:none;will-change:transform,opacity;`;
+  }
+
+  function anim(el: HTMLElement, name: string, dur: number, ease = 'ease-out') {
+    el.style.opacity = '1';
+    el.style.animation = `${name} ${dur}ms ${ease} forwards`;
+  }
+
+  function spawnSmoke(bx: number, by: number, size: number) {
+    const x  = bx + size * (0.28 + Math.random() * 0.44);
+    const y  = by + size * 0.27;
+    const sz = 16 + Math.random() * 28;
+    const dx = (Math.random() - 0.5) * 55;
+    const g  = Math.floor(190 + Math.random() * 50);
+    const el = document.createElement('div');
+    el.style.cssText = `position:fixed;left:${x-sz/2}px;top:${y-sz/2}px;width:${sz}px;height:${sz}px;border-radius:50%;background:rgba(${g},${g},${g-5},0.27);z-index:10002;pointer-events:none;--dx:${dx}px;animation:eeSmoke ${480+Math.random()*580}ms ease-out forwards;`;
+    pts.appendChild(el);
+    setTimeout(() => el.remove(), 1150);
+  }
+
+  async function run() {
+    if (running) return;
+    running = true;
+
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+
+    // Responsive sizing: egg/pan group fills ~58% of width or ~52% of height, capped at 440px
+    const ES = Math.min(Math.round(Math.min(vw * 0.58, vh * 0.52)), 440);
+    const PS = Math.round(ES * 0.68);         // plate
+    const WS = Math.round(ES * 0.58);         // wolf width (smaller than pan)
+    const WH = Math.round(WS * 1.32);         // wolf height
+
+    // Pan/egg center: horizontally centered, ~48% down
+    const panX = Math.round(vw / 2 - ES / 2);
+    const panY = Math.round(vh * 0.48 - ES / 2);
+
+    // Cooked egg final position: same x, shifted up ~6% so egg sits higher on plate
+    const ckdFinalY = panY - Math.round(ES * 0.06);
+
+    // Plate: centered within the adjusted cooked-egg area
+    const plateX = panX + Math.round((ES - PS) / 2);
+    const plateY = panY + Math.round((ES - PS) / 2) + Math.round(ES * 0.05);
+
+    // Wolf: centered, midsection (~46% down) aligned with plate center
+    const wolfX = Math.round(vw / 2 - WS / 2 + vw * 0.12);
+    const wolfY = Math.round((plateY + PS * 0.60) - WH * 0.46);
+
+    pts.innerHTML = '';
+    [pan,wht,ylk,rim,shl,shr,plt,ckd,wlf].forEach(el => {
+      el.style.cssText = 'position:fixed;opacity:0;pointer-events:none;';
+    });
+
+    ov.classList.add('on');
+    await $(50);
+
+    // ── 1. PAN FLIES IN: fast, dizzy 2 rotations ─────────
+    place(pan, panX, panY, ES);
+    pan.style.opacity = '1';
+    pan.style.animation = 'eePanFly 640ms ease-out forwards';
+
+    // ── 2. EGG FALLS FAST from top (gravity) ─────────────
+    await $(480);
+    place(shl, panX, panY, ES);
+    place(shr, panX, panY, ES);
+    // pre-place white and yolk (invisible, ready to pour)
+    place(wht, panX, panY + Math.round(ES * 0.25), ES);
+    place(ylk, panX, panY + Math.round(ES * 0.20), ES);
+    wht.style.transformOrigin = '50% 28%'; // anchor at crack point
+    shl.style.opacity = '1'; shr.style.opacity = '1';
+    shl.style.animation = 'eeEggFall 420ms ease-in forwards';
+    shr.style.animation = 'eeEggFall 420ms ease-in forwards';
+
+    // ── 3. CRACK: slow deliberate rotation like human hands ─
+    await $(360); // shells near pan
+    // shells rotate apart (slow at first showing the crack, then fly)
+    shl.style.animation = 'eeCrackL 720ms ease-in forwards';
+    shr.style.animation = 'eeCrackR 720ms ease-in forwards';
+
+    // white pours FAST from crack simultaneously — gravity
+    anim(wht, 'eeWhitePour', 420, 'ease-in-out');
+
+    // rim appears — now white/yolk are sandwiched between pan and rim
+    await $(55);
+    rim.style.cssText = `position:fixed;left:${panX}px;top:${panY}px;width:${ES}px;height:${ES}px;opacity:1;pointer-events:none;will-change:transform,opacity;`;
+
+    // yolk drops fast right after white
+    await $(140);
+    anim(ylk, 'eeYolkPlop', 360, 'ease-in');
+
+    // ── 4. SIZZLE: slow cooking, subtle vibration + smoke ─
+    await $(420);
+    const sizzleAnim = 'eeSizzleShake 240ms ease-in-out infinite';
+    [pan, rim, wht, ylk].forEach(el => { el.style.animation = sizzleAnim; });
+    const smokeInt = setInterval(() => spawnSmoke(panX, panY, ES), 52);
+    await $(1250);
+    clearInterval(smokeInt);
+    [pan, rim, wht, ylk].forEach(el => { el.style.animation = 'none'; });
+
+    // ── 5. COOKED REVEAL: glow, no stars ──────────────────
+    wht.style.transition = 'opacity 300ms'; ylk.style.transition = 'opacity 300ms';
+    wht.style.opacity = '0'; ylk.style.opacity = '0';
+    place(ckd, panX, panY, ES);
+    anim(ckd, 'eeCookedReveal', 520, 'ease-out');
+    await $(600);
+
+    // ── 6. COOKED EGG ARCS UP ─────────────────────────────
+    // First: reposition ckd to final y (shifted up) so arc returns there
+    ckd.style.top = ckdFinalY + 'px';
+    anim(ckd, 'eeCookedArc', 800, 'cubic-bezier(0.4,0,0.6,1)');
+
+    // ── 7. PAN EXITS LEFT as egg is airborne ──────────────
+    await $(160);
+    pan.style.animation = 'eePanExit 380ms ease-in forwards';
+    rim.style.transition = 'opacity 280ms'; rim.style.opacity = '0';
+
+    // ── 8. PLATE SLIDES IN FROM RIGHT ─────────────────────
+    await $(170);
+    place(plt, plateX, plateY, PS);
+    anim(plt, 'eePlateIn', 480);
+
+    // ── 9. EGG LANDS ON PLATE (arc = 800ms, elapsed = 160+170+470=800) ──
+    await $(470);
+    ckd.style.animation = 'none';
+    ckd.style.transform  = 'translateY(-18px) scale(1.1)';
+    await $(16);
+    anim(ckd, 'eeCookedLand', 280, 'ease-out');
+
+    // ── 10. WOLF RUNS IN FAST — old Disney squash+stretch ─
+    await $(220);
+    place(wlf, wolfX, wolfY, WS, WH);
+    anim(wlf, 'eeWolfRun', 440, 'ease-out');
+
+    // ── 11. WOLF WALKS OFF WITH PLATE, no wobble ──────────
+    await $(560); // arrived + tiny beat
+    const walkDur = 1550;
+    wlf.style.animation = `eeWolfWalk ${walkDur}ms linear forwards`;
+    plt.style.animation  = `eeItemWalk ${walkDur}ms linear forwards`;
+    ckd.style.animation  = `eeItemWalk ${walkDur}ms linear forwards`;
+
+    // ── 12. FADE + CLEAN UP ───────────────────────────────
+    await $(walkDur + 60);
+    ov.style.transition = 'opacity 300ms'; ov.style.opacity = '0';
+    await $(350);
+    ov.classList.remove('on'); ov.style.opacity = '1'; ov.style.transition = '';
+    pts.innerHTML = '';
+    [pan,wht,ylk,rim,shl,shr,plt,ckd,wlf].forEach(el => {
+      el.style.cssText = 'position:fixed;opacity:0;pointer-events:none;';
+    });
+    running = false;
+  }
+
+  // ── SINGLE CLICK TRIGGER ──────────────────────────────
+  function attachTriggers() {
+    const targets = document.querySelectorAll('[data-egg-trigger]'
+    );
+    targets.forEach(el => {
+      (el as HTMLElement).style.cursor = 'pointer';
+      el.addEventListener('click', () => run());
+      el.addEventListener('touchend', (e) => { e.preventDefault(); run(); });
+    });
+  }
+
+  (window as any).triggerEgg = run;
+  document.addEventListener('DOMContentLoaded', attachTriggers);
+</script>

@@ -1,0 +1,74 @@
+---
+---
+<!--
+  ShakeTrigger.astro
+  Drop this anywhere in Layout.astro (inside <body>).
+  On mobile: shake the phone → triggers triggerEgg()
+  Asks for motion permission on iOS 13+ automatically on first interaction.
+-->
+
+<script>
+  // ── CONFIG ────────────────────────────────────────────
+  const SHAKE_THRESHOLD = 18;   // acceleration magnitude to count as shake (lower = more sensitive)
+  const SHAKE_COUNT     = 3;    // how many threshold crossings within the window
+  const SHAKE_WINDOW_MS = 600;  // time window to collect shakes
+
+  // ── STATE ─────────────────────────────────────────────
+  let shakes: number[] = [];
+  let lastMag = 0;
+  let permissionGranted = false;
+
+  function checkShake(ax: number, ay: number, az: number) {
+    const mag = Math.sqrt(ax*ax + ay*ay + az*az);
+    const delta = Math.abs(mag - lastMag);
+    lastMag = mag;
+
+    if (delta > SHAKE_THRESHOLD) {
+      const now = Date.now();
+      shakes.push(now);
+      // keep only shakes within the window
+      shakes = shakes.filter(t => now - t < SHAKE_WINDOW_MS);
+      if (shakes.length >= SHAKE_COUNT) {
+        shakes = [];
+        if (typeof (window as any).triggerEgg === 'function') {
+          (window as any).triggerEgg();
+        }
+      }
+    }
+  }
+
+  function startListening() {
+    window.addEventListener('devicemotion', (e) => {
+      const a = e.accelerationIncludingGravity;
+      if (!a) return;
+      checkShake(a.x ?? 0, a.y ?? 0, a.z ?? 0);
+    });
+    permissionGranted = true;
+  }
+
+  // iOS 13+ requires explicit permission request triggered by a user gesture
+  async function requestMotionPermission() {
+    const DevMot = (DeviceMotionEvent as any);
+    if (typeof DevMot.requestPermission === 'function') {
+      try {
+        const result = await DevMot.requestPermission();
+        if (result === 'granted') startListening();
+      } catch (_) {}
+    } else {
+      // Android / older iOS — no permission needed
+      startListening();
+    }
+  }
+
+  // Request on first user interaction (tap anywhere)
+  function onFirstInteraction() {
+    if (permissionGranted) return;
+    requestMotionPermission();
+    // Only need to do this once
+    document.removeEventListener('touchstart', onFirstInteraction);
+    document.removeEventListener('click', onFirstInteraction);
+  }
+
+  document.addEventListener('touchstart', onFirstInteraction, { once: true });
+  document.addEventListener('click',      onFirstInteraction, { once: true });
+</script>
