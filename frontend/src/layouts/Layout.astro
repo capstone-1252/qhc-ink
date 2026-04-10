@@ -9,12 +9,15 @@ interface Props {
 }
 
 const { title, description } = Astro.props;
-const actualTitle = title ? `${title} | Little Wolf Restaurant` : 'Little Wolf Restaurant';
-const actualDescription = description || 'Little Wolf Restaurant – fresh meals, cozy atmosphere, local ingredients.';
+const actualTitle = title 
+  ? `${title} | Little Wolf Restaurant` 
+  : 'Little Wolf Restaurant | Creative Small Plates & Cocktails in Garneau, Edmonton';
+const actualDescription = description 
+  || 'Low-key neighbourhood favourite in Garneau. Inventive veggie-forward small plates, creative cocktails, and a warm, intimate atmosphere. Walk-ins welcome.';
 ---
 
 <!doctype html>
-<html lang="en" class="scroll-smooth">
+<html lang="en-CA" class="scroll-smooth">
 <HeadSeo title={actualTitle} description={actualDescription} />       
     <body>
         <slot /> <!-- all page content would inject here -->
