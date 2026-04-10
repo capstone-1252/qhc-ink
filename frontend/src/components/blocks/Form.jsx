@@ -1,21 +1,12 @@
-// Food Bank Form react component
-// NOTES:
-// 1. Zod schema = ONE source of truth for ALL validation (client + server compatible)
-// 2. React Hook Form manages ALL form state (no more manual formValues)
-// 3. form.trigger() validates ONLY current step's fields on Next
-// 4. Errors display automatically under each field
-// 5. Your exact fetch logic preserved (payload, states, etc.)
-// 6. Native HTML labels + error messages = accessible by default
-// 7. className fixed (was "classname")
 
 import styles from "./Form.module.css";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { formSchema } from "@/shared/schema.js";
+import { formSchema } from "../../../shared/schema";
 import { useRef, useEffect } from "react";
 
-//this is my modal function
+
 function ConfirmModal({ isOpen, onClose, onConfirm, isSubmitting }) {
   if (!isOpen) return null;
 
@@ -52,7 +43,6 @@ function ConfirmModal({ isOpen, onClose, onConfirm, isSubmitting }) {
 }
 
 export default function CreateFoodBankForm({ reservationSlots }) {
-  // STEP 2: React Hook Form replaces ALL manual state + validation
     const nameInputRef = useRef(null);
 
   const form = useForm({
@@ -90,7 +80,6 @@ export default function CreateFoodBankForm({ reservationSlots }) {
   }, [step]);
 
   async function onFormSubmit(data) {
-    console.log("Form data validated on client side:", data); // debug
     const payload = {
       name: data.name,
       email: data.email,
@@ -130,27 +119,24 @@ export default function CreateFoodBankForm({ reservationSlots }) {
     } 
   }
 
-  // STEP 5: Step validation (only current step's fields)
   const validateCurrentStep = async () => {
     const fields =
       step === 1
         ? ["reservation_slot", "partySize"]
         : ["name", "email", "phone"];
 
-    const isValid = await trigger(fields); // Zod validates ONLY these fields
+    const isValid = await trigger(fields);
     return isValid;
   };
 
   const totalSteps = 2;
 
   return (
-    // STEP 6: Native form (Radix removed, fully accessible)
     <form
       onSubmit={handleSubmit(onFormSubmit)}
       className={styles.container}
       noValidate
     >
-      {/* Step indicator (className fixed) */}
       <div className={styles.headerBlock}>
         <h2 className={styles.secondHeading}>Request form</h2>
 
@@ -184,23 +170,23 @@ export default function CreateFoodBankForm({ reservationSlots }) {
             <div className={styles.slotButtonGroup}>
               {reservationSlots.map((slot) => {
                 const isSelected =
-                  form.watch("reservation_slot") === slot.documentId; //slot.id
-                const isDisabled = !slot.available; //for disabling if unavailable at backend
+                  form.watch("reservation_slot") === slot.documentId; 
+                const isDisabled = !slot.available; 
                 return (
                   <button
-                    key={slot.id} //slot.id bcs this is for react
+                    key={slot.id} 
                     type="button"
                     
                     onClick={() => {
                       form.setValue("reservation_slot", slot.documentId, {
                         shouldValidate: true,
                       });
-                      // Force a re-trigger of validation for this specific field immediately
+                     
                       form.trigger("reservation_slot");
                     }}
                     className={`${styles.slotButton} ${isSelected ? styles.slotButtonSelected : ""} ${isDisabled ? styles.slotButtonDisabled : ""}`}
                     aria-pressed={isSelected}
-                    disabled={isDisabled} //native HTML disabled
+                    disabled={isDisabled} 
                   >
                     <div className={styles.flex}>
                       <p>{slot.time}</p>
