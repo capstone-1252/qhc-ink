@@ -20,7 +20,10 @@ const EmblaCarousel = ({ slides, options }) => {
         <div className="embla__container">
           {slides.map((slide, index) => (
             <div className="embla__slide" key={index}>
-              <img src={slide.img} alt={slide.title} />
+              <picture>
+                <source media="(max-width: 768px)" srcSet={slide.imgMobile} />
+                <img src={slide.img} alt={slide.title} />
+              </picture>
             </div>
           ))}
         </div>
