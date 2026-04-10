@@ -5,7 +5,7 @@
 //          and forwards it to Strapi's API.
 // LOCATION: Must be in netlify/functions/ folder (root level, not in src/)
 // URL: /.netlify/functions/submit-food-bank (matches filename without .js)
-// ============================================================================
+// ========================================================================
 
 //import zod schema
 
