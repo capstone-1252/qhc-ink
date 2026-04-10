@@ -5,7 +5,7 @@
 //          and forwards it to Strapi's API.
 // LOCATION: Must be in netlify/functions/ folder (root level, not in src/)
 // URL: /.netlify/functions/submit-food-bank (matches filename without .js)
-// ========================================================================
+// ============================================================================
 
 //import zod schema
 
@@ -38,7 +38,6 @@ export async function handler(event, context) {
       headers: {
         'Allow': 'POST, OPTIONS',
         'Access-Control-Allow-Origin': '*',
-        
       },
       body: JSON.stringify({ error: 'Method Not Allowed' }),
     };
@@ -75,7 +74,7 @@ export async function handler(event, context) {
 
     if (!validation.success) {
       const firstError = validation.error?.errors?.[0]?.message || 'Validation failed';     
-return {
+      return {
         statusCode: 400,
         headers: {
           'Access-Control-Allow-Origin': '*',
@@ -87,10 +86,11 @@ return {
     const { name, email, phone, note, reservation_slot, partySize } = validation.data;
 
     console.log('=== DEBUG: Incoming Payload ===');
-console.log('Full payload:', JSON.stringify(payload, null, 2));
-console.log('reservation_slot value:', reservation_slot);
-console.log('reservation_slot type:', typeof reservation_slot);
-console.log('===============================');
+    console.log('Full payload:', JSON.stringify(payload, null, 2));
+    console.log('reservation_slot value:', reservation_slot);
+    console.log('reservation_slot type:', typeof reservation_slot);
+    console.log('===============================');
+
     // ------------------------------------------------------------------------
     // STEP 8: PREPARE DATA FOR STRAPI
     // ------------------------------------------------------------------------
@@ -98,18 +98,18 @@ console.log('===============================');
     // Format: { data: { field1: value1, field2: value2, ... } }
     // Note: note is optional, so we provide empty string if undefined
     // ------------------------------------------------------------------------
-const strapiData = {
-  data: {
-    name,
-    email,
-    phone,
-    note: note || '', // Default to empty string if note is undefined
-    reservation_slot: {
-      connect: [{ documentId: reservation_slot }],
-    },
-    partySize
-  }
-};
+    const strapiData = {
+      data: {
+        name,
+        email,
+        phone,
+        note: note || '', // Default to empty string if note is undefined
+        reservation_slot: {
+          connect: [{ documentId: reservation_slot }],
+        },
+        partySize
+      }
+    };
 
     // ------------------------------------------------------------------------
     // STEP 9: LOAD ENVIRONMENT VARIABLES
@@ -162,7 +162,7 @@ if (!strapiUrl || !strapiToken) {
     // ------------------------------------------------------------------------
     // Why: Strapi might reject the request (validation, auth, rate limit)
     // Security: Don't expose Strapi's internal error messages to users
-    // Note: .catch() presvents crash if Strapi returns invalid JSON
+    // Note: .catch() prevents crash if Strapi returns invalid JSON
     // ------------------------------------------------------------------------
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
@@ -170,9 +170,9 @@ if (!strapiUrl || !strapiToken) {
       console.error('Strapi HTTP status:', response.status);
       return {
         statusCode: response.status, // Pass through Strapi's status code
-           headers: {
-       'Access-Control-Allow-Origin': '*',  // <- this is important
-      },
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+        },
         body: JSON.stringify({ 
           error: errorData.error?.message || 'Strapi submission failed' 
         }),
@@ -185,11 +185,51 @@ if (!strapiUrl || !strapiToken) {
     // Why: We need to confirm what Strapi returned
     // Note: Strapi typically returns { data: { id, attributes, ... } }
     // ------------------------------------------------------------------------
-
     const result = await response.json();
 
     // ------------------------------------------------------------------------
-    // STEP 14: RETURN SUCCESS RESPONSE TO FRONTEND
+    // STEP 14: SEND EMAIL NOTIFICATION TO CLIENT
+    // ------------------------------------------------------------------------
+    // Why: Client needs to know when a new reservation request comes in
+    // Security: API key is server-side only, never exposed to browser
+    // Note: If email fails, we still return success — form submission wins
+    // ------------------------------------------------------------------------
+    const resendApiKey = process.env.RESEND_API_KEY;
+
+    if (resendApiKey) {
+      const emailResponse = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${resendApiKey}`,
+        },
+        body: JSON.stringify({
+          from: 'Little Wolf Reservations <onboarding@resend.dev>',
+          to: 'qhc.ink@gmail.com', 
+          subject: 'TEST New Food Bank Dinner Reservation Request', // replace with shauns/restaraunt email? might need to ask him
+          html: `
+            <h2>New Food Bank Dinner Reservation</h2>
+            <p><strong>Name:</strong> ${name}</p>
+            <p><strong>Email:</strong> ${email}</p>
+            <p><strong>Phone:</strong> ${phone}</p>
+            <p><strong>Party Size:</strong> ${partySize}</p>
+            <p><strong>Note:</strong> ${note || 'None'}</p>
+          `,
+        }),
+      });
+
+      if (!emailResponse.ok) {
+        console.error('Email send failed:', await emailResponse.json());
+        // We don't return an error here — form submission still succeeded
+      } else {
+        console.log('Email notification sent successfully');
+      }
+    } else {
+      console.warn('RESEND_API_KEY not set — skipping email notification');
+    }
+
+    // ------------------------------------------------------------------------
+    // STEP 15: RETURN SUCCESS RESPONSE TO FRONTEND
     // ------------------------------------------------------------------------
     // Why: The React form needs to know submission succeeded
     // Security: Don't expose Strapi's internal IDs or sensitive data
@@ -197,11 +237,12 @@ if (!strapiUrl || !strapiToken) {
     // ------------------------------------------------------------------------
     return {
       statusCode: 200,
-         headers: {
-       'Access-Control-Allow-Origin': '*',  // <- this is important
+      headers: {
+        'Access-Control-Allow-Origin': '*',
       },
       body: JSON.stringify({ success: true, data: result.data }),
     };
+
   } catch (error) {
     // ------------------------------------------------------------------------
     // STEP 15: CATCH ALL UNEXPECTED ERRORS
@@ -213,8 +254,8 @@ if (!strapiUrl || !strapiToken) {
     console.error('Function error:', error);
     return {
       statusCode: 500,
-         headers: {
-       'Access-Control-Allow-Origin': '*',  // <- this is important
+      headers: {
+        'Access-Control-Allow-Origin': '*',
       },
       body: JSON.stringify({ error: 'Internal server error' }),
     };
