@@ -4,7 +4,10 @@ const faqs = [
   {
     id: 'faq-1',
     question: 'How does the vegan foodbank fundraiser work?',
-    answer: `Foodbank reservations take place on select dates with limited seating. The dates are regularly updated on the website. There is a $5 reservation fee purely to ensure commitment in donating to the charity!\n\nA foodbank fundraiser reservation is separate from regular reservations. Book your foodbank seating @here!`
+    answer: [
+      { type: 'text', content: 'Foodbank reservations take place on select dates with limited seating. The dates are regularly updated on the website. There is a $5 reservation fee purely to ensure commitment in donating to the charity!' },
+      { type: 'text-with-link', content: 'A foodbank fundraiser reservation is separate from regular reservations. Book your foodbank seating ', linkText: 'here', href: '/food-bank' }
+    ]
   },
   {
     id: 'faq-2',
@@ -14,14 +17,47 @@ const faqs = [
   {
     id: 'faq-3',
     question: 'How do I make a reservation for a large party?',
-    answer: 'Large party reservations are made by emailing hi@littlewolfrestaurant.com to be guided through the process.'
+    answer: [
+      { type: 'text-with-link', content: 'Large party reservations are made by emailing ', linkText: 'hi@littlewolfrestaurant.com', href: 'mailto:hi@littlewolfrestaurant.com', suffix: ' to be guided through the process.' }
+    ]
   },
   {
     id: 'faq-4',
     question: 'How can I find out more about events coming from Little Wolf?',
-    answer: `Our Instagram is very active with loads more content from us!\n\nCheck us out @here!`
+    answer: [
+      { type: 'text-with-link', content: 'Our ', linkText: 'Instagram', href: 'https://www.instagram.com/eatlilwolf/', suffix: ' is very active with loads more content from us!' }
+    ]
   }
 ];
+
+function renderAnswer(answer) {
+  if (typeof answer === 'string') {
+    return answer.split('\n\n').map((para, i) => <p key={i}>{para}</p>);
+  }
+
+  return answer.map((block, i) => {
+    if (block.type === 'text') {
+      return <p key={i}>{block.content}</p>;
+    }
+   if (block.type === 'text-with-link') {
+  const isExternal = block.href.startsWith('http') || block.href.startsWith('mailto');
+  return (
+    <p key={i}>
+      {block.content}
+      <a
+        href={block.href}
+        target={isExternal && !block.href.startsWith('mailto') ? '_blank' : undefined}
+        rel={isExternal && !block.href.startsWith('mailto') ? 'noopener noreferrer' : undefined}
+      >
+        {block.linkText}
+      </a>
+      {block.suffix || ''}
+    </p>
+  );
+}
+    return null;
+  });
+}
 
 export default function FAQAccordion() {
   return (
@@ -50,9 +86,7 @@ export default function FAQAccordion() {
           </Accordion.Header>
           <Accordion.Content className="faq-content">
             <div className="faq-content-inner">
-              {faq.answer.split('\n\n').map((para, i) => (
-                <p key={i}>{para}</p>
-              ))}
+              {renderAnswer(faq.answer)}
             </div>
           </Accordion.Content>
         </Accordion.Item>
