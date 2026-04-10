@@ -55,11 +55,6 @@ const MenuLinks = [
         </picture>
     </div>
 
-<<<<<<< form-debugging
-<section class="form-section">
-    <CreateFoodBankForm client:load reservationSlots={reservationSlots}/>
-</section>
-=======
     <section class="info-section">
         <div class="info-inner">
             <p>By completing the form below, you are requesting a seat at the Food Bank Dinner. Once seating is confirmed, you will receive an email with instructions to pay the $5 reservation fee. Your reservation will be finalized after payment is received.</p>
@@ -68,9 +63,8 @@ const MenuLinks = [
     </section>
 
     <section class="form-section">
-        <CreateFoodBankForm client:visible reservationSlots={reservationSlots}/>
+        <CreateFoodBankForm client:load reservationSlots={reservationSlots}/>
     </section>
->>>>>>> main
 
 </main>
 
